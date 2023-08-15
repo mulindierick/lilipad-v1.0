@@ -1,14 +1,13 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import React from 'react';
-import CustomIcon from './CustomIcon';
-import {TextBig, TextBigger, TextNormal} from './CustomText';
-import {COLORS, images} from '../../utils/constants/theme';
-import CustomImage from './CustomImage';
+import {StyleSheet, View} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {useNavigation} from '@react-navigation/native';
+import {images} from '../../utils/constants/theme';
+import CustomImage from './CustomImage';
+import {TextBigger} from './CustomText';
 
 const CustomHeader = ({forInfoFurtherScreen = false}) => {
   const navigation = useNavigation();
@@ -22,7 +21,7 @@ const CustomHeader = ({forInfoFurtherScreen = false}) => {
           width={wp(7)}
           onPressImage={() => navigation.goBack()}
         />
-        <View style={{alignItems: 'center', marginLeft: wp(18.5)}}>
+        <View style={{alignItems: 'center', marginLeft: wp(18.2)}}>
           <TextBigger>Tell Us A Bit</TextBigger>
           <TextBigger>About Yourself</TextBigger>
         </View>

@@ -23,6 +23,7 @@ const CustomImage = props => {
     containerStyle,
     disabled,
     resizeMode,
+    onPressEditable,
     ...rest
   } = props;
   const [isLoading, setIsLoading] = useState(true);
@@ -60,7 +61,10 @@ const CustomImage = props => {
         )}
       </Pressable>
       {editable && (
-        <TouchableOpacity style={styles.iconContainer} activeOpacity={0.5}>
+        <TouchableOpacity
+          style={styles.iconContainer}
+          activeOpacity={0.5}
+          onPress={onPressEditable}>
           <MaterialIcons
             name="camera-alt"
             color={COLORS.white}

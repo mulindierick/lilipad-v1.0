@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import React, {useState} from 'react';
+import {useForm} from 'react-hook-form';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -8,18 +8,35 @@ import {
 import CustomButton from '../../components/common/CustomButton';
 import CustomImage from '../../components/common/CustomImage';
 import CustomRHFTextInput from '../../components/common/CustomReactHookFormTextInput';
-import { TextNormal } from '../../components/common/CustomText';
+import {TextNormal} from '../../components/common/CustomText';
 import CustomWrapper from '../../components/wrapper/CustomWrapper';
-import { COLORS } from '../../utils/constants/theme';
+import {COLORS} from '../../utils/constants/theme';
+import useImagePicker from '../../utils/hooks/useImagePicker';
 import ReasonForWhyWeAsk from './ReasonForWhyWeAsk';
+import CustomImagePickerModal from '../../components/common/CustomImagePickerModal';
 
 const FurtherInfo = () => {
   const [modal, setModal] = useState(false);
+  const [imageModal, setImageModal] = useState(false);
+  const {accessCamera, accessGallery, localImageUriArray} = useImagePicker();
   const {
     control,
     handleSubmit,
     formState: {isValid},
   } = useForm();
+
+  const cameraHandler = () => {
+    setImageModal(false);
+    setTimeout(() => {
+      accessCamera();
+    }, 500);
+  };
+  const galleryHandler = () => {
+    setImageModal(false);
+    setTimeout(() => {
+      accessGallery();
+    }, 500);
+  };
 
   return (
     <CustomWrapper requiresHeader forInfoFurtherScreen={true}>
@@ -33,11 +50,15 @@ const FurtherInfo = () => {
           <View style={styles.imageContainer}>
             <CustomImage
               source={{
-                uri: 'https://thecrimsonwhite.com/wp-content/uploads/2023/04/john-wick-4-cast-1647530231314-900x506.jpg',
+                uri:
+                  localImageUriArray.length > 0
+                    ? localImageUriArray[0]?.image
+                    : 'https://thecrimsonwhite.com/wp-content/uploads/2023/04/john-wick-4-cast-1647530231314-900x506.jpg',
               }}
               containerStyle={styles.innerImageContainer}
               resizeMode="cover"
               editable
+              onPressEditable={() => setImageModal(true)}
             />
           </View>
         </View>
@@ -111,6 +132,13 @@ const FurtherInfo = () => {
         isVisible={modal}
         onBackButtonPress={() => setModal(false)}
         onBackdropPress={() => setModal(false)}
+      />
+      <CustomImagePickerModal
+        showModal={imageModal}
+        onPressCamera={cameraHandler}
+        onPressGallery={galleryHandler}
+        onBackButtonPress={() => setImageModal(false)}
+        onBackdropPress={() => setImageModal(false)}
       />
     </CustomWrapper>
   );

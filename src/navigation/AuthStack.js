@@ -1,4 +1,4 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import Auth from '../screens/Auth';
 import EmailAuth from '../screens/Auth/EmailAuth';
