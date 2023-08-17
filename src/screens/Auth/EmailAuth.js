@@ -2,10 +2,13 @@ import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {useForm} from 'react-hook-form';
 import {KeyboardAvoidingView, StyleSheet, View} from 'react-native';
-import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from 'react-native-responsive-screen';
 import CustomButton from '../../components/common/CustomButton';
 import CustomRHFTextInput from '../../components/common/CustomReactHookFormTextInput';
-import {TextBigger} from '../../components/common/CustomText';
+import {TextBigger, TextNormal} from '../../components/common/CustomText';
 import CustomWrapper from '../../components/wrapper/CustomWrapper';
 import {COLORS} from '../../utils/constants/theme';
 
@@ -43,6 +46,23 @@ const EmailAuth = () => {
             key="email"
             placeholder={'you@skidmore.edu'}
           />
+          <View style={styles.middleNoteContainer}>
+            <TextNormal
+              italic
+              textStyle={{textAlign: 'center'}}
+              color={COLORS.grey}>
+              As of
+              <TextNormal color={COLORS.grey} bold>
+                {' '}
+                Fall 2023, LiliPad{' '}
+              </TextNormal>
+              is only active at{' '}
+              <TextNormal color={COLORS.grey} bold>
+                Skidmore College.
+              </TextNormal>{' '}
+              We are planning to scale to other schools in the coming weeks.
+            </TextNormal>
+          </View>
           <CustomButton
             title="Send Code"
             disabled={!isValid}
@@ -65,6 +85,9 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: hp(5),
     justifyContent: 'space-between',
-    paddingBottom: hp(5),
+    paddingBottom: hp(3),
+  },
+  middleNoteContainer: {
+    paddingHorizontal: wp(4),
   },
 });

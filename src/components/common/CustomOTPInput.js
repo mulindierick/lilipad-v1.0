@@ -14,7 +14,7 @@ const CustomOTPInput = props => {
   return (
     <View style={styles.container}>
       <OtpInputs
-        handleChange={code => onChange(code)}
+        // handleChange={code => onChange(code)}
         numberOfInputs={4}
         ref={inputRef}
         // autofillFromClipboard={true}
