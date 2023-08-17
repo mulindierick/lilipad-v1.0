@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useForm} from 'react-hook-form';
 import {KeyboardAvoidingView, StyleSheet, View} from 'react-native';
 import {
@@ -11,8 +11,23 @@ import CustomRHFTextInput from '../../components/common/CustomReactHookFormTextI
 import {TextBigger, TextNormal} from '../../components/common/CustomText';
 import CustomWrapper from '../../components/wrapper/CustomWrapper';
 import {COLORS} from '../../utils/constants/theme';
+import auth from '@react-native-firebase/auth';
 
 const EmailAuth = () => {
+  const checking = async () => {
+    try {
+      let user = await auth().createUserWithEmailAndPassword(
+        'mustafa@skidmore.edu',
+        '1234567890',
+      );
+    } catch (err) {
+      console.log({err});
+    }
+  };
+  useEffect(() => {
+    checking();
+  }, []);
+
   const navigation = useNavigation();
   const {
     control,

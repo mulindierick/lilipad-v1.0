@@ -1,4 +1,4 @@
-package com.lilypad.newarchitecture.modules;
+package com.lilipad.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;

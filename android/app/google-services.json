@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "874620061966",
-    "project_id": "lilipad-ef75d",
-    "storage_bucket": "lilipad-ef75d.appspot.com"
+    "project_number": "569356313674",
+    "project_id": "lilipad-8d334",
+    "storage_bucket": "lilipad-8d334.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:874620061966:android:62a390ae122be39add6f5f",
+        "mobilesdk_app_id": "1:569356313674:android:eb110498c81a9634bcb2b3",
         "android_client_info": {
-          "package_name": "com.lilypad"
+          "package_name": "com.lilipad"
         }
       },
       "oauth_client": [
         {
-          "client_id": "874620061966-0mdgio4s0agmfftpbpc41gqa9e5horki.apps.googleusercontent.com",
+          "client_id": "569356313674-571ike9oa6repepajvv8paa1ttbgcdbi.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCbFDBwEE4HosOVK3GNjC-tHlMRgRU00NU"
+          "current_key": "AIzaSyDHNp3PlXP6aMAWeLjEC_ctl3hWH2mUHsc"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "874620061966-0mdgio4s0agmfftpbpc41gqa9e5horki.apps.googleusercontent.com",
+              "client_id": "569356313674-571ike9oa6repepajvv8paa1ttbgcdbi.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

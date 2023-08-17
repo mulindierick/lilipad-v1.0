@@ -1,4 +1,4 @@
-package com.lilypad.newarchitecture;
+package com.lilipad.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.EmptyReactNativeConfig;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.lilypad.BuildConfig;
-import com.lilypad.newarchitecture.components.MainComponentsRegistry;
-import com.lilypad.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.lilipad.BuildConfig;
+import com.lilipad.newarchitecture.components.MainComponentsRegistry;
+import com.lilipad.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 
