@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {Keyboard, StyleSheet, View} from 'react-native';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
@@ -7,10 +7,15 @@ import {TextBigger, TextNormal} from '../../components/common/CustomText';
 import CustomWrapper from '../../components/wrapper/CustomWrapper';
 import {COLORS} from '../../utils/constants/theme';
 import {useNavigation} from '@react-navigation/native';
+import {useVerifyOTPMutation} from '../../redux/apis';
+import CustomLoader from '../../components/common/CustomLoader';
 
 const OTPverification = ({route}) => {
   const email = route?.params?.email;
   const navigation = useNavigation();
+  const [loader, setLoader] = useState(false);
+
+  const [verifyOTP] = useVerifyOTPMutation();
   const {control, handleSubmit} = useForm();
   useEffect(() => {
     Keyboard.dismiss();
@@ -19,10 +24,21 @@ const OTPverification = ({route}) => {
     }, 300);
   }, []);
 
-  const onCodeFilled = num => {
-    let str = num.toString();
-    if (str.length == 4) {
-      navigation.navigate('FurtherInfo');
+  const onCodeFilled = async num => {
+    let otp = num.toString();
+    if (otp.length == 4) {
+      setLoader(true);
+      try {
+        let res = await verifyOTP({email: email, otp: otp});
+        if (!res?.error) {
+          navigation.navigate('FurtherInfo');
+        } else {
+          alert(res?.error?.data?.message || 'An error occured, try again!');
+        }
+      } catch (err) {
+        console.log({err});
+      }
+      setLoader(false);
     }
   };
 
@@ -55,6 +71,7 @@ const OTPverification = ({route}) => {
       <TextNormal
         textStyle={styles.bottomText}
         color={COLORS.grey}>{`Didn't Get The Code?`}</TextNormal>
+      {loader && <CustomLoader />}
     </CustomWrapper>
   );
 };

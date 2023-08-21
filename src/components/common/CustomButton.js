@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity} from 'react-native';
+import {StyleSheet, TouchableOpacity, ActivityIndicator} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -15,6 +15,7 @@ const CustomButton = props => {
     disabled,
     bigText = false,
     boldTitle = false,
+    loader = false,
   } = props;
 
   return (
@@ -22,7 +23,9 @@ const CustomButton = props => {
       disabled={disabled}
       onPress={onPress}
       style={[styles.container, containerStyle, disabled && styles.disabled]}>
-      {bigText ? (
+      {loader ? (
+        <ActivityIndicator color={COLORS.white} />
+      ) : bigText ? (
         <TextBig color={COLORS.white} bold={boldTitle}>
           {title}
         </TextBig>

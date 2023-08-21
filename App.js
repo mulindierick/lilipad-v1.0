@@ -10,11 +10,11 @@ import {
 } from './src/utils/pushNotification_Helper';
 
 const App = () => {
-  useEffect(() => {
-    //   requestUserPermission();
-    GetFCMToken();
-    //   NotificationListener();
-  }, []);
+  // useEffect(() => {
+  //   requestUserPermission();
+  //   GetFCMToken();
+  //   NotificationListener();
+  // }, []);
 
   return (
     <Provider store={store}>

@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React from 'react';
+import React, {useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {KeyboardAvoidingView, StyleSheet, View} from 'react-native';
 import {
@@ -10,9 +10,12 @@ import CustomButton from '../../components/common/CustomButton';
 import CustomRHFTextInput from '../../components/common/CustomReactHookFormTextInput';
 import {TextBigger, TextNormal} from '../../components/common/CustomText';
 import CustomWrapper from '../../components/wrapper/CustomWrapper';
+import {useSendOTPemailMutation} from '../../redux/apis';
 import {COLORS} from '../../utils/constants/theme';
 
 const EmailAuth = () => {
+  const [emailSenderFunction] = useSendOTPemailMutation();
+  const [loader, setLoader] = useState(false);
   const navigation = useNavigation();
   const {
     control,
@@ -20,8 +23,20 @@ const EmailAuth = () => {
     formState: {isValid},
   } = useForm();
 
-  const onSendCode = data => {
-    navigation.navigate('OTPverification', {email: data?.email});
+  const onSendCode = async data => {
+    try {
+      setLoader(true);
+      const res = await emailSenderFunction({email: data?.email});
+      console.log({res});
+      if (res?.data?.message == 'OTP sent successfully') {
+        navigation.navigate('OTPverification', {email: data?.email});
+      } else {
+        alert('Enter Valid Email');
+      }
+    } catch (err) {
+      console.log({err});
+    }
+    setLoader(false);
   };
 
   return (
@@ -35,12 +50,12 @@ const EmailAuth = () => {
         </View>
         <View style={styles.innerContainer}>
           <CustomRHFTextInput
-            rules={{
-              required: {value: true},
-              pattern: {
-                value: /^[^\d]+@skidmore\.edu$/,
-              },
-            }}
+            // rules={{
+            //   required: {value: true},
+            //   pattern: {
+            //     value: /^[^\d]+@skidmore\.edu$/,
+            //   },
+            // }}
             control={control}
             name="email"
             key="email"
@@ -65,8 +80,9 @@ const EmailAuth = () => {
           </View>
           <CustomButton
             title="Send Code"
-            disabled={!isValid}
+            // disabled={!isValid}
             onPress={handleSubmit(onSendCode)}
+            loader={loader}
           />
         </View>
       </KeyboardAvoidingView>
