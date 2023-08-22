@@ -9,13 +9,14 @@ import {COLORS} from '../../utils/constants/theme';
 import {useNavigation} from '@react-navigation/native';
 import {useVerifyOTPMutation} from '../../redux/apis';
 import CustomLoader from '../../components/common/CustomLoader';
+import UseFirebaseAuth from '../../utils/hooks/UseFirebaseAuth';
 
 const OTPverification = ({route}) => {
   const email = route?.params?.email;
   const navigation = useNavigation();
   const [loader, setLoader] = useState(false);
+  const {firebaseAuth} = UseFirebaseAuth();
 
-  const [verifyOTP] = useVerifyOTPMutation();
   const {control, handleSubmit} = useForm();
   useEffect(() => {
     Keyboard.dismiss();
@@ -29,12 +30,8 @@ const OTPverification = ({route}) => {
     if (otp.length == 4) {
       setLoader(true);
       try {
-        let res = await verifyOTP({email: email, otp: otp});
-        if (!res?.error) {
-          navigation.navigate('FurtherInfo');
-        } else {
-          alert(res?.error?.data?.message || 'An error occured, try again!');
-        }
+        let res = await firebaseAuth(email, otp);
+        // navigation.navigate('FurtherInfo');
       } catch (err) {
         console.log({err});
       }
