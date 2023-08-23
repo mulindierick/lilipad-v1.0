@@ -13,7 +13,6 @@ const AuthStack = () => {
       <Stack.Screen name="Auth" component={Auth} />
       <Stack.Screen name="EmailAuth" component={EmailAuth} />
       <Stack.Screen name="OTPverification" component={OTPverification} />
-      <Stack.Screen name="FurtherInfo" component={FurtherInfo} />
     </Stack.Navigator>
   );
 };

@@ -9,8 +9,9 @@ import {TextSmall} from './CustomText';
 import {COLORS} from '../../utils/constants/theme';
 
 const CustomOTPInput = props => {
-  const {onChange, error, inputStyles, style, inputRef, onCodeFilled} = props;
-
+  const {onChange, showError, inputStyles, style, inputRef, onCodeFilled} =
+    props;
+  console.log({showError});
   return (
     <View style={styles.container}>
       <OtpInputs
@@ -18,16 +19,13 @@ const CustomOTPInput = props => {
         numberOfInputs={4}
         ref={inputRef}
         // autofillFromClipboard={true}
-        // inputContainerStyles={{}}
         inputStyles={[styles.inputStyles, {...inputStyles}]}
         style={[styles.containerStyle, {...style}]}
         focusStyles={styles.Focus}
         keyboardType="numeric"
         handleChange={num => onCodeFilled(num)}
+        filledInputContainerStyles={[styles.Focus, showError && styles.Error]}
       />
-      <TextSmall textStyle={{marginTop: hp(3)}} color="red">
-        {error && `*${error}`}
-      </TextSmall>
     </View>
   );
 };
@@ -37,7 +35,6 @@ export default CustomOTPInput;
 const styles = StyleSheet.create({
   container: {
     height: hp(7),
-    marginTop: hp(2),
     paddingHorizontal: wp(6),
   },
   inputStyles: {
@@ -45,9 +42,10 @@ const styles = StyleSheet.create({
     height: hp(8),
     textAlign: 'center',
     borderRadius: 10,
-    fontSize: wp(5),
+    fontSize: wp(6),
     color: COLORS.lightgrey,
     backgroundColor: '#F6F6F6',
+    fontWeight: '700',
   },
   containerStyle: {
     flexDirection: 'row',
@@ -56,8 +54,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   Focus: {
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: COLORS.blue,
+    borderRadius: 10,
+  },
+  Error: {
+    borderWidth: 2,
+    borderColor: COLORS.error,
     borderRadius: 10,
   },
 });

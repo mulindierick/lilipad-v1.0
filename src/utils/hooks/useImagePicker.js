@@ -18,6 +18,7 @@ const useImagePicker = () => {
       multiple: false,
       maxFiles: 1,
       mediaType: 'photo',
+      cropperCircleOverlay: true,
     };
 
     try {
@@ -58,9 +59,11 @@ const useImagePicker = () => {
     let config = {
       forceJpg: true,
       // includeBase64: true,
+      cropping: true,
       multiple: true,
       maxFiles: 1,
       mediaType: 'photo',
+      cropperCircleOverlay: true,
     };
 
     try {

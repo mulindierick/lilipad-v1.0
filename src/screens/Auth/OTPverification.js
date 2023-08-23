@@ -16,6 +16,7 @@ const OTPverification = ({route}) => {
   const navigation = useNavigation();
   const [loader, setLoader] = useState(false);
   const {firebaseAuth} = UseFirebaseAuth();
+  const [OTPerror, setError] = useState(false);
 
   const {control, handleSubmit} = useForm();
   useEffect(() => {
@@ -26,12 +27,15 @@ const OTPverification = ({route}) => {
   }, []);
 
   const onCodeFilled = async num => {
+    setError(false);
     let otp = num.toString();
     if (otp.length == 4) {
       setLoader(true);
       try {
         let res = await firebaseAuth(email, otp);
-        // navigation.navigate('FurtherInfo');
+        if (res !== 'Success') {
+          setError(true);
+        }
       } catch (err) {
         console.log({err});
       }
@@ -43,9 +47,14 @@ const OTPverification = ({route}) => {
   return (
     <CustomWrapper requiresHeader>
       <View style={styles.TextContainer}>
-        <TextBigger>Enter The Code We Sent</TextBigger>
-        <TextBigger>
-          To <TextBigger color={COLORS.blue}>you@skidmore.edu</TextBigger>
+        <TextBigger textStyle={styles.textHeader}>
+          Enter The Code We Sent
+        </TextBigger>
+        <TextBigger textStyle={styles.textHeader}>
+          To{' '}
+          <TextBigger textStyle={[styles.textHeader, {color: COLORS.blue}]}>
+            you@skidmore.edu
+          </TextBigger>
         </TextBigger>
       </View>
       <Controller
@@ -58,16 +67,12 @@ const OTPverification = ({route}) => {
         }) => (
           <CustomOTPInput
             onChange={onChange}
-            error={error?.message}
-            showError={error ? true : false}
+            showError={OTPerror}
             inputRef={inputRef}
             onCodeFilled={onCodeFilled}
           />
         )}
       />
-      <TextNormal
-        textStyle={styles.bottomText}
-        color={COLORS.grey}>{`Didn't Get The Code?`}</TextNormal>
       {loader && <CustomLoader />}
     </CustomWrapper>
   );
@@ -79,10 +84,16 @@ const styles = StyleSheet.create({
   TextContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: hp(3),
+    marginBottom: hp(4),
+    marginTop: hp(1),
   },
   bottomText: {
     alignSelf: 'center',
     marginTop: hp(5),
+  },
+  textHeader: {
+    fontSize: hp(3.3),
+    fontWeight: '600',
+    color: '#151313',
   },
 });

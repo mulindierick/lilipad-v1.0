@@ -10,7 +10,7 @@ import CustomImage from '../../components/common/CustomImage';
 import CustomRHFTextInput from '../../components/common/CustomReactHookFormTextInput';
 import {TextNormal} from '../../components/common/CustomText';
 import CustomWrapper from '../../components/wrapper/CustomWrapper';
-import {COLORS} from '../../utils/constants/theme';
+import {COLORS, FONTS, images} from '../../utils/constants/theme';
 import useImagePicker from '../../utils/hooks/useImagePicker';
 import ReasonForWhyWeAsk from './ReasonForWhyWeAsk';
 import CustomImagePickerModal from '../../components/common/CustomImagePickerModal';
@@ -40,12 +40,13 @@ const FurtherInfo = () => {
 
   return (
     <CustomWrapper requiresHeader forInfoFurtherScreen={true}>
-      <ScrollView
-        automaticallyAdjustKeyboardInsets={true}
-        showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.topContainer}>
-          <TextNormal color={COLORS.grey} onPress={() => setModal(true)}>
-            Why do we ask?
+          <TextNormal
+            color={COLORS.grey}
+            onPress={() => setModal(true)}
+            textStyle={styles.WhyDoWeAsk}>
+            Why Do We Ask?
           </TextNormal>
           <View style={styles.imageContainer}>
             <CustomImage
@@ -57,13 +58,19 @@ const FurtherInfo = () => {
               }}
               containerStyle={styles.innerImageContainer}
               resizeMode="cover"
-              editable
-              onPressEditable={() => setImageModal(true)}
+            />
+            <CustomImage
+              source={images.cameraIcon}
+              resizeMode="cover"
+              containerStyle={styles.iconContainer}
+              height={hp(4.5)}
+              width={hp(4.5)}
+              onPressImage={() => setImageModal(true)}
             />
           </View>
         </View>
-        <View style={styles.inputContainer}>
-          <TextNormal bold textStyle={{marginBottom: hp(0.5)}}>
+        <View style={{marginTop: hp(2)}}>
+          <TextNormal bold textStyle={{marginBottom: hp(1)}}>
             Your First Name
           </TextNormal>
           <CustomRHFTextInput
@@ -74,12 +81,12 @@ const FurtherInfo = () => {
             name="firstName"
             key="firstName"
           />
-          <TextNormal italic textStyle={{marginTop: hp(0.5)}}>
+          <TextNormal textStyle={styles.italicStyle}>
             You will not be able to change your first name
           </TextNormal>
         </View>
         <View style={styles.inputContainer}>
-          <TextNormal bold textStyle={{marginBottom: hp(0.5)}}>
+          <TextNormal bold textStyle={{marginBottom: hp(1)}}>
             Your Last Name
           </TextNormal>
           <CustomRHFTextInput
@@ -90,12 +97,12 @@ const FurtherInfo = () => {
             name="lastName"
             key="lastName"
           />
-          <TextNormal italic textStyle={{marginTop: hp(0.5)}}>
+          <TextNormal textStyle={styles.italicStyle}>
             You will not be able to change your last name
           </TextNormal>
         </View>
         <View style={styles.inputContainer}>
-          <TextNormal bold textStyle={{marginBottom: hp(0.5)}}>
+          <TextNormal bold textStyle={{marginBottom: hp(1)}}>
             Your Class Year
           </TextNormal>
           <CustomRHFTextInput
@@ -108,7 +115,7 @@ const FurtherInfo = () => {
           />
         </View>
         <View style={styles.inputContainer}>
-          <TextNormal bold textStyle={{marginBottom: hp(0.5)}}>
+          <TextNormal bold textStyle={{marginBottom: hp(1)}}>
             {`Your Major (Or Prospective Major)`}
           </TextNormal>
           <CustomRHFTextInput
@@ -125,7 +132,9 @@ const FurtherInfo = () => {
           title="Create Account"
           onPress={() => console.log('HELLO')}
           containerStyle={styles.button}
+          textStyle={styles.buttonText}
           boldTitle={true}
+          disabled={!isValid}
         />
       </ScrollView>
       <ReasonForWhyWeAsk
@@ -152,27 +161,53 @@ const styles = StyleSheet.create({
     marginTop: hp(1),
   },
   imageContainer: {
-    marginTop: hp(1),
-    height: hp(13),
+    marginTop: hp(2),
+    height: hp(16),
     aspectRatio: 1,
     borderRadius: hp(10),
-    borderWidth: 2,
-    borderColor: COLORS.grey,
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.9,
+    shadowRadius: 3,
+    elevation: 12,
   },
   innerImageContainer: {
     height: hp(13),
     aspectRatio: 1,
     borderRadius: hp(10),
-    borderWidth: 1,
-    borderColor: COLORS.white,
   },
   inputContainer: {
-    marginTop: hp(1.5),
+    marginTop: hp(1),
   },
   button: {
-    width: wp(92),
+    width: wp(87),
     marginVertical: hp(4),
+    height: hp(6.4),
+  },
+  WhyDoWeAsk: {
+    fontFamily: FONTS.Light,
+    fontSize: wp(4.2),
+    color: '#8F8F8F',
+  },
+  italicStyle: {
+    fontFamily: FONTS.LightItalic,
+    fontSize: wp(3.3),
+    marginTop: hp(0.5),
+  },
+  buttonText: {
+    fontSize: hp(2.7),
+    fontWeight: '700',
+  },
+  iconContainer: {
+    position: 'absolute',
+    left: 25,
+    bottom: 0,
+    borderRadius: 100,
+    zIndex: 1000,
   },
 });

@@ -1,0 +1,46 @@
+diff --git a/node_modules/react-native-otp-inputs/src/OtpInput.tsx b/node_modules/react-native-otp-inputs/src/OtpInput.tsx
+index d8a2453..1712f6b 100644
+--- a/node_modules/react-native-otp-inputs/src/OtpInput.tsx
++++ b/node_modules/react-native-otp-inputs/src/OtpInput.tsx
+@@ -38,6 +38,7 @@ const OtpInput = forwardRef<TextInput, Props>(
+       placeholder,
+       selectTextOnFocus,
+       secureTextEntry,
++      filledInputContainerStyles,
+       ...rest
+     },
+     ref,
+@@ -63,7 +64,8 @@ const OtpInput = forwardRef<TextInput, Props>(
+ 
+     return (
+       // @ts-expect-error
+-      <View style={[inputContainerStyles, focused && focusStyles]}>
++      <View style={[inputContainerStyles, focused && focusStyles,       filledInputContainerStyles,
++      ]}>
+         {/* @ts-expect-error */}
+         <TextInput
+           autoFocus={autoFocus}
+diff --git a/node_modules/react-native-otp-inputs/src/index.tsx b/node_modules/react-native-otp-inputs/src/index.tsx
+index 7fd9e45..3704d23 100644
+--- a/node_modules/react-native-otp-inputs/src/index.tsx
++++ b/node_modules/react-native-otp-inputs/src/index.tsx
+@@ -64,6 +64,7 @@ const OtpInputs = forwardRef<OtpInputsRef, Props>(
+       clearTextOnFocus = false,
+       defaultValue,
+       focusStyles,
++      filledInputContainerStyles,
+       handleChange = console.log,
+       inputContainerStyles,
+       inputStyles,
+@@ -271,6 +272,11 @@ const OtpInputs = forwardRef<OtpInputsRef, Props>(
+             secureTextEntry={secureTextEntry}
+             selectTextOnFocus={selectTextOnFocus}
+             testID={`${testIDPrefix}-${inputIndex}`}
++            filledInputContainerStyles={
++              inputValue && index <= Object.keys(otpCode).length - 1
++                ? filledInputContainerStyles
++                : {}
++            }
+             {...restProps}
+           />
+         );

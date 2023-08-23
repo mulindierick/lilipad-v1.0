@@ -5,25 +5,32 @@ import {useVerifyOTPMutation} from '../../redux/apis';
 const UseFirebaseAuth = () => {
   const [verifyOTP] = useVerifyOTPMutation();
   const firebaseAuth = async (email, otp) => {
+    console.log(email, otp);
     try {
       let res = await verifyOTP({email: email, otp: otp});
-      firebase
-        .auth()
-        .signInWithCustomToken(res.data.data)
-        .then(userCredential => {
-          // Signed in
-          console.log('HERE', userCredential.user);
-          var email = email;
-          // ...
-        })
-        .catch(error => {
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          // ...
-        });
-      auth().signOut();
+      console.log({res});
+      if (res?.data?.message == 'Success') {
+        let authStatus = firebase
+          .auth()
+          .signInWithCustomToken(res.data.data)
+          .then(userCredential => {
+            // Signed in
+            console.log('HERE', userCredential.user);
+            var email = email;
+            // ...
+            return 'Success';
+          })
+          .catch(error => {
+            alert('Sorry!, Something went wrong');
+            return 'Error';
+            // ...
+          });
+        return authStatus;
+      }
+      return res?.error?.data?.message;
     } catch (err) {
       console.log({err});
+      return 'Error';
     }
   };
   return {

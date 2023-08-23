@@ -16,6 +16,8 @@ const CustomButton = props => {
     bigText = false,
     boldTitle = false,
     loader = false,
+    fontSize = null,
+    textStyle = {},
   } = props;
 
   return (
@@ -25,12 +27,8 @@ const CustomButton = props => {
       style={[styles.container, containerStyle, disabled && styles.disabled]}>
       {loader ? (
         <ActivityIndicator color={COLORS.white} />
-      ) : bigText ? (
-        <TextBig color={COLORS.white} bold={boldTitle}>
-          {title}
-        </TextBig>
       ) : (
-        <TextNormal color={COLORS.white} bold={boldTitle}>
+        <TextNormal color={COLORS.white} bold={boldTitle} textStyle={textStyle}>
           {title}
         </TextNormal>
       )}

@@ -5,10 +5,10 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import CustomButton from '../../components/common/CustomButton';
-import CustomImage from '../../components/common/CustomImage';
 import {TextNormal} from '../../components/common/CustomText';
 import CustomWrapper from '../../components/wrapper/CustomWrapper';
-import {COLORS, images} from '../../utils/constants/theme';
+import {COLORS, FONTS, images} from '../../utils/constants/theme';
+import CustomImage from '../../components/common/CustomImage';
 
 const Auth = ({navigation}) => {
   return (
@@ -16,17 +16,19 @@ const Auth = ({navigation}) => {
       <View style={styles.container}>
         <CustomImage
           source={images.bigAppIcon}
-          height={hp(30)}
+          height={hp(40)}
           width={wp(100)}
         />
         <CustomButton
           title="Join"
           bigText
           onPress={() => navigation.navigate('EmailAuth')}
+          textStyle={styles.buttonText}
+          containerStyle={{height: hp(7), backgroundColor: COLORS.grey}}
         />
-        <TextNormal color={COLORS.grey}>
+        <TextNormal color={COLORS.grey} textStyle={styles.text1}>
           A Project By
-          <TextNormal italic color={COLORS.grey}>
+          <TextNormal color={COLORS.grey} textStyle={styles.text2}>
             {' '}
             Lili
           </TextNormal>
@@ -42,8 +44,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    marginTop: hp(13),
+    marginTop: hp(10),
     justifyContent: 'space-between',
-    marginBottom: hp(13),
+    marginBottom: hp(6),
+  },
+  buttonText: {
+    fontSize: hp(3.5),
+    fontWeight: '600',
+  },
+  text1: {
+    fontFamily: FONTS.Light,
+  },
+  text2: {
+    fontFamily: FONTS.MediumItalic,
   },
 });
