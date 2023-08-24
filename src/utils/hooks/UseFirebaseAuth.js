@@ -1,9 +1,13 @@
 import {firebase} from '@react-native-firebase/auth';
-import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import {useVerifyOTPMutation} from '../../redux/apis';
+import {useSelector} from 'react-redux';
 
 const UseFirebaseAuth = () => {
   const [verifyOTP] = useVerifyOTPMutation();
+
+  const {user} = useSelector(state => state.userSlice);
+  console.log({user});
   const firebaseAuth = async (email, otp) => {
     console.log(email, otp);
     try {
@@ -33,6 +37,15 @@ const UseFirebaseAuth = () => {
       return 'Error';
     }
   };
+
+  const createAccount = async body => {
+    const {email, password, firstName, lastName, major, classYear, image} =
+      body;
+    try {
+      let res = firestore().collection('accounts').doc(email).update({});
+    } catch (err) {}
+  };
+
   return {
     firebaseAuth,
   };

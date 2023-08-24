@@ -1,13 +1,9 @@
-import React, {useEffect} from 'react';
-import RootStack from './src/navigation/RootStack';
+import React from 'react';
+import {Toast} from 'react-native-toast-message/lib/src/Toast';
 import {Provider} from 'react-redux';
-import {persistor, store} from './src/redux/store';
 import {PersistGate} from 'redux-persist/integration/react';
-import {
-  GetFCMToken,
-  NotificationListener,
-  requestUserPermission,
-} from './src/utils/pushNotification_Helper';
+import RootStack from './src/navigation/RootStack';
+import {persistor, store} from './src/redux/store';
 
 const App = () => {
   // useEffect(() => {
@@ -20,6 +16,7 @@ const App = () => {
     <Provider store={store}>
       <PersistGate persistor={persistor}>
         <RootStack />
+        <Toast position="bottom" autoHide={true} />
       </PersistGate>
     </Provider>
   );

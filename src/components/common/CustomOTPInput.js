@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     fontSize: wp(6),
     color: COLORS.lightgrey,
     backgroundColor: '#F6F6F6',
-    fontWeight: '700',
+    fontWeight: '600',
   },
   containerStyle: {
     flexDirection: 'row',

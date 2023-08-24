@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {useForm} from 'react-hook-form';
+import React, {useEffect, useState} from 'react';
+import {set, useForm} from 'react-hook-form';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {
   heightPercentageToDP as hp,
@@ -7,17 +7,24 @@ import {
 } from 'react-native-responsive-screen';
 import CustomButton from '../../components/common/CustomButton';
 import CustomImage from '../../components/common/CustomImage';
+import CustomImagePickerModal from '../../components/common/CustomImagePickerModal';
 import CustomRHFTextInput from '../../components/common/CustomReactHookFormTextInput';
 import {TextNormal} from '../../components/common/CustomText';
 import CustomWrapper from '../../components/wrapper/CustomWrapper';
 import {COLORS, FONTS, images} from '../../utils/constants/theme';
 import useImagePicker from '../../utils/hooks/useImagePicker';
 import ReasonForWhyWeAsk from './ReasonForWhyWeAsk';
-import CustomImagePickerModal from '../../components/common/CustomImagePickerModal';
+import CustomSearchDropDown from '../../components/common/CustomSearchDropDown';
+import firestore from '@react-native-firebase/firestore';
 
 const FurtherInfo = () => {
   const [modal, setModal] = useState(false);
   const [imageModal, setImageModal] = useState(false);
+  const [majorsData, setMajorsData] = useState([]);
+  const [classYearData, setClassYearData] = useState([]);
+  const [selectedMajor, setSelectedMajor] = useState('');
+  const [selectedClassYear, setSelectedClassYear] = useState('');
+
   const {accessCamera, accessGallery, localImageUriArray} = useImagePicker();
   const {
     control,
@@ -25,12 +32,31 @@ const FurtherInfo = () => {
     formState: {isValid},
   } = useForm();
 
+  const getData = async () => {
+    try {
+      let res = await firestore()
+        .collection('Colleges')
+        .where('collegeName', '==', 'Skidmore College')
+        .get();
+      setMajorsData(res?.docs[0]?.data()?.majorsOffered);
+      setClassYearData(res?.docs[0]?.data()?.classYear);
+      console.log({res});
+    } catch (err) {
+      console.log({err});
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   const cameraHandler = () => {
     setImageModal(false);
     setTimeout(() => {
       accessCamera();
     }, 500);
   };
+
   const galleryHandler = () => {
     setImageModal(false);
     setTimeout(() => {
@@ -40,7 +66,12 @@ const FurtherInfo = () => {
 
   return (
     <CustomWrapper requiresHeader forInfoFurtherScreen={true}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        nestedScrollEnabled={true}
+        scrollEnabled={true}
+        showsVerticalScrollIndicator={false}
+        automaticallyAdjustKeyboardInsets={true}
+        keyboardShouldPersistTaps="handled">
         <View style={styles.topContainer}>
           <TextNormal
             color={COLORS.grey}
@@ -101,40 +132,41 @@ const FurtherInfo = () => {
             You will not be able to change your last name
           </TextNormal>
         </View>
-        <View style={styles.inputContainer}>
-          <TextNormal bold textStyle={{marginBottom: hp(1)}}>
-            Your Class Year
-          </TextNormal>
-          <CustomRHFTextInput
-            rules={{
-              required: {value: true, message: 'Name is Required'},
-            }}
-            control={control}
-            name="name"
-            key="name"
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <TextNormal bold textStyle={{marginBottom: hp(1)}}>
-            {`Your Major (Or Prospective Major)`}
-          </TextNormal>
-          <CustomRHFTextInput
-            rules={{
-              required: {value: true, message: 'Name is Required'},
-            }}
-            control={control}
-            name="major"
-            key="major"
-            placeholder={'Search'}
-          />
-        </View>
+        <ScrollView
+          horizontal={true}
+          scrollEnabled={false}
+          nestedScrollEnabled={true}
+          contentContainerStyle={{
+            width: '100%',
+            flexDirection: 'column',
+          }}
+          keyboardShouldPersistTaps="handled">
+          <View style={styles.inputContainer}>
+            <TextNormal bold textStyle={{marginBottom: hp(1)}}>
+              Your Class Year
+            </TextNormal>
+            <CustomSearchDropDown
+              data={classYearData}
+              setSelected={setSelectedClassYear}
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <TextNormal bold textStyle={{marginBottom: hp(1)}}>
+              {`Your Major (Or Prospective Major)`}
+            </TextNormal>
+            <CustomSearchDropDown
+              data={majorsData}
+              setSelected={setSelectedMajor}
+            />
+          </View>
+        </ScrollView>
         <CustomButton
           title="Create Account"
           onPress={() => console.log('HELLO')}
           containerStyle={styles.button}
           textStyle={styles.buttonText}
           boldTitle={true}
-          disabled={!isValid}
+          disabled={!isValid || !localImageUriArray.length > 0}
         />
       </ScrollView>
       <ReasonForWhyWeAsk

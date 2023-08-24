@@ -10,6 +10,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useVerifyOTPMutation} from '../../redux/apis';
 import CustomLoader from '../../components/common/CustomLoader';
 import UseFirebaseAuth from '../../utils/hooks/UseFirebaseAuth';
+import {showToast} from '../../utils/constants/helper';
 
 const OTPverification = ({route}) => {
   const email = route?.params?.email;
@@ -33,8 +34,12 @@ const OTPverification = ({route}) => {
       setLoader(true);
       try {
         let res = await firebaseAuth(email, otp);
+        console.log({res});
         if (res !== 'Success') {
           setError(true);
+          showToast('error', res);
+        } else {
+          showToast('success', 'Email Verified Scuccessfully');
         }
       } catch (err) {
         console.log({err});

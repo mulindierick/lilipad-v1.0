@@ -12,7 +12,8 @@ const CustomTextInput = ({
   value,
   onChange,
   label,
-  onBlur,
+  onBlur = null,
+  onFocus = null,
   placeholder,
   secureTextEntry,
   withIcon,
@@ -55,6 +56,8 @@ const CustomTextInput = ({
             placeholderTextColor={COLORS.inActiveGrey}
             autoCapitalize="none"
             autoCorrect={false}
+            onFocus={onFocus}
+            onBlur={onBlur}
           />
 
           {secureTextEntry && (
