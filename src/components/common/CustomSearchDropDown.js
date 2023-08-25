@@ -1,22 +1,28 @@
-import {StyleSheet, Text, View, Keyboard} from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
-import CustomTextInput from './CustomTextInput';
-import {FlatList} from 'react-native';
-import {TextNormal} from './CustomText';
-import {TouchableOpacity} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import {
-  widthPercentageToDP as wp,
+  FlatList,
+  Keyboard,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import {
   heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import {COLORS} from '../../utils/constants/theme';
-import {TouchableWithoutFeedback} from 'react-native';
-import KeyboardAvoidingView from 'react-native/Libraries/Components/Keyboard/KeyboardAvoidingView';
+import {TextNormal} from './CustomText';
+import CustomTextInput from './CustomTextInput';
 
-const CustomSearchDropDown = ({data = [], setSelected}) => {
+const CustomSearchDropDown = ({data, setSelected, selected}) => {
   const [text, setText] = useState('');
   const [focus, setFocus] = useState(false);
-  const [filteredData, setFilteredData] = useState(data);
+  const [filteredData, setFilteredData] = useState(data || []);
+
   useEffect(() => {
+    if (selected && focus && text !== selected) {
+      setSelected('');
+    }
     if (text) {
       setFilteredData(
         data.filter(item => item.toLowerCase().includes(text.toLowerCase())),
@@ -27,7 +33,6 @@ const CustomSearchDropDown = ({data = [], setSelected}) => {
   }, [text]);
 
   const handleSelect = item => {
-    console.log({item});
     setSelected(item);
     setText(item);
     Keyboard.dismiss();
@@ -38,7 +43,8 @@ const CustomSearchDropDown = ({data = [], setSelected}) => {
       <CustomTextInput
         onChange={txt => setText(txt)}
         value={text}
-        onFocus={() => setFocus(true)}
+        //because the data takes sometime to populate in filteredData
+        onFocus={() => setTimeout(() => setFocus(true), 100)}
         onBlur={() => setFocus(false)}
         placeholder="Search"
       />

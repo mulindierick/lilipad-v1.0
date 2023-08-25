@@ -83,12 +83,12 @@ const EmailAuth = () => {
         <View style={styles.innerContainer}>
           <CustomRHFTextInput
             control={control}
-            // rules={{
-            //   required: {value: true},
-            //   pattern: {
-            //     value: /^[^\d]+@skidmore\.edu$/,
-            //   },
-            // }}
+            rules={{
+              required: {value: true},
+              pattern: {
+                value: /^[^\d]+@zenkoders\.com$/,
+              },
+            }}
             name="email"
             key="email"
             placeholder={'you@skidmore.edu'}
@@ -119,7 +119,7 @@ const EmailAuth = () => {
             loader={loader}
             textStyle={styles.buttonText}
             containerStyle={{height: hp(6.2)}}
-            // disabled={!isValid}
+            disabled={!isValid}
           />
         </View>
       </KeyboardAvoidingView>

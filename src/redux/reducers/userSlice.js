@@ -8,6 +8,7 @@ const initialState = {
   isVerified: null,
   firebaseUserId: null,
   major: null,
+  spaces: null,
 };
 
 export const userSlice = createSlice({
@@ -22,6 +23,7 @@ export const userSlice = createSlice({
       state.isVerified = payload?.isVerified || null;
       state.firebaseUserId = payload?.firebaseUserId || null;
       state.major = payload?.major || null;
+      state.spaces = payload?.spaces || null;
     },
   },
 });

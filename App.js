@@ -4,8 +4,10 @@ import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import RootStack from './src/navigation/RootStack';
 import {persistor, store} from './src/redux/store';
+import {LogBox} from 'react-native';
 
 const App = () => {
+  LogBox.ignoreAllLogs(true);
   // useEffect(() => {
   //   requestUserPermission();
   //   GetFCMToken();

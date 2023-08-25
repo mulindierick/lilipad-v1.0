@@ -14,6 +14,7 @@ export const images = {
   headerIcon: require('../../assets/headerIcon.png'),
   bigAppIcon: require('../../assets/BigAppIcon.png'),
   cameraIcon: require('../../assets/cameraIcon.png'),
+  dummyProfilePic: require('../../assets/dummyProfilePic.png'),
 };
 
 export const FONTS = {

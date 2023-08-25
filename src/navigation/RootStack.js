@@ -8,8 +8,13 @@ import TakingUserInformationStep from './TakingUserInformationStep';
 import firestore from '@react-native-firebase/firestore';
 import {useDispatch} from 'react-redux';
 import {setUser} from '../redux/reducers/userSlice';
+import CustomLoader from '../components/common/CustomLoader';
+import useUser from '../utils/hooks/useUser';
+import BottomTabNavigator from './BottomTabNavigator';
 
 const RootStack = ({navigation}) => {
+  const [loading, setLoading] = useState(true);
+  const {user} = useUser();
   useApp(navigation);
   useEffect(() => {
     SplashScreen.hide();
@@ -19,6 +24,8 @@ const RootStack = ({navigation}) => {
   const dispatch = useDispatch();
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(async user => {
+      auth().signOut();
+      setLoading(true);
       try {
         if (user) {
           setIslogin(true);
@@ -45,13 +52,22 @@ const RootStack = ({navigation}) => {
       } catch (error) {
         console.log('error', error);
       }
+      setLoading(false);
     });
     return subscriber;
   }, []);
 
   return (
     <NavigationContainer>
-      {isLogin ? <TakingUserInformationStep /> : <AuthStack />}
+      {loading ? (
+        <CustomLoader />
+      ) : !isLogin ? (
+        <AuthStack />
+      ) : user.isVerified ? (
+        <BottomTabNavigator />
+      ) : (
+        <TakingUserInformationStep />
+      )}
     </NavigationContainer>
   );
 };

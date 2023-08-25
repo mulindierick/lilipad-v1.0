@@ -16,14 +16,42 @@ import useImagePicker from '../../utils/hooks/useImagePicker';
 import ReasonForWhyWeAsk from './ReasonForWhyWeAsk';
 import CustomSearchDropDown from '../../components/common/CustomSearchDropDown';
 import firestore from '@react-native-firebase/firestore';
+import UseFirebaseAuth from '../../utils/hooks/UseFirebaseAuth';
+import {showToast} from '../../utils/constants/helper';
 
 const FurtherInfo = () => {
   const [modal, setModal] = useState(false);
   const [imageModal, setImageModal] = useState(false);
   const [majorsData, setMajorsData] = useState([]);
   const [classYearData, setClassYearData] = useState([]);
-  const [selectedMajor, setSelectedMajor] = useState('');
-  const [selectedClassYear, setSelectedClassYear] = useState('');
+  const [selectedMajor, setSelectedMajor] = useState(null);
+  const [selectedClassYear, setSelectedClassYear] = useState(null);
+  const [loader, setLoader] = useState(false);
+
+  const {createAccount} = UseFirebaseAuth();
+
+  console.log('heree ', selectedMajor, ' ', selectedClassYear);
+
+  const createAccountOfUser = async data => {
+    setLoader(true);
+    try {
+      let res = await createAccount({
+        ...data,
+        major: selectedMajor,
+        classYear: selectedClassYear,
+        image: localImageUriArray[0]?.image,
+      });
+      console.log({res});
+      if (res == 'Success') {
+        showToast('success', 'Account Created Successfully');
+      } else {
+        showToast('error', 'Some error occured! try again later.');
+      }
+    } catch (err) {
+      console.log({err});
+    }
+    setLoader(false);
+  };
 
   const {accessCamera, accessGallery, localImageUriArray} = useImagePicker();
   const {
@@ -48,6 +76,8 @@ const FurtherInfo = () => {
 
   useEffect(() => {
     getData();
+    console.log('RUNNED THE COMMAND');
+    console.log({b: majorsData, a: classYearData});
   }, []);
 
   const cameraHandler = () => {
@@ -81,12 +111,13 @@ const FurtherInfo = () => {
           </TextNormal>
           <View style={styles.imageContainer}>
             <CustomImage
-              source={{
-                uri:
-                  localImageUriArray.length > 0
-                    ? localImageUriArray[0]?.image
-                    : 'https://thecrimsonwhite.com/wp-content/uploads/2023/04/john-wick-4-cast-1647530231314-900x506.jpg',
-              }}
+              source={
+                localImageUriArray.length > 0
+                  ? {
+                      uri: localImageUriArray[0]?.image,
+                    }
+                  : images.dummyProfilePic
+              }
               containerStyle={styles.innerImageContainer}
               resizeMode="cover"
             />
@@ -148,6 +179,7 @@ const FurtherInfo = () => {
             <CustomSearchDropDown
               data={classYearData}
               setSelected={setSelectedClassYear}
+              selected={selectedClassYear}
             />
           </View>
           <View style={styles.inputContainer}>
@@ -157,16 +189,23 @@ const FurtherInfo = () => {
             <CustomSearchDropDown
               data={majorsData}
               setSelected={setSelectedMajor}
+              selected={selectedMajor}
             />
           </View>
         </ScrollView>
         <CustomButton
           title="Create Account"
-          onPress={() => console.log('HELLO')}
+          onPress={handleSubmit(createAccountOfUser)}
           containerStyle={styles.button}
           textStyle={styles.buttonText}
           boldTitle={true}
-          disabled={!isValid || !localImageUriArray.length > 0}
+          disabled={
+            !isValid ||
+            !localImageUriArray.length > 0 ||
+            !selectedMajor ||
+            !selectedClassYear
+          }
+          loader={loader}
         />
       </ScrollView>
       <ReasonForWhyWeAsk
@@ -204,7 +243,7 @@ const styles = StyleSheet.create({
       width: 0,
       height: 0,
     },
-    shadowOpacity: 0.9,
+    shadowOpacity: 0.6,
     shadowRadius: 3,
     elevation: 12,
   },
