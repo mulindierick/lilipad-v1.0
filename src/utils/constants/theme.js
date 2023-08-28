@@ -7,6 +7,8 @@ export const COLORS = {
   textColor: '#151313',
   textColorGrey: '#969696',
   error: '#FE0303',
+  green: '#4CCF0F',
+  red: '#FE0303',
 };
 
 export const images = {
@@ -15,6 +17,15 @@ export const images = {
   bigAppIcon: require('../../assets/BigAppIcon.png'),
   cameraIcon: require('../../assets/cameraIcon.png'),
   dummyProfilePic: require('../../assets/dummyProfilePic.png'),
+  profileSelected: require('../../assets/porfileSelected.png'),
+  profileUnselected: require('../../assets/profileUnselected.png'),
+  communitySelected: require('../../assets/communitySelected.png'),
+  communityUnselected: require('../../assets/communityUnselected.png'),
+  search: require('../../assets/Search.png'),
+  filter: require('../../assets/Filter.png'),
+  postOptions: require('../../assets/postOptions.png'),
+  commentsIcon: require('../../assets/Comment.png'),
+  likeIcon: require('../../assets/Heart.png'),
 };
 
 export const FONTS = {

@@ -1,18 +1,18 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {COLORS} from '../../utils/constants/theme';
-import CustomIcon from '../common/CustomIcon';
 import CustomHeader from '../common/CustomHeader';
 
 const CustomWrapper = ({
   children,
   requiresHeader = false,
   forInfoFurtherScreen = false,
+  containerStyle,
 }) => {
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, containerStyle]}>
       {requiresHeader && (
         <CustomHeader forInfoFurtherScreen={forInfoFurtherScreen} />
       )}

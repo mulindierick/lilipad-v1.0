@@ -24,7 +24,6 @@ const RootStack = ({navigation}) => {
   const dispatch = useDispatch();
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(async user => {
-      auth().signOut();
       setLoading(true);
       try {
         if (user) {
@@ -34,6 +33,7 @@ const RootStack = ({navigation}) => {
             .doc(user?.uid)
             .onSnapshot(userDetailData => {
               const userData = userDetailData?.data();
+              console.log({userData});
               dispatch(
                 setUser({
                   email: userData?.email,
@@ -43,6 +43,7 @@ const RootStack = ({navigation}) => {
                   isVerified: userData?.isVerified,
                   firebaseUserId: userData?.firebaseUserId,
                   major: userData?.major,
+                  spaces: userData?.spaces,
                 }),
               );
             });

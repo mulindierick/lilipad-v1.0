@@ -5,6 +5,7 @@ import {PersistGate} from 'redux-persist/integration/react';
 import RootStack from './src/navigation/RootStack';
 import {persistor, store} from './src/redux/store';
 import {LogBox} from 'react-native';
+import {MenuProvider} from 'react-native-popup-menu';
 
 const App = () => {
   LogBox.ignoreAllLogs(true);
@@ -17,7 +18,9 @@ const App = () => {
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor}>
-        <RootStack />
+        <MenuProvider>
+          <RootStack />
+        </MenuProvider>
         <Toast position="bottom" autoHide={true} />
       </PersistGate>
     </Provider>
