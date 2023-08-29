@@ -9,6 +9,7 @@ export const COLORS = {
   error: '#FE0303',
   green: '#4CCF0F',
   red: '#FE0303',
+  placeholder: '#BABABA',
 };
 
 export const images = {
