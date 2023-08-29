@@ -100,14 +100,6 @@ const CommunityHeader = ({selected, setSelected}) => {
           </Menu>
         </View>
       </View>
-      <View style={styles.secondContainer}>
-        <TextNormal bold textStyle={styles.normalText}>
-          My Spaces
-        </TextNormal>
-        <TextNormal bold color={COLORS.blue} textStyle={styles.normalText}>
-          Browse All
-        </TextNormal>
-      </View>
     </>
   );
 };
@@ -151,6 +143,7 @@ const styles = StyleSheet.create({
     fontSize: hp(1.8),
     fontWeight: 'bold',
     paddingHorizontal: wp(3),
+    marginVertical: hp(0.4),
     width: wp(47),
   },
 });

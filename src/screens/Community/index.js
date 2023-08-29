@@ -14,6 +14,7 @@ import {COLORS, FONTS, images} from '../../utils/constants/theme';
 import CustomImage from '../../components/common/CustomImage';
 import CustomIcon from '../../components/common/CustomIcon';
 import PostItem from './PostItem';
+import {TouchableOpacity} from 'react-native';
 
 const Community = () => {
   const {user} = useUser();
@@ -25,19 +26,26 @@ const Community = () => {
         selected={selectedFilter}
         setSelected={setSelectedFilter}
       />
-      <View>
-        <SpacesContainer
-          data={user?.spaces}
-          selected={selectedSpaces}
-          setSelected={setSleectedSpaces}
-        />
-      </View>
       <FlatList
         data={[1, 2]}
         renderItem={({item}) => <PostItem />}
         ListFooterComponent={() => <View style={{marginBottom: hp(10)}}></View>}
         showsVerticalScrollIndicator={false}
+        ListHeaderComponent={() => (
+          <>
+            <View>
+              <SpacesContainer
+                data={user?.spaces}
+                selected={selectedSpaces}
+                setSelected={setSleectedSpaces}
+              />
+            </View>
+          </>
+        )}
       />
+      <View style={styles.addButton}>
+        <CustomImage source={images.addButton} resizeMode="cover" />
+      </View>
     </CustomWrapper>
   );
 };
@@ -49,5 +57,12 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  addButton: {
+    position: 'absolute',
+    height: wp(15),
+    width: wp(15),
+    bottom: hp(16),
+    right: wp(5),
   },
 });

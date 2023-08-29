@@ -30,59 +30,52 @@ const SpacesContainer = ({data = [], selected, setSelected}) => {
     }
   };
   return (
-    <ScrollView
-      horizontal={true}
-      showsHorizontalScrollIndicator={false}
-      contentContainerStyle={{
-        flexGrow: 1,
-        paddingHorizontal: wp(0.5),
-      }}>
-      {data.map((item, index) => {
-        return (
-          <Menu key={index} style={{activeOpacity: 1}}>
-            <MenuTrigger
-              customStyles={{
-                triggerTouchable: {
-                  underlayColor: 'rgba(0, 0, 0, 0)',
-                },
-              }}
-              triggerOnLongPress={true}
-              onAlternativeAction={() => setSelected(item)}
-              style={selected == item ? styles.selected : styles.container}>
-              <TextNormal
-                textStyle={styles.textStyle}
-                numberOfLines={2}
-                color={selected == item ? COLORS.white : COLORS.black}>
-                {item}
-              </TextNormal>
-              <View style={styles.totalPostNumbers}>
-                <TextSmall
-                  bold
-                  color={COLORS.white}
-                  textStyle={{fontSize: hp(1.4)}}>
-                  0
-                </TextSmall>
-              </View>
-            </MenuTrigger>
-            <MenuOptions optionsContainerStyle={styles.filterPopMenu}>
-              <MenuOption
-                onSelect={() => console.log('HELLo')}
+    <>
+      <View style={styles.secondContainer}>
+        <TextNormal bold textStyle={styles.normalText}>
+          My Spaces
+        </TextNormal>
+        <TextNormal bold color={COLORS.blue} textStyle={styles.normalText}>
+          Browse All
+        </TextNormal>
+      </View>
+      <ScrollView
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{
+          flexGrow: 1,
+          paddingHorizontal: wp(0.5),
+        }}>
+        {data.map((item, index) => {
+          return (
+            <Menu key={index} style={{activeOpacity: 1}}>
+              <MenuTrigger
                 customStyles={{
-                  optionTouchable: {
+                  triggerTouchable: {
                     underlayColor: 'rgba(0, 0, 0, 0)',
                   },
                 }}
-                children={
-                  <PopUpMenuItem
-                    icon={images.viewMemberIcon}
-                    text={'View Members'}
-                    color={COLORS.blue}
-                  />
-                }
-              />
-              {item != user?.major && item != 'Skidmore College' && (
+                triggerOnLongPress={true}
+                onAlternativeAction={() => setSelected(item)}
+                style={selected == item ? styles.selected : styles.container}>
+                <TextNormal
+                  textStyle={styles.textStyle}
+                  numberOfLines={2}
+                  color={selected == item ? COLORS.white : COLORS.black}>
+                  {item}
+                </TextNormal>
+                <View style={styles.totalPostNumbers}>
+                  <TextSmall
+                    bold
+                    color={COLORS.white}
+                    textStyle={{fontSize: hp(1.4)}}>
+                    0
+                  </TextSmall>
+                </View>
+              </MenuTrigger>
+              <MenuOptions optionsContainerStyle={styles.filterPopMenu}>
                 <MenuOption
-                  onSelect={() => removeAndUpdateSpaces(item)}
+                  onSelect={() => console.log('HELLo')}
                   customStyles={{
                     optionTouchable: {
                       underlayColor: 'rgba(0, 0, 0, 0)',
@@ -90,18 +83,35 @@ const SpacesContainer = ({data = [], selected, setSelected}) => {
                   }}
                   children={
                     <PopUpMenuItem
-                      icon={images.leaveGroupIcon}
-                      text={'Leave Space'}
-                      color={COLORS.red}
+                      icon={images.viewMemberIcon}
+                      text={'View Members'}
+                      color={COLORS.blue}
                     />
                   }
                 />
-              )}
-            </MenuOptions>
-          </Menu>
-        );
-      })}
-    </ScrollView>
+                {item != user?.major && item != 'Skidmore College' && (
+                  <MenuOption
+                    onSelect={() => removeAndUpdateSpaces(item)}
+                    customStyles={{
+                      optionTouchable: {
+                        underlayColor: 'rgba(0, 0, 0, 0)',
+                      },
+                    }}
+                    children={
+                      <PopUpMenuItem
+                        icon={images.leaveGroupIcon}
+                        text={'Leave Space'}
+                        color={COLORS.red}
+                      />
+                    }
+                  />
+                )}
+              </MenuOptions>
+            </Menu>
+          );
+        })}
+      </ScrollView>
+    </>
   );
 };
 
@@ -164,5 +174,14 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     paddingVertical: hp(1.5),
     borderRadius: 12,
+  },
+  secondContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: hp(2),
+  },
+  normalText: {
+    fontSize: hp(1.9),
+    fontWeight: '600',
   },
 });

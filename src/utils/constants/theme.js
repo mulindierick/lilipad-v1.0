@@ -31,6 +31,7 @@ export const images = {
   profileIcon: require('../../assets/profileIcon.png'),
   ReportIcon: require('../../assets/ReportIcon.png'),
   viewMemberIcon: require('../../assets/viewMemberIcon.png'),
+  addButton: require('../../assets/addButton.png'),
 };
 
 export const FONTS = {
