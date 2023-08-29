@@ -41,10 +41,33 @@ const UseFirebaseAuth = () => {
     }
   };
 
+  //Will optimize later. This is just for testing
   const createAccount = async body => {
     const {email, firstName, lastName, major, classYear, image} = body;
+    const array = [major, classYear, 'Skidmore College'];
     try {
       let url = await uploadImage(image);
+      array.map(async item => {
+        let res2 = await firestore().collection('spaces').doc(item).get();
+        if (res2?._data) {
+          res2 = await firestore()
+            .collection('spaces')
+            .doc(item)
+            .set(
+              {
+                members: firestore.FieldValue.arrayUnion(user?.firebaseUserId),
+              },
+              {merge: true},
+            );
+        } else {
+          res2 = await firestore()
+            .collection('spaces')
+            .doc(item)
+            .set({
+              members: [user?.firebaseUserId],
+            });
+        }
+      });
 
       let res = await firestore()
         .collection('accounts')
@@ -55,31 +78,11 @@ const UseFirebaseAuth = () => {
           major: major,
           classYear: classYear,
           photo: url,
-          spaces: [major],
+          spaces: ['Skidmore College', classYear, major],
           isVerified: true,
         });
 
-      let res2 = await firestore().collection('spaces').doc(major).get();
-      console.log({res2});
-      if (res2?._data) {
-        let res2 = await firestore()
-          .collection('spaces')
-          .doc(major)
-          .set(
-            {
-              members: firestore.FieldValue.arrayUnion(user?.firebaseUserId),
-            },
-            {merge: true},
-          );
-      } else {
-        let res2 = await firestore()
-          .collection('spaces')
-          .doc(major)
-          .set({
-            members: [user?.firebaseUserId],
-          });
-      }
-
+      console.log('Added Skidmore College');
       dispatch(
         setUser({
           email: user?.email,
@@ -87,8 +90,9 @@ const UseFirebaseAuth = () => {
           lastName: lastName,
           major: major,
           photo: url,
-          spaces: [major],
+          spaces: ['Skidmore College', classYear, major],
           isVerified: true,
+          firebaseUserId: user?.firebaseUserId,
         }),
       );
       return 'Success';

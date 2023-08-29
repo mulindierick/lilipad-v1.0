@@ -30,7 +30,12 @@ const CommunityHeader = ({selected, setSelected}) => {
             containerStyle={{marginRight: wp(7)}}
           />
           <Menu>
-            <MenuTrigger>
+            <MenuTrigger
+              customStyles={{
+                triggerTouchable: {
+                  underlayColor: 'rgba(0, 0, 0, 0)',
+                },
+              }}>
               <CustomImage
                 source={images.filter}
                 height={wp(9)}
@@ -42,6 +47,11 @@ const CommunityHeader = ({selected, setSelected}) => {
             <MenuOptions optionsContainerStyle={styles.filterPopMenu}>
               <MenuOption
                 onSelect={() => setSelected('Recent')}
+                customStyles={{
+                  optionTouchable: {
+                    underlayColor: 'rgba(0, 0, 0, 0)',
+                  },
+                }}
                 children={
                   <TextNormal
                     textStyle={[
@@ -54,6 +64,11 @@ const CommunityHeader = ({selected, setSelected}) => {
               />
               <MenuOption
                 onSelect={() => setSelected('Popular')}
+                customStyles={{
+                  optionTouchable: {
+                    underlayColor: 'rgba(0, 0, 0, 0)',
+                  },
+                }}
                 children={
                   <TextNormal
                     textStyle={[
@@ -66,6 +81,11 @@ const CommunityHeader = ({selected, setSelected}) => {
               />
               <MenuOption
                 onSelect={() => setSelected('My Posts')}
+                customStyles={{
+                  optionTouchable: {
+                    underlayColor: 'rgba(0, 0, 0, 0)',
+                  },
+                }}
                 children={
                   <TextNormal
                     textStyle={[

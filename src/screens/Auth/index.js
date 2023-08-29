@@ -54,8 +54,10 @@ const styles = StyleSheet.create({
   },
   text1: {
     fontFamily: FONTS.Light,
+    fontWeight: '300',
   },
   text2: {
     fontFamily: FONTS.MediumItalic,
+    fontWeight: '400',
   },
 });

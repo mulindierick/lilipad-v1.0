@@ -26,6 +26,10 @@ export const images = {
   postOptions: require('../../assets/postOptions.png'),
   commentsIcon: require('../../assets/Comment.png'),
   likeIcon: require('../../assets/Heart.png'),
+  leaveGroupIcon: require('../../assets/leaveGroupIcon.png'),
+  profileIcon: require('../../assets/profileIcon.png'),
+  ReportIcon: require('../../assets/ReportIcon.png'),
+  viewMemberIcon: require('../../assets/viewMemberIcon.png'),
 };
 
 export const FONTS = {

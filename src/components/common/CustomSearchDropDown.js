@@ -15,7 +15,7 @@ import {TextNormal} from './CustomText';
 import CustomTextInput from './CustomTextInput';
 
 const CustomSearchDropDown = ({data, setSelected, selected}) => {
-  const [text, setText] = useState('');
+  const [text, setText] = useState(null);
   const [focus, setFocus] = useState(false);
   const [filteredData, setFilteredData] = useState(data || []);
 
@@ -38,13 +38,18 @@ const CustomSearchDropDown = ({data, setSelected, selected}) => {
     Keyboard.dismiss();
   };
 
+  const turnFocusOn = () => {
+    setText('');
+    setFocus(true);
+  };
+
   return (
     <View>
       <CustomTextInput
         onChange={txt => setText(txt)}
         value={text}
         //because the data takes sometime to populate in filteredData
-        onFocus={() => setTimeout(() => setFocus(true), 100)}
+        onFocus={() => turnFocusOn()}
         onBlur={() => setFocus(false)}
         placeholder="Search"
       />
