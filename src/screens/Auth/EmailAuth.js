@@ -86,7 +86,7 @@ const EmailAuth = () => {
             rules={{
               required: {value: true},
               pattern: {
-                value: /^[^\d]+@skidmore\.com$/,
+                value: /^[^\d]+@skidmore\.edu$/,
               },
             }}
             name="email"
