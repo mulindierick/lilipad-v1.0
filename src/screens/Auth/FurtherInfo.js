@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
     fontSize: wp(4.2),
     color: '#8F8F8F',
     fontWeight: '300',
-    marginTop: hp(-11),
+    marginTop: hp(-4),
   },
   italicStyle: {
     fontFamily: FONTS.LightItalic,
