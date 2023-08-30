@@ -1,5 +1,6 @@
+import firestore from '@react-native-firebase/firestore';
 import React, {useEffect, useState} from 'react';
-import {set, useForm} from 'react-hook-form';
+import {useForm} from 'react-hook-form';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {
   heightPercentageToDP as hp,
@@ -9,15 +10,14 @@ import CustomButton from '../../components/common/CustomButton';
 import CustomImage from '../../components/common/CustomImage';
 import CustomImagePickerModal from '../../components/common/CustomImagePickerModal';
 import CustomRHFTextInput from '../../components/common/CustomReactHookFormTextInput';
+import CustomSearchDropDown from '../../components/common/CustomSearchDropDown';
 import {TextNormal} from '../../components/common/CustomText';
 import CustomWrapper from '../../components/wrapper/CustomWrapper';
+import {showToast} from '../../utils/constants/helper';
 import {COLORS, FONTS, images} from '../../utils/constants/theme';
+import UseFirebaseAuth from '../../utils/hooks/UseFirebaseAuth';
 import useImagePicker from '../../utils/hooks/useImagePicker';
 import ReasonForWhyWeAsk from './ReasonForWhyWeAsk';
-import CustomSearchDropDown from '../../components/common/CustomSearchDropDown';
-import firestore from '@react-native-firebase/firestore';
-import UseFirebaseAuth from '../../utils/hooks/UseFirebaseAuth';
-import {showToast} from '../../utils/constants/helper';
 
 const FurtherInfo = () => {
   const [modal, setModal] = useState(false);
@@ -76,8 +76,6 @@ const FurtherInfo = () => {
 
   useEffect(() => {
     getData();
-    console.log('RUNNED THE COMMAND');
-    console.log({b: majorsData, a: classYearData});
   }, []);
 
   const cameraHandler = () => {
@@ -100,8 +98,13 @@ const FurtherInfo = () => {
         nestedScrollEnabled={true}
         scrollEnabled={true}
         showsVerticalScrollIndicator={false}
-        automaticallyAdjustKeyboardInsets={true}
-        keyboardShouldPersistTaps="handled">
+        keyboardShouldPersistTaps="handled"
+        contentInsetAdjustmentBehavior="automatic"
+        automaticallyAdjustKeyboardInsets
+        contentInset={{
+          top: hp(5),
+        }}
+        automaticallyAdjustContentInsets={true}>
         <View style={styles.topContainer}>
           <TextNormal
             color={COLORS.grey}
@@ -229,7 +232,7 @@ export default FurtherInfo;
 const styles = StyleSheet.create({
   topContainer: {
     alignItems: 'center',
-    marginTop: hp(1),
+    // marginTop: hp(1),
   },
   imageContainer: {
     marginTop: hp(2),
@@ -264,11 +267,14 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.Light,
     fontSize: wp(4.2),
     color: '#8F8F8F',
+    fontWeight: '300',
+    marginTop: hp(-11),
   },
   italicStyle: {
     fontFamily: FONTS.LightItalic,
     fontSize: wp(3.3),
     marginTop: hp(0.5),
+    color: '#575757',
   },
   buttonText: {
     fontSize: hp(2.7),

@@ -29,7 +29,7 @@ const Community = () => {
       <FlatList
         data={[1, 2]}
         renderItem={({item}) => <PostItem />}
-        ListFooterComponent={() => <View style={{marginBottom: hp(10)}}></View>}
+        ListFooterComponent={() => <View style={{marginBottom: hp(15)}}></View>}
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={() => (
           <>
