@@ -11,7 +11,6 @@ import {COLORS} from '../../utils/constants/theme';
 const CustomOTPInput = props => {
   const {onChange, showError, inputStyles, style, inputRef, onCodeFilled} =
     props;
-  console.log({showError});
   return (
     <View style={styles.container}>
       <OtpInputs

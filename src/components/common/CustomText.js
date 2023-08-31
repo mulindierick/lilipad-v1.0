@@ -21,7 +21,7 @@ export const TextNormal = ({
     <Text
       style={[
         styles.text,
-        italic && {fontFamily: 'IBM Plex Sans Medium Italic'},
+        italic && {fontFamily: 'IBMPlexSans-MediumItalic'},
         styles.normal,
         bold && {fontWeight: 'bold'},
         color && {color: color},
@@ -174,7 +174,7 @@ export const TextHuge = ({
 
 const styles = StyleSheet.create({
   text: {
-    fontFamily: 'IBM Plex Sans Regular',
+    fontFamily: 'IBMPlexSans-Regular',
   },
   normal: {
     fontSize: wp(4),

@@ -27,7 +27,7 @@
 		8DE83535D58040DCB5588CDF /* NotoSansJP-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B17B21C18393454D94E6ED68 /* NotoSansJP-VariableFont_wght.ttf */; };
 		9A3FCE59651B4CCAA80BF0E9 /* IBMPlexSans-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F8B0C0B15C8C4FE4815C98F4 /* IBMPlexSans-BoldItalic.ttf */; };
 		C00CC48B05AE4627BA4241BE /* IBMPlexSans-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2123DE4B5AE74C77A33D5709 /* IBMPlexSans-ThinItalic.ttf */; };
-		D5BB9EF22A8E89D900F0CABC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D5BB9EF12A8E89D800F0CABC /* GoogleService-Info.plist */; };
+		D5D293EE2AA07FBB00E2A60D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D5D293ED2AA07FBB00E2A60D /* GoogleService-Info.plist */; };
 		E1E40E47CC0A408982B70CA0 /* IBMPlexSans-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4B354004587642DC954F06B7 /* IBMPlexSans-ExtraLightItalic.ttf */; };
 		E7E3ECEE474849BEB30A781D /* IBMPlexSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E59047E7D08C4D41BE1FBFA3 /* IBMPlexSans-Regular.ttf */; };
 /* End PBXBuildFile section */
@@ -72,7 +72,7 @@
 		AA105750134445C59C6AABE2 /* IBMPlexSans-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "IBMPlexSans-Bold.ttf"; path = "../assets/fonts/IBMPlexSans-Bold.ttf"; sourceTree = "<group>"; };
 		B17B21C18393454D94E6ED68 /* NotoSansJP-VariableFont_wght.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "NotoSansJP-VariableFont_wght.ttf"; path = "../assets/fonts/NotoSansJP-VariableFont_wght.ttf"; sourceTree = "<group>"; };
 		D5950F932A93774800D86FE8 /* LilyPad.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = LilyPad.entitlements; path = LilyPad/LilyPad.entitlements; sourceTree = "<group>"; };
-		D5BB9EF12A8E89D800F0CABC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		D5D293ED2AA07FBB00E2A60D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E59047E7D08C4D41BE1FBFA3 /* IBMPlexSans-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "IBMPlexSans-Regular.ttf"; path = "../assets/fonts/IBMPlexSans-Regular.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		EED4018E6C0B426CB4C6268F /* IBMPlexSans-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "IBMPlexSans-LightItalic.ttf"; path = "../assets/fonts/IBMPlexSans-LightItalic.ttf"; sourceTree = "<group>"; };
@@ -172,7 +172,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				D5BB9EF12A8E89D800F0CABC /* GoogleService-Info.plist */,
+				D5D293ED2AA07FBB00E2A60D /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* LilyPad */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* LilyPadTests */,
@@ -310,7 +310,7 @@
 				6A193733B192433FB0410312 /* IBMPlexSans-Light.ttf in Resources */,
 				5DCF94C98B5944CDAF02F20F /* IBMPlexSans-LightItalic.ttf in Resources */,
 				15E62613D2BB412F9892F20B /* IBMPlexSans-Medium.ttf in Resources */,
-				D5BB9EF22A8E89D900F0CABC /* GoogleService-Info.plist in Resources */,
+				D5D293EE2AA07FBB00E2A60D /* GoogleService-Info.plist in Resources */,
 				3F690C72F48E41F4A60482D7 /* IBMPlexSans-MediumItalic.ttf in Resources */,
 				E7E3ECEE474849BEB30A781D /* IBMPlexSans-Regular.ttf in Resources */,
 				7DBD552C53374ED5B6D66BB2 /* IBMPlexSans-SemiBold.ttf in Resources */,

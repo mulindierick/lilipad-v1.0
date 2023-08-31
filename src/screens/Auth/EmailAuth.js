@@ -54,13 +54,9 @@ const EmailAuth = () => {
   const onSendCode = async data => {
     try {
       setLoader(true);
+      navigation.navigate('OTPverification', {email: data?.email});
       const res = await emailSenderFunction({email: data?.email});
       console.log({res});
-      if (res?.data?.message === 'OTP sent successfully') {
-        navigation.navigate('OTPverification', {email: data?.email});
-      } else {
-        alert('Enter Valid Email');
-      }
     } catch (err) {
       console.log({err});
     }
@@ -91,7 +87,7 @@ const EmailAuth = () => {
             }}
             name="email"
             key="email"
-            placeholder={'you@skidmore.edu'}
+            placeholder={'you@school.edu'}
           />
           {!isKeyboardVisible && (
             <View style={styles.middleNoteContainer}>

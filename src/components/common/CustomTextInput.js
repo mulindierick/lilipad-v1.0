@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
   textInput: {
     height: hp(7),
     flex: 1,
-    fontFamily: 'IBM Plex Sans Regular',
+    fontFamily: 'IBMPlexSans-Regular',
     borderBottomColor: COLORS.white,
     borderBottomWidth: 1,
     paddingHorizontal: wp(4),

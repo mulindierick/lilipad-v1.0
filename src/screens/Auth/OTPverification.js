@@ -1,20 +1,25 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {Keyboard, StyleSheet, View} from 'react-native';
-import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from 'react-native-responsive-screen';
 import CustomOTPInput from '../../components/common/CustomOTPInput';
 import {TextBigger, TextNormal} from '../../components/common/CustomText';
 import CustomWrapper from '../../components/wrapper/CustomWrapper';
 import {COLORS} from '../../utils/constants/theme';
 import {useNavigation} from '@react-navigation/native';
-import {useVerifyOTPMutation} from '../../redux/apis';
+import {useSendOTPemailMutation, useVerifyOTPMutation} from '../../redux/apis';
 import CustomLoader from '../../components/common/CustomLoader';
 import UseFirebaseAuth from '../../utils/hooks/UseFirebaseAuth';
 import {showToast} from '../../utils/constants/helper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const OTPverification = ({route}) => {
   const email = route?.params?.email;
   const navigation = useNavigation();
+  const [emailSenderFunction] = useSendOTPemailMutation();
   const [loader, setLoader] = useState(false);
   const {firebaseAuth} = UseFirebaseAuth();
   const [OTPerror, setError] = useState(false);
@@ -26,6 +31,51 @@ const OTPverification = ({route}) => {
       inputRef.current.focus();
     }, 300);
   }, []);
+
+  const onSendCode = async data => {
+    try {
+      setLoader(true);
+      const res = await emailSenderFunction({email: data?.email});
+    } catch (err) {
+      console.log({err});
+    }
+    setLoader(false);
+    setRemainingTime(initialTime);
+    setIsRunning(true);
+  };
+
+  //For Timer
+  const initialTime = 30 * 1000; // 30 seconds in milliseconds
+  const [remainingTime, setRemainingTime] = useState(initialTime);
+  const [isRunning, setIsRunning] = useState(true);
+
+  const stopTimer = async () => {
+    setIsRunning(false);
+    const savedStartTime = await AsyncStorage.getItem('startTime');
+    if (savedStartTime && isRunning) {
+      const elapsed = Date.now() - parseInt(savedStartTime, 10);
+      const newRemainingTime = Math.max(remainingTime - elapsed, 0);
+      setRemainingTime(newRemainingTime);
+      await AsyncStorage.removeItem('startTime');
+    }
+  };
+
+  useEffect(() => {
+    if (isRunning) {
+      const interval = setInterval(() => {
+        if (remainingTime > 0) {
+          setRemainingTime(prevTime => prevTime - 1000);
+        } else {
+          stopTimer();
+          clearInterval(interval);
+        }
+      }, 1000);
+
+      return () => {
+        clearInterval(interval);
+      };
+    }
+  }, [isRunning, remainingTime]);
 
   const onCodeFilled = async num => {
     setError(false);
@@ -55,10 +105,10 @@ const OTPverification = ({route}) => {
         <TextBigger textStyle={styles.textHeader}>
           Enter The Code We Sent
         </TextBigger>
-        <TextBigger textStyle={styles.textHeader}>
+        <TextBigger textStyle={styles.textHeader} numberOfLines={1}>
           To{' '}
           <TextBigger textStyle={[styles.textHeader, {color: COLORS.blue}]}>
-            you@skidmore.edu
+            {email}
           </TextBigger>
         </TextBigger>
       </View>
@@ -78,6 +128,20 @@ const OTPverification = ({route}) => {
           />
         )}
       />
+      <View style={styles.bottomTextContainer}>
+        <TextNormal
+          textStyle={styles.bottomText}
+          color={remainingTime > 0 ? '#969696' : COLORS.blue}
+          disabled={remainingTime > 0 ? true : false}
+          onPress={() => onSendCode({email: email})}>
+          Resend Code
+        </TextNormal>
+        <TextNormal
+          textStyle={styles.bottomText}
+          color={remainingTime > 0 ? COLORS.blue : '#969696'}>
+          {remainingTime / 1000} sec
+        </TextNormal>
+      </View>
       {loader && <CustomLoader />}
     </CustomWrapper>
   );
@@ -92,13 +156,21 @@ const styles = StyleSheet.create({
     marginBottom: hp(4),
     marginTop: hp(1),
   },
-  bottomText: {
-    alignSelf: 'center',
-    marginTop: hp(5),
+  bottomTextContainer: {
+    marginTop: hp(10),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignSelf: 'flex-end',
+    width: wp(51),
+    marginRight: wp(7),
   },
   textHeader: {
     fontSize: hp(3.3),
     fontWeight: '600',
     color: '#151313',
+  },
+  bottomText: {
+    fontWeight: '400',
+    fontSize: hp(2.05),
   },
 });

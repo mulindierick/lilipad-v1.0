@@ -35,11 +35,11 @@ export const images = {
 };
 
 export const FONTS = {
-  Regular: 'IBM Plex Sans Regular',
-  Medium: 'IBM Plex Sans Medium',
-  Light: 'IBM Plex Sans Light',
-  Bold: 'IBM Plex Sans Bold',
-  MediumItalic: 'IBM Plex Sans Medium Italic',
-  LightItalic: 'IBM Plex Sans Light Italic',
-  BoldItalic: 'IBM Plex Sans Bold Italic',
+  Regular: 'IBMPlexSans-Regular',
+  Medium: 'IBMPlexSans-Medium',
+  Light: 'IBMPlexSans-Light',
+  Bold: 'IBMPlexSans-Bold',
+  MediumItalic: 'IBMPlexSans-MediumItalic',
+  LightItalic: 'IBMPlexSans-LightItalic',
+  BoldItalic: 'IBMPlexSans-BoldItalic',
 };
