@@ -53,14 +53,12 @@ const EmailAuth = () => {
 
   const onSendCode = async data => {
     try {
-      setLoader(true);
       navigation.navigate('OTPverification', {email: data?.email});
       const res = await emailSenderFunction({email: data?.email});
       console.log({res});
     } catch (err) {
       console.log({err});
     }
-    setLoader(false);
   };
 
   return (
