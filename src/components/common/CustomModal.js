@@ -27,9 +27,10 @@ const CustomModal = ({
 export default CustomModal;
 
 const styles = StyleSheet.create({
-  container: {
+  modalContainer: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignItems: 'center',
+    marginBottom: 0,
   },
 });

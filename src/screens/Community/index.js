@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {TextBig, TextNormal} from '../../components/common/CustomText';
 import CustomWrapper from '../../components/wrapper/CustomWrapper';
@@ -15,11 +15,18 @@ import CustomImage from '../../components/common/CustomImage';
 import CustomIcon from '../../components/common/CustomIcon';
 import PostItem from './PostItem';
 import {TouchableOpacity} from 'react-native';
+import AddPostModal from './AddPostModal';
 
 const Community = () => {
   const {user} = useUser();
   const [selectedSpaces, setSleectedSpaces] = useState(user?.spaces[0]);
+  //The below state is used to store the data of the selected space
+  const [selectedSpaceData, setSelectedSpaceData] = useState(
+    user?.spaces.map(item => null),
+  );
   const [selectedFilter, setSelectedFilter] = useState('Recent');
+  const [addPostModal, setAddPostModal] = useState(false);
+
   return (
     <CustomWrapper containerStyle={{backgroundColor: '#F6F6F6'}}>
       <CommunityHeader
@@ -43,9 +50,17 @@ const Community = () => {
           </>
         )}
       />
-      <View style={styles.addButton}>
-        <CustomImage source={images.addButton} resizeMode="cover" />
-      </View>
+      <TouchableOpacity
+        style={styles.addButton}
+        onPress={() => setAddPostModal(true)}
+        activeOpacity={0.8}>
+        <CustomImage source={images.addButton} resizeMode="cover" disabled />
+      </TouchableOpacity>
+      <AddPostModal
+        isVisible={addPostModal}
+        onBackButtonPress={() => setAddPostModal(false)}
+        onBackDropPress={() => setAddPostModal(false)}
+      />
     </CustomWrapper>
   );
 };

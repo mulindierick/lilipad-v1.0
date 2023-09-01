@@ -10,7 +10,7 @@ const useImagePicker = () => {
 
   const [loading, setLoading] = useState(false);
 
-  const accessGallery = async () => {
+  const accessGallery = async (cropperCircleOverlay = true) => {
     let config = {
       forceJpg: true,
       // includeBase64: true,
@@ -18,7 +18,7 @@ const useImagePicker = () => {
       multiple: false,
       maxFiles: 1,
       mediaType: 'photo',
-      cropperCircleOverlay: true,
+      cropperCircleOverlay: cropperCircleOverlay,
     };
 
     try {
@@ -55,7 +55,7 @@ const useImagePicker = () => {
     }
   };
 
-  const accessCamera = async (multiple = true) => {
+  const accessCamera = async (cropperCircleOverlay = true) => {
     let config = {
       forceJpg: true,
       // includeBase64: true,
@@ -63,7 +63,7 @@ const useImagePicker = () => {
       multiple: true,
       maxFiles: 1,
       mediaType: 'photo',
-      cropperCircleOverlay: true,
+      cropperCircleOverlay: cropperCircleOverlay,
     };
 
     try {

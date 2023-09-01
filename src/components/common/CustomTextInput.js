@@ -25,6 +25,7 @@ const CustomTextInput = ({
   error,
   textInputStyle,
   showError = true,
+  multiline = false,
 }) => {
   const [visible, setVisible] = useState(secureTextEntry ? true : false);
 
@@ -58,6 +59,7 @@ const CustomTextInput = ({
             autoCorrect={false}
             onFocus={onFocus}
             onBlur={onBlur}
+            multiline={multiline}
           />
 
           {secureTextEntry && (
