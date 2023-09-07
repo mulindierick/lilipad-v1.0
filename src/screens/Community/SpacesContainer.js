@@ -15,7 +15,14 @@ import {COLORS, images} from '../../utils/constants/theme';
 import useUser from '../../utils/hooks/useUser';
 import PopUpMenuItem from './PopUpMenuItem';
 import SpacesRelatedActivity from '../../utils/hooks/SpacesRelatedActivity';
-const SpacesContainer = ({data = [], selected, setSelected}) => {
+import {useNavigation} from '@react-navigation/native';
+const SpacesContainer = ({
+  data = [],
+  selected,
+  setSelected,
+  setSpacesIndex,
+}) => {
+  const navigation = useNavigation();
   const {user} = useUser();
   const [toggleMenu, setToggleMenu] = useState(false);
   const {removeSpace} = SpacesRelatedActivity();
@@ -35,7 +42,11 @@ const SpacesContainer = ({data = [], selected, setSelected}) => {
         <TextNormal bold textStyle={styles.normalText}>
           My Spaces
         </TextNormal>
-        <TextNormal bold color={COLORS.blue} textStyle={styles.normalText}>
+        <TextNormal
+          bold
+          color={COLORS.blue}
+          textStyle={styles.normalText}
+          onPress={() => navigation.navigate('ExploreSpaces')}>
           Browse All
         </TextNormal>
       </View>
@@ -56,7 +67,9 @@ const SpacesContainer = ({data = [], selected, setSelected}) => {
                   },
                 }}
                 triggerOnLongPress={true}
-                onAlternativeAction={() => setSelected(item)}
+                onAlternativeAction={() => {
+                  setSelected(item), setSpacesIndex(index);
+                }}
                 style={selected == item ? styles.selected : styles.container}>
                 <TextNormal
                   textStyle={styles.textStyle}

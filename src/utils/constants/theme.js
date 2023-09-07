@@ -34,6 +34,9 @@ export const images = {
   addButton: require('../../assets/addButton.png'),
   camera: require('../../assets/Camera.png'),
   image: require('../../assets/Image.png'),
+  exploreSpaceIcon: require('../../assets/ExploreSpaceIcon.png'),
+  joinGroupIcon: require('../../assets/joinGroupIcon.png'),
+  alreadyInGroupIcon: require('../../assets/alreadyInGroupIcon.png'),
 };
 
 export const FONTS = {

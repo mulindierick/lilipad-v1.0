@@ -1,14 +1,15 @@
-import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import CustomImage from '../../components/common/CustomImage';
-import {TextNormal} from '../../components/common/CustomText';
+import {StyleSheet, View} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
+import CustomImage from '../../components/common/CustomImage';
+import {TextNormal} from '../../components/common/CustomText';
 import {images} from '../../utils/constants/theme';
+import {getAgoTime} from '../../utils/constants/helper';
 
-const PostHeader = ({photo, name}) => {
+const PostHeader = ({photo, name, time}) => {
   return (
     <View style={styles.postHeader}>
       <CustomImage
@@ -27,7 +28,9 @@ const PostHeader = ({photo, name}) => {
         }}>
         <View>
           <TextNormal textStyle={styles.textNormal}>{name}</TextNormal>
-          <TextNormal textStyle={styles.textTimeAgo}>9 minutes ago</TextNormal>
+          <TextNormal textStyle={styles.textTimeAgo}>
+            {getAgoTime(time._seconds)}
+          </TextNormal>
         </View>
         <CustomImage
           source={images.postOptions}

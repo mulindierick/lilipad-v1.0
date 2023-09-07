@@ -12,27 +12,27 @@ import useUser from '../../utils/hooks/useUser';
 import PostHeader from './PostHeader';
 import PostFooter from './PostFooter';
 
-const PostItem = () => {
-  const {user} = useUser();
-
+const PostItem = ({data}) => {
+  const user = data?.user?._data;
   return (
     <View style={styles.postContainer}>
       <PostHeader
         photo={user?.photo}
         name={user?.firstName + ' ' + user?.lastName}
+        time={data?.createdAt}
       />
       <View style={styles.postText}>
-        <TextNormal textStyle={styles.postTextStyle}>
-          Has anyone taken MB107? Please give me some advice.
-        </TextNormal>
+        <TextNormal textStyle={styles.postTextStyle}>{data?.text}</TextNormal>
       </View>
-      <CustomImage
-        source={{uri: user?.photo}}
-        height={hp(25)}
-        width={'100%'}
-        resizeMode="cover"
-        containerStyle={{borderRadius: 10, marginTop: hp(1.5)}}
-      />
+      {data?.postPhoto && (
+        <CustomImage
+          source={{uri: data?.postPhoto}}
+          height={hp(25)}
+          width={'100%'}
+          resizeMode="cover"
+          containerStyle={{borderRadius: 10, marginTop: hp(1.5)}}
+        />
+      )}
       <PostFooter />
     </View>
   );

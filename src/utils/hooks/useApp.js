@@ -9,7 +9,6 @@ export const useApp = navigation => {
   // 	requestUserPermission();
   // }, []);
 
-  console.log('-----> notification onOpened');
   // Must be outside of any component LifeCycle (such as `componentDidMount`).
   PushNotification.configure({
     // onRegister: function (token: string) {},

@@ -11,6 +11,7 @@ import {setUser} from '../redux/reducers/userSlice';
 import CustomLoader from '../components/common/CustomLoader';
 import useUser from '../utils/hooks/useUser';
 import BottomTabNavigator from './BottomTabNavigator';
+import ScreenStack from './ScreenStack';
 
 const RootStack = ({navigation}) => {
   const [loading, setLoading] = useState(true);
@@ -65,7 +66,9 @@ const RootStack = ({navigation}) => {
       ) : !isLogin ? (
         <AuthStack />
       ) : user.isVerified ? (
-        <BottomTabNavigator />
+        <>
+          <ScreenStack />
+        </>
       ) : (
         <TakingUserInformationStep />
       )}

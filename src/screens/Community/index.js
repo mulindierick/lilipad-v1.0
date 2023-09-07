@@ -16,14 +16,45 @@ import CustomIcon from '../../components/common/CustomIcon';
 import PostItem from './PostItem';
 import {TouchableOpacity} from 'react-native';
 import AddPostModal from './AddPostModal';
+import usePost from '../../utils/hooks/usePost';
+import {set} from 'react-hook-form';
+import {ActivityIndicator} from 'react-native';
 
 const Community = () => {
   const {user} = useUser();
-  const [selectedSpaces, setSleectedSpaces] = useState(user?.spaces[0]);
+  const [spacesIndex, setSpacesIndex] = useState(0);
+  const [selectedSpaces, setSlectedSpaces] = useState(user?.spaces[0]);
+  const {fetchPostsOfAllSpaces, fetchPostsOfSpecificSpace} = usePost();
+  const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(true);
   //The below state is used to store the data of the selected space
-  const [selectedSpaceData, setSelectedSpaceData] = useState(
-    user?.spaces.map(item => null),
-  );
+  const [selectedSpaceData, setSelectedSpaceData] = useState(() => {
+    let obj = {};
+    user?.spaces.forEach(space => {
+      console.log({space});
+      obj[space] = [];
+    });
+    return obj;
+  });
+
+  const fetchPosts = async () => {
+    setLoading(true);
+    const data = await fetchPostsOfAllSpaces(user?.spaces);
+    setSelectedSpaceData(data);
+    setLoading(false);
+  };
+
+  const fetchParticularSpacePosts = async spaceName => {
+    setRefreshing(true);
+    const data = await fetchPostsOfSpecificSpace(selectedSpaces);
+    setSelectedSpaceData({...selectedSpaceData, [selectedSpaces]: data});
+    setRefreshing(false);
+  };
+
+  useEffect(() => {
+    const res = fetchPosts();
+  }, []);
+
   const [selectedFilter, setSelectedFilter] = useState('Recent');
   const [addPostModal, setAddPostModal] = useState(false);
 
@@ -32,10 +63,14 @@ const Community = () => {
       <CommunityHeader
         selected={selectedFilter}
         setSelected={setSelectedFilter}
+        setSpacesIndex={setSpacesIndex}
       />
       <FlatList
-        data={[1, 2]}
-        renderItem={({item}) => <PostItem />}
+        data={selectedSpaceData[selectedSpaces]}
+        // data={[]}
+        refreshing={refreshing}
+        onRefresh={() => fetchParticularSpacePosts()}
+        renderItem={({item}) => <PostItem data={item} />}
         ListFooterComponent={() => <View style={{marginBottom: hp(15)}}></View>}
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={() => (
@@ -44,10 +79,26 @@ const Community = () => {
               <SpacesContainer
                 data={user?.spaces}
                 selected={selectedSpaces}
-                setSelected={setSleectedSpaces}
+                setSelected={setSlectedSpaces}
+                setSpacesIndex={setSpacesIndex}
               />
             </View>
           </>
+        )}
+        ListEmptyComponent={() => (
+          <View
+            style={{
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: hp(50),
+            }}>
+            {loading ? (
+              <ActivityIndicator color={COLORS.blue} size="large" />
+            ) : (
+              <TextBig color={COLORS.blue}>No Data Found</TextBig>
+            )}
+          </View>
         )}
       />
       <TouchableOpacity
@@ -60,6 +111,7 @@ const Community = () => {
         isVisible={addPostModal}
         onBackButtonPress={() => setAddPostModal(false)}
         onBackDropPress={() => setAddPostModal(false)}
+        spaceName={selectedSpaces}
       />
     </CustomWrapper>
   );

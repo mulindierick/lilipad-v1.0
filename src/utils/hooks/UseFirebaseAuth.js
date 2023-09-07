@@ -9,8 +9,8 @@ const UseFirebaseAuth = () => {
   const [verifyOTP] = useVerifyOTPMutation();
   const {uploadImage} = useUser();
   const dispatch = useDispatch();
-
   const {user} = useSelector(state => ({user: state.userSlice}));
+
   const firebaseAuth = async (email, otp) => {
     console.log(email, otp);
     try {
@@ -64,6 +64,7 @@ const UseFirebaseAuth = () => {
             .collection('spaces')
             .doc(item)
             .set({
+              spaceName: item,
               members: [user?.firebaseUserId],
             });
         }
