@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useState} from 'react';
 import {
   heightPercentageToDP as hp,
@@ -13,6 +13,7 @@ import PostHeader from './PostHeader';
 import PostFooter from './PostFooter';
 import usePost from '../../utils/hooks/usePost';
 import {set} from 'react-hook-form';
+import {useNavigation} from '@react-navigation/native';
 
 const PostItem = ({data}) => {
   const user = data?.user?._data;
@@ -21,6 +22,7 @@ const PostItem = ({data}) => {
   const [commentCount, setCommentCount] = useState(data?.commentsCount);
   const [loader, setLoader] = useState(false);
   const {handlePostLike} = usePost();
+  const navigation = useNavigation();
 
   const handleLike = async () => {
     setLoader(true);
@@ -35,7 +37,14 @@ const PostItem = ({data}) => {
   };
 
   return (
-    <View style={styles.postContainer}>
+    <TouchableOpacity
+      style={styles.postContainer}
+      onPress={() =>
+        navigation.navigate('PostDetails', {
+          postId: data?.postId,
+          spaceName: data?.spaceName,
+        })
+      }>
       <PostHeader
         photo={user?.photo}
         name={user?.firstName + ' ' + user?.lastName}
@@ -60,7 +69,7 @@ const PostItem = ({data}) => {
         onPressLike={() => handleLike()}
         loader={loader}
       />
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -98,7 +107,7 @@ const styles = StyleSheet.create({
   },
   postText: {
     marginTop: hp(1.5),
-    marginRight: wp(12),
+    marginRight: wp(5),
   },
   postTextStyle: {
     fontSize: hp(1.75),

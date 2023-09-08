@@ -153,12 +153,41 @@ const usePost = () => {
     }
   };
 
+  const fetchPostById = async (postId, spaceName) => {
+    try {
+      const data = await firestore()
+        .collection(`spaces/${spaceName}/posts`)
+        .doc(postId)
+        .get();
+      let userLiked = false;
+      if (data?._data.likesCount > 0) {
+        const likes = await firestore()
+          .collection(
+            `spaces/${data?._data.spaceName}/posts/${data?._data.postId}/likes`,
+          )
+          .doc(user?.firebaseUserId)
+          .get();
+        if (likes?._data?.userId === user?.firebaseUserId) {
+          userLiked = true;
+        }
+      }
+      return {
+        data: data?._data,
+        user: await data?._data?.createdByReference.get(),
+        userLiked: userLiked,
+      };
+    } catch (err) {
+      console.log({err});
+    }
+  };
+
   return {
     fetchPostsOfAllSpaces,
     sharePost,
     fetchPostsOfSpecificSpace,
     fetchAllSpaces,
     handlePostLike,
+    fetchPostById,
   };
 };
 

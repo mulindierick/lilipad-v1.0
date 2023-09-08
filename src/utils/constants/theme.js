@@ -37,6 +37,8 @@ export const images = {
   exploreSpaceIcon: require('../../assets/ExploreSpaceIcon.png'),
   joinGroupIcon: require('../../assets/joinGroupIcon.png'),
   alreadyInGroupIcon: require('../../assets/alreadyInGroupIcon.png'),
+  plus: require('../../assets/plus.png'),
+  send: require('../../assets/Send.png'),
 };
 
 export const FONTS = {
