@@ -14,6 +14,7 @@ import useImagePicker from '../../utils/hooks/useImagePicker';
 import usePost from '../../utils/hooks/usePost';
 import {showToast} from '../../utils/constants/helper';
 import {set} from 'react-hook-form';
+import {TouchableWithoutFeedback, Keyboard} from 'react-native';
 
 const AddPostModal = ({
   isVisible,
@@ -62,60 +63,64 @@ const AddPostModal = ({
       isVisible={isVisible}
       onBackButtonPress={onBackButtonPress}
       onBackdropPress={onBackDropPress}>
-      <View style={styles.container}>
-        <AddPostHeader
-          onIconPress={onBackButtonPress}
-          onPressShare={() => addPostOnFirebase(spaceName)}
-        />
-        <AddPostTextInput setText={setText} text={text} />
-        {localImageUriArray.length > 0 ? (
-          <View>
-            <TouchableOpacity
-              style={styles.removeIconContainer}
-              activeOpacity={1}
-              onPress={() => setLocalImageUriArray([])}>
-              <CustomIcon
-                type="ionicons"
-                icon="close"
-                size={wp(6)}
-                color={'#B0B0B0'}
-                disabled
-              />
-            </TouchableOpacity>
-            <View style={styles.ShadowImageContainer}>
-              <CustomImage
-                source={{
-                  uri: localImageUriArray[0]?.image,
-                }}
-                height={hp(25)}
-                width={wp(86)}
-                resizeMode="cover"
-                containerStyle={styles.imageContainer}
-                removeIcon
-                onPressRemoveIcon={() => setLocalImageUriArray([])}
-              />
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.container}>
+          <AddPostHeader
+            onIconPress={onBackButtonPress}
+            onPressShare={() => addPostOnFirebase(spaceName)}
+            disabled={!localImageUriArray.length > 0 && !text}
+            loader={loader}
+          />
+          <AddPostTextInput setText={setText} text={text} />
+          {localImageUriArray.length > 0 ? (
+            <View>
+              <TouchableOpacity
+                style={styles.removeIconContainer}
+                activeOpacity={1}
+                onPress={() => setLocalImageUriArray([])}>
+                <CustomIcon
+                  type="ionicons"
+                  icon="close"
+                  size={wp(6)}
+                  color={'#B0B0B0'}
+                  disabled
+                />
+              </TouchableOpacity>
+              <View style={styles.ShadowImageContainer}>
+                <CustomImage
+                  source={{
+                    uri: localImageUriArray[0]?.image,
+                  }}
+                  height={hp(25)}
+                  width={wp(86)}
+                  resizeMode="cover"
+                  containerStyle={styles.imageContainer}
+                  removeIcon
+                  onPressRemoveIcon={() => setLocalImageUriArray([])}
+                />
+              </View>
             </View>
-          </View>
-        ) : null}
-        <View style={styles.footer}>
-          <CustomImage
-            source={images.image}
-            resizeMode="cover"
-            height={hp(4)}
-            width={wp(8.9)}
-            containerStyle={{marginRight: wp(7)}}
-            onPressImage={() => galleryHandler()}
-          />
+          ) : null}
+          <View style={styles.footer}>
+            <CustomImage
+              source={images.image}
+              resizeMode="cover"
+              height={hp(4)}
+              width={wp(8.9)}
+              containerStyle={{marginRight: wp(7)}}
+              onPressImage={() => galleryHandler()}
+            />
 
-          <CustomImage
-            source={images.camera}
-            resizeMode="cover"
-            height={hp(4)}
-            width={wp(8.9)}
-            onPressImage={() => cameraHandler()}
-          />
+            <CustomImage
+              source={images.camera}
+              resizeMode="cover"
+              height={hp(4)}
+              width={wp(8.9)}
+              onPressImage={() => cameraHandler()}
+            />
+          </View>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     </CustomModal>
   );
 };

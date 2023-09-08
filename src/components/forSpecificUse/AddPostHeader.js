@@ -9,7 +9,7 @@ import CustomImage from '../common/CustomImage';
 import {TextNormal} from '../common/CustomText';
 import {COLORS, FONTS, images} from '../../utils/constants/theme';
 
-const AddPostHeader = ({onIconPress, onPressShare, loader}) => {
+const AddPostHeader = ({onIconPress, onPressShare, loader, disabled}) => {
   return (
     <View style={styles.container}>
       <CustomIcon
@@ -20,13 +20,19 @@ const AddPostHeader = ({onIconPress, onPressShare, loader}) => {
         onPress={onIconPress}
       />
       <CustomImage source={images.headerIcon} height={hp(10)} width={wp(10)} />
-      {loader ? (
-        <ActivityIndicator color={COLORS.blue} />
-      ) : (
-        <TextNormal textStyle={styles.textStyle} onPress={onPressShare}>
-          Share
-        </TextNormal>
-      )}
+      <View>
+        {loader ? (
+          <ActivityIndicator color={COLORS.blue} />
+        ) : (
+          <TextNormal
+            textStyle={styles.textStyle}
+            onPress={onPressShare}
+            disabled={disabled}
+            color={disabled ? COLORS.grey : COLORS.blue}>
+            Share
+          </TextNormal>
+        )}
+      </View>
     </View>
   );
 };
@@ -41,7 +47,6 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     fontWeight: '700',
-    color: COLORS.blue,
     fontSize: wp(6),
   },
 });

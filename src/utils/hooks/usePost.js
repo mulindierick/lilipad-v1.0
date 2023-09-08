@@ -29,9 +29,24 @@ const usePost = () => {
           data.map(async item => {
             if (item.status === 'fulfilled') {
               const post = item.value.docs.map(async doc => {
+                let userLiked = false;
+                if (doc.data().likesCount > 0) {
+                  const likes = await firestore()
+                    .collection(
+                      `spaces/${doc.data().spaceName}/posts/${
+                        doc.data().postId
+                      }/likes`,
+                    )
+                    .doc(user?.firebaseUserId)
+                    .get();
+                  if (likes?._data?.userId === user?.firebaseUserId) {
+                    userLiked = true;
+                  }
+                }
                 return {
                   ...doc.data(),
                   user: await doc.data().createdByReference.get(),
+                  userLiked: userLiked,
                 };
               });
               return await Promise.all(post);
@@ -80,8 +95,6 @@ const usePost = () => {
         .set({
           text: text,
           postPhoto: imageUrl,
-          likes: [],
-          comments: [],
           createdAt: firestore.FieldValue.serverTimestamp(),
           createdBy: user?.firebaseUserId,
           createdByReference: firestore().doc(
@@ -90,6 +103,7 @@ const usePost = () => {
           likesCount: 0,
           commentsCount: 0,
           postId: postId.id,
+          spaceName: spaceName,
         });
     } catch (error) {
       console.log(error);
@@ -105,11 +119,46 @@ const usePost = () => {
     }
   };
 
+  const handlePostLike = async (spaceName, postId, like) => {
+    try {
+      if (like) {
+        const likeIdTask = await firestore()
+          .collection(`spaces/${spaceName}/posts/${postId}/likes`)
+          .doc(user?.firebaseUserId)
+          .delete();
+        const countIncrementTask = await firestore()
+          .collection(`spaces/${spaceName}/posts`)
+          .doc(postId)
+          .update({
+            likesCount: firestore.FieldValue.increment(-1),
+          });
+      } else {
+        const likeIdTask = await firestore()
+          .collection(`spaces/${spaceName}/posts/${postId}/likes`)
+          .doc(user?.firebaseUserId)
+          .set({
+            userId: user?.firebaseUserId,
+            postId: postId,
+            likedAt: firestore.FieldValue.serverTimestamp(),
+          });
+        const countIncrementTask = await firestore()
+          .collection(`spaces/${spaceName}/posts`)
+          .doc(postId)
+          .update({
+            likesCount: firestore.FieldValue.increment(1),
+          });
+      }
+    } catch (err) {
+      console.log({err});
+    }
+  };
+
   return {
     fetchPostsOfAllSpaces,
     sharePost,
     fetchPostsOfSpecificSpace,
     fetchAllSpaces,
+    handlePostLike,
   };
 };
 

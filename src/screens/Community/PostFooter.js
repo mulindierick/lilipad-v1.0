@@ -8,7 +8,14 @@ import CustomIcon from '../../components/common/CustomIcon';
 import {TextNormal} from '../../components/common/CustomText';
 import {COLORS} from '../../utils/constants/theme';
 
-const PostFooter = () => {
+const PostFooter = ({
+  likeCount,
+  commentCount,
+  userLiked,
+  onPressLike,
+  onPressComment,
+  loader,
+}) => {
   return (
     <View style={styles.postFooter}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -17,6 +24,8 @@ const PostFooter = () => {
           icon="heart"
           size={hp(3)}
           color={COLORS.red}
+          onPress={onPressLike}
+          disabled={loader}
         />
         <TextNormal
           textStyle={{
@@ -25,7 +34,7 @@ const PostFooter = () => {
             fontWeight: '400',
             color: 'rgba(87, 87, 87, 0.83)',
           }}>
-          0 likes
+          {likeCount} likes
         </TextNormal>
       </View>
       <View
@@ -47,7 +56,7 @@ const PostFooter = () => {
             fontWeight: '400',
             color: 'rgba(87, 87, 87, 0.83)',
           }}>
-          0 replies
+          {commentCount} replies
         </TextNormal>
       </View>
     </View>

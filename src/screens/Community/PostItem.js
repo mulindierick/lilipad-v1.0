@@ -1,5 +1,5 @@
 import {StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -11,9 +11,29 @@ import {COLORS, images} from '../../utils/constants/theme';
 import useUser from '../../utils/hooks/useUser';
 import PostHeader from './PostHeader';
 import PostFooter from './PostFooter';
+import usePost from '../../utils/hooks/usePost';
+import {set} from 'react-hook-form';
 
 const PostItem = ({data}) => {
   const user = data?.user?._data;
+  const [like, setLike] = useState(data?.userLiked);
+  const [likeCount, setLikeCount] = useState(data?.likesCount);
+  const [commentCount, setCommentCount] = useState(data?.commentsCount);
+  const [loader, setLoader] = useState(false);
+  const {handlePostLike} = usePost();
+
+  const handleLike = async () => {
+    setLoader(true);
+    try {
+      const res = await handlePostLike(data?.spaceName, data?.postId, like);
+    } catch (err) {
+      console.log({err});
+    }
+    like ? setLikeCount(likeCount - 1) : setLikeCount(likeCount + 1);
+    setLike(!like);
+    setLoader(false);
+  };
+
   return (
     <View style={styles.postContainer}>
       <PostHeader
@@ -33,7 +53,13 @@ const PostItem = ({data}) => {
           containerStyle={{borderRadius: 10, marginTop: hp(1.5)}}
         />
       )}
-      <PostFooter />
+      <PostFooter
+        likeCount={likeCount}
+        commentCount={commentCount}
+        userLiked={data?.userLiked}
+        onPressLike={() => handleLike()}
+        loader={loader}
+      />
     </View>
   );
 };

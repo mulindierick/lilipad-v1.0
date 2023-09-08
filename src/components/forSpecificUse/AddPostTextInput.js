@@ -9,7 +9,7 @@ import CustomTextInput from '../common/CustomTextInput';
 
 const AddPostTextInput = ({text, setText}) => {
   return (
-    <View>
+    <View style={styles.parentContainer}>
       <CustomTextInput
         onChange={txt => setText(txt)}
         value={text}
@@ -25,8 +25,14 @@ const AddPostTextInput = ({text, setText}) => {
 export default AddPostTextInput;
 
 const styles = StyleSheet.create({
+  parentContainer: {
+    maxHeight: hp(35),
+    minHeight: hp(7),
+    overflow: 'hidden',
+  },
   container: {
     height: hp(35),
+    // minHeight: hp(7),
     width: '100%',
     backgroundColor: 'transparent',
     justifyContent: 'flex-start',
