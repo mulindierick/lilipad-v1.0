@@ -45,7 +45,7 @@ const OTPverification = ({route}) => {
   };
 
   //For Timer
-  const initialTime = 30 * 1000; // 30 seconds in milliseconds
+  const initialTime = 60 * 1000; // 30 seconds in milliseconds
   const [remainingTime, setRemainingTime] = useState(initialTime);
   const [isRunning, setIsRunning] = useState(true);
 
@@ -136,11 +136,13 @@ const OTPverification = ({route}) => {
           onPress={() => onSendCode({email: email})}>
           Resend Code
         </TextNormal>
-        <TextNormal
-          textStyle={styles.bottomText}
-          color={remainingTime > 0 ? COLORS.blue : '#969696'}>
-          {remainingTime / 1000} sec
-        </TextNormal>
+        {remainingTime > 0 && (
+          <TextNormal
+            textStyle={styles.bottomTextTimer}
+            color={remainingTime > 0 ? COLORS.blue : '#969696'}>
+            {remainingTime / 1000} Seconds
+          </TextNormal>
+        )}
       </View>
       {loader && <CustomLoader />}
     </CustomWrapper>
@@ -157,12 +159,8 @@ const styles = StyleSheet.create({
     marginTop: hp(1),
   },
   bottomTextContainer: {
-    marginTop: hp(10),
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignSelf: 'flex-end',
-    width: wp(51),
-    marginRight: wp(7),
+    marginTop: hp(7),
+    alignItems: 'center',
   },
   textHeader: {
     fontSize: hp(3.3),
@@ -172,5 +170,10 @@ const styles = StyleSheet.create({
   bottomText: {
     fontWeight: '400',
     fontSize: hp(2.05),
+  },
+  bottomTextTimer: {
+    fontWeight: '400',
+    fontSize: hp(2.05),
+    marginTop: hp(1.5),
   },
 });

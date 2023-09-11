@@ -56,6 +56,7 @@ const SpacesContainer = ({
         contentContainerStyle={{
           flexGrow: 1,
           paddingHorizontal: wp(0.5),
+          marginVertical: hp(0.5),
         }}>
         {data.map((item, index) => {
           return (
@@ -142,13 +143,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp(2),
     marginVertical: hp(1.5),
     // For Shadow
+    borderWidth: 0.1,
+    borderColor: '#CCCCCC',
     shadowColor: '#000000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 1,
     },
-    shadowOpacity: 0.3,
-    shadowRadius: 2,
+    shadowOpacity: 0.14,
+    shadowRadius: 1,
     elevation: 8,
   },
   selected: {
@@ -191,7 +194,7 @@ const styles = StyleSheet.create({
   secondContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: hp(2),
+    marginTop: hp(1),
   },
   normalText: {
     fontSize: hp(1.9),

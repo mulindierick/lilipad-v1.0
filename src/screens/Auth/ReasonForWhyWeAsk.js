@@ -14,13 +14,26 @@ const ReasonForWhyWeAsk = ({isVisible, onBackDropPress, onBackButtonPress}) => {
     <CustomModal
       isVisible={isVisible}
       onBackButtonPress={onBackDropPress}
-      onBackdropPress={onBackButtonPress}>
+      onBackdropPress={onBackButtonPress}
+      containerStyle={styles.containerStyle}>
       <View style={styles.container}>
         <TextNormal textStyle={styles.textStyle} color={COLORS.grey}>
-          “We kindly ask for your full name, class year, and major to help us
-          create connections that resonate with your experiences and interests.
-          This way, your journey on our platform becomes uniquely yours. Rest
-          assured, your data's security is our top concern.”
+          We kindly ask for your{' '}
+          <TextNormal color={COLORS.textColorGrey}>Full name</TextNormal>,
+          <TextNormal color={COLORS.textColorGrey}> Class year</TextNormal>, and
+          <TextNormal color={COLORS.textColorGrey}> Major </TextNormal>
+          to help us create connections that resonate with your experiences and
+          interests. This way, your journey on the app becomes
+          <TextNormal color={COLORS.textColorGrey}>
+            {' '}
+            uniquely your own.
+          </TextNormal>
+          <TextNormal textStyle={styles.textStyle} color={COLORS.grey}>
+            {'\n\n'}Rest assured, your{' '}
+            <TextNormal color={COLORS.textColorGrey}>
+              data's security is our top concern.
+            </TextNormal>
+          </TextNormal>
         </TextNormal>
       </View>
     </CustomModal>
@@ -36,13 +49,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp(5),
     width: wp(80),
     alignSelf: 'center',
-    borderRadius: hp(4),
+    borderRadius: 15,
     alignItems: 'center',
     justifyContent: 'center',
     textAlignVertical: 'center',
   },
   textStyle: {
     fontFamily: FONTS.LightItalic,
-    textAlign: 'center',
+  },
+  containerStyle: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

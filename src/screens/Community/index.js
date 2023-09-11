@@ -24,6 +24,7 @@ const Community = () => {
   const {user} = useUser();
   const [spacesIndex, setSpacesIndex] = useState(0);
   const [selectedSpaces, setSlectedSpaces] = useState(user?.spaces[0]);
+  const [upperBorderFlag, setUpperBorderFlag] = useState(false);
   const {fetchPostsOfAllSpaces, fetchPostsOfSpecificSpace} = usePost();
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -64,10 +65,16 @@ const Community = () => {
         selected={selectedFilter}
         setSelected={setSelectedFilter}
         setSpacesIndex={setSpacesIndex}
+        upperBorderFlag={upperBorderFlag}
       />
       <FlatList
         data={selectedSpaceData[selectedSpaces]}
         // data={[]}
+        onScroll={event => {
+          event.nativeEvent.contentOffset.y > 0
+            ? setUpperBorderFlag(true)
+            : setUpperBorderFlag(false);
+        }}
         refreshing={refreshing}
         onRefresh={() => fetchParticularSpacePosts()}
         renderItem={({item}) => <PostItem data={item} />}
@@ -96,7 +103,9 @@ const Community = () => {
             {loading ? (
               <ActivityIndicator color={COLORS.blue} size="large" />
             ) : (
-              <TextBig color={COLORS.blue}>No Data Found</TextBig>
+              <TextNormal textStyle={styles.noDataFound}>
+                Nothing, Yet.
+              </TextNormal>
             )}
           </View>
         )}
@@ -131,5 +140,10 @@ const styles = StyleSheet.create({
     width: wp(15),
     bottom: hp(16),
     right: wp(5),
+  },
+  noDataFound: {
+    color: '#747474',
+    fontFamily: FONTS.LightItalic,
+    fontWeight: '400',
   },
 });

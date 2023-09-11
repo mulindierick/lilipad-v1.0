@@ -40,14 +40,29 @@ const BottomTabNavigator = () => {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: COLORS.white,
+          position: 'absolute',
           height: hp(13),
+          backgroundColor: 'transparent',
           borderTopRightRadius: hp(10),
           borderTopLeftRadius: hp(10),
-          position: 'absolute',
-          bottom: 0,
-          overflow: 'hidden',
         },
+        tabBarBackground: () => (
+          <View
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: hp(13),
+              backgroundColor: COLORS.white,
+              borderTopRightRadius: hp(10),
+              borderTopLeftRadius: hp(10),
+              borderWidth: 0.6,
+              borderBottomWidth: 0,
+              borderColor: '#DADADA',
+            }}
+          />
+        ),
       }}>
       {tabsBar.map(tab => (
         <Tab.Screen

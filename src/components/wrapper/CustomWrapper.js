@@ -12,7 +12,7 @@ const CustomWrapper = ({
   containerStyle,
 }) => {
   return (
-    <SafeAreaView style={[styles.container, containerStyle]}>
+    <SafeAreaView style={[styles.container, containerStyle]} edges={['top']}>
       {requiresHeader && (
         <CustomHeader forInfoFurtherScreen={forInfoFurtherScreen} />
       )}

@@ -17,7 +17,7 @@ const CustomModal = ({
     <ReactNativeModal
       onBackButtonPress={onBackButtonPress}
       onBackdropPress={onBackdropPress}
-      style={styles.modalContainer}
+      style={[styles.modalContainer, containerStyle]}
       isVisible={isVisible}>
       {children}
     </ReactNativeModal>

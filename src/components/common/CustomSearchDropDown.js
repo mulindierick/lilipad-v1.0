@@ -10,7 +10,7 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {COLORS} from '../../utils/constants/theme';
+import {COLORS, FONTS} from '../../utils/constants/theme';
 import {TextNormal} from './CustomText';
 import CustomTextInput from './CustomTextInput';
 
@@ -61,15 +61,8 @@ const CustomSearchDropDown = ({data, setSelected, selected}) => {
               <TouchableOpacity
                 style={styles.textStyle}
                 onPress={() => handleSelect(item)}>
-                <TextNormal color={COLORS.textColor}>{item}</TextNormal>
+                <TextNormal textStyle={styles.text}>{item}</TextNormal>
               </TouchableOpacity>
-            )}
-            ItemSeparatorComponent={() => (
-              <View
-                style={{
-                  borderBottomWidth: 1,
-                  borderColor: COLORS.grey,
-                }}></View>
             )}
             keyboardShouldPersistTaps="always"
             nestedScrollEnabled={true}
@@ -91,21 +84,22 @@ export default CustomSearchDropDown;
 const styles = StyleSheet.create({
   textStyle: {
     paddingHorizontal: wp(4),
-    paddingVertical: hp(0.5),
-  },
-  dropDownContainer: {
-    backgroundColor: '#F6F6F6',
-    borderBottomRightRadius: 10,
-    borderBottomLeftRadius: 10,
+    paddingVertical: hp(1.2),
+    borderWidth: 1,
+    borderRadius: 10,
+    marginVertical: hp(0.2),
+    borderColor: '#D9D9D9',
   },
   listContainer: {
     width: '100%',
     flex: 1,
-    backgroundColor: '#F6F6F6',
-    borderBottomRightRadius: 10,
-    borderBottomLeftRadius: 10,
-    maxHeight: hp(10.5), // Set a fixed height for the dropdown list
+    maxHeight: hp(16.5), // Set a fixed height for the dropdown list
     marginTop: hp(0.5),
     overflow: 'hidden', // Prevents list from overflowing
+  },
+  text: {
+    fontFamily: FONTS.Medium,
+    color: '#888888',
+    fontWeight: '500',
   },
 });

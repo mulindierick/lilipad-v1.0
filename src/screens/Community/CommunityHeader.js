@@ -14,7 +14,7 @@ import {
   MenuTrigger,
 } from 'react-native-popup-menu';
 
-const CommunityHeader = ({selected, setSelected}) => {
+const CommunityHeader = ({selected, setSelected, upperBorderFlag}) => {
   return (
     <>
       <View style={styles.container}>
@@ -100,6 +100,23 @@ const CommunityHeader = ({selected, setSelected}) => {
           </Menu>
         </View>
       </View>
+      <View
+        style={
+          upperBorderFlag
+            ? {
+                borderWidth: 0.4,
+                marginTop: hp(1.5),
+                borderColor: '#DADADA',
+                marginHorizontal: wp(-4),
+              }
+            : {
+                borderWidth: 0.4,
+                borderColor: 'transparent',
+                marginTop: hp(1.5),
+                marginHorizontal: wp(-4),
+              }
+        }
+      />
     </>
   );
 };

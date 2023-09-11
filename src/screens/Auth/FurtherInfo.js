@@ -146,9 +146,6 @@ const FurtherInfo = () => {
             name="firstName"
             key="firstName"
           />
-          <TextNormal textStyle={styles.italicStyle}>
-            You will not be able to change your first name
-          </TextNormal>
         </View>
         <View style={styles.inputContainer}>
           <TextNormal bold textStyle={{marginBottom: hp(1)}}>
@@ -162,9 +159,6 @@ const FurtherInfo = () => {
             name="lastName"
             key="lastName"
           />
-          <TextNormal textStyle={styles.italicStyle}>
-            You will not be able to change your last name
-          </TextNormal>
         </View>
         <ScrollView
           horizontal={true}
@@ -246,7 +240,7 @@ const styles = StyleSheet.create({
       width: 0,
       height: 0,
     },
-    shadowOpacity: 0.6,
+    shadowOpacity: 0.3,
     shadowRadius: 3,
     elevation: 12,
   },
@@ -256,7 +250,7 @@ const styles = StyleSheet.create({
     borderRadius: hp(10),
   },
   inputContainer: {
-    marginTop: hp(1),
+    marginTop: hp(1.5),
   },
   button: {
     width: wp(87),
