@@ -4,6 +4,7 @@ import {useVerifyOTPMutation} from '../../redux/apis';
 import {useDispatch, useSelector} from 'react-redux';
 import {setUser} from '../../redux/reducers/userSlice';
 import useUser from './useUser';
+import {setFirstTimeLogin} from '../../redux/reducers/generalSlice';
 
 const UseFirebaseAuth = () => {
   const [verifyOTP] = useVerifyOTPMutation();
@@ -96,6 +97,8 @@ const UseFirebaseAuth = () => {
           firebaseUserId: user?.firebaseUserId,
         }),
       );
+      dispatch(setFirstTimeLogin({firstTimeLogin: true}));
+
       return 'Success';
     } catch (err) {
       console.log({err});
@@ -103,9 +106,55 @@ const UseFirebaseAuth = () => {
     }
   };
 
+  const joinSpaces = async spaceName => {
+    try {
+      await firestore()
+        .collection('accounts')
+        .doc(user?.firebaseUserId)
+        .set(
+          {
+            spaces: firestore.FieldValue.arrayUnion(spaceName),
+          },
+          {merge: true},
+        );
+      await firestore()
+        .collection('spaces')
+        .doc(spaceName)
+        .set(
+          {
+            members: firestore.FieldValue.arrayUnion(user?.firebaseUserId),
+          },
+          {merge: true},
+        );
+      return 'Success';
+    } catch (err) {
+      console.log({err});
+    }
+    // if (res2?._data) {
+    //   res2 = await firestore()
+    //     .collection('spaces')
+    //     .doc(item)
+    //     .set(
+    //       {
+    //         members: firestore.FieldValue.arrayUnion(user?.firebaseUserId),
+    //       },
+    //       {merge: true},
+    //     );
+    // } else {
+    //   res2 = await firestore()
+    //     .collection('spaces')
+    //     .doc(item)
+    //     .set({
+    //       spaceName: item,
+    //       members: [user?.firebaseUserId],
+    //     });
+    // }
+  };
+
   return {
     firebaseAuth,
     createAccount,
+    joinSpaces,
   };
 };
 

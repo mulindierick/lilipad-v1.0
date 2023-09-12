@@ -7,7 +7,7 @@ import {
 import CustomImage from '../../components/common/CustomImage';
 import {TextNormal} from '../../components/common/CustomText';
 import {images} from '../../utils/constants/theme';
-import {getAgoTime} from '../../utils/constants/helper';
+import {getAgoTime, getAgoTimeFullString} from '../../utils/constants/helper';
 
 const PostHeader = ({photo, name, time}) => {
   return (
@@ -29,7 +29,7 @@ const PostHeader = ({photo, name, time}) => {
         <View>
           <TextNormal textStyle={styles.textNormal}>{name}</TextNormal>
           <TextNormal textStyle={styles.textTimeAgo}>
-            {getAgoTime(time._seconds)}
+            {getAgoTimeFullString(time._seconds)}
           </TextNormal>
         </View>
         <CustomImage

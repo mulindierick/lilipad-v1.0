@@ -1,19 +1,19 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
-  nothing: null,
+  firstTimeLogin: false,
 };
 
 export const generalSlice = createSlice({
   name: 'general',
   initialState,
   reducers: {
-    setNothing: (state, {payload}) => {
-      state.nothing = payload.nothing;
+    setFirstTimeLogin: (state, {payload}) => {
+      state.firstTimeLogin = payload.firstTimeLogin;
     },
   },
 });
 
-export const {setNothing} = generalSlice.actions;
+export const {setFirstTimeLogin} = generalSlice.actions;
 
 export default generalSlice.reducer;

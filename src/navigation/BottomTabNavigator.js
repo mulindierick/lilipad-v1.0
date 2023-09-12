@@ -1,6 +1,6 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import React from 'react';
+import React, {useContext, useState} from 'react';
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
 import {
   heightPercentageToDP as hp,
@@ -12,6 +12,7 @@ import {COLORS, images} from '../utils/constants/theme';
 import CustomIcon from '../components/common/CustomIcon';
 import {TextSmaller} from '../components/common/CustomText';
 import CustomImage from '../components/common/CustomImage';
+import {MyContext} from '../context/Context';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -35,6 +36,8 @@ const TABS = [
 
 const BottomTabNavigator = () => {
   const tabsBar = TABS;
+  const [selectedTab, setSelectedTab] = useState(tabsBar[0].name);
+  const {PostFlatListRef} = useContext(MyContext);
   return (
     <Tab.Navigator
       screenOptions={{
@@ -78,6 +81,14 @@ const BottomTabNavigator = () => {
                   style={[...props.style]}
                   onPress={() => {
                     props.onPress();
+                    if (tab.name === selectedTab && tab.name != 'Profile') {
+                      PostFlatListRef.current.scrollToOffset({
+                        animated: true,
+                        offset: 0,
+                      });
+                    } else {
+                      setSelectedTab(tab.name);
+                    }
                   }}>
                   <View
                     style={[...props.style, {bottom: hp(0.5)}]}

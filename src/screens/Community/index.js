@@ -1,5 +1,12 @@
-import React, {useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import React, {
+  useEffect,
+  useState,
+  useMemo,
+  useContext,
+  memo,
+  useRef,
+} from 'react';
+import {Animated, StyleSheet, View, Easing} from 'react-native';
 import {TextBig, TextNormal} from '../../components/common/CustomText';
 import CustomWrapper from '../../components/wrapper/CustomWrapper';
 import CommunityHeader from './CommunityHeader';
@@ -19,16 +26,19 @@ import AddPostModal from './AddPostModal';
 import usePost from '../../utils/hooks/usePost';
 import {set} from 'react-hook-form';
 import {ActivityIndicator} from 'react-native';
+import WelcomeNoteModal from './WelcomeNoteModal';
+import {useDispatch} from 'react-redux';
+import {MyContext} from '../../context/Context';
 
 const Community = () => {
-  const {user} = useUser();
-  const [spacesIndex, setSpacesIndex] = useState(0);
+  const {user, general, setFirstTimeLoginStatus} = useUser();
   const [selectedSpaces, setSlectedSpaces] = useState(user?.spaces[0]);
   const [upperBorderFlag, setUpperBorderFlag] = useState(false);
   const {fetchPostsOfAllSpaces, fetchPostsOfSpecificSpace} = usePost();
+  const {PostFlatListRef} = useContext(MyContext);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
-  //The below state is used to store the data of the selected space
+  // The below state is used to store the data of the selected space
   const [selectedSpaceData, setSelectedSpaceData] = useState(() => {
     let obj = {};
     user?.spaces.forEach(space => {
@@ -37,7 +47,7 @@ const Community = () => {
     });
     return obj;
   });
-
+  console.log('HELLO');
   const fetchPosts = async () => {
     setLoading(true);
     const data = await fetchPostsOfAllSpaces(user?.spaces);
@@ -52,6 +62,10 @@ const Community = () => {
     setRefreshing(false);
   };
 
+  const AllSpacesData = useMemo(() => {
+    return selectedSpaceData[selectedSpaces];
+  }, [selectedSpaceData]);
+
   useEffect(() => {
     const res = fetchPosts();
   }, []);
@@ -64,10 +78,12 @@ const Community = () => {
       <CommunityHeader
         selected={selectedFilter}
         setSelected={setSelectedFilter}
-        setSpacesIndex={setSpacesIndex}
         upperBorderFlag={upperBorderFlag}
       />
+
       <FlatList
+        ref={PostFlatListRef}
+        keyExtractor={(item, index) => index.toString()}
         data={selectedSpaceData[selectedSpaces]}
         // data={[]}
         onScroll={event => {
@@ -80,18 +96,6 @@ const Community = () => {
         renderItem={({item}) => <PostItem data={item} />}
         ListFooterComponent={() => <View style={{marginBottom: hp(15)}}></View>}
         showsVerticalScrollIndicator={false}
-        ListHeaderComponent={() => (
-          <>
-            <View>
-              <SpacesContainer
-                data={user?.spaces}
-                selected={selectedSpaces}
-                setSelected={setSlectedSpaces}
-                setSpacesIndex={setSpacesIndex}
-              />
-            </View>
-          </>
-        )}
         ListEmptyComponent={() => (
           <View
             style={{
@@ -109,6 +113,15 @@ const Community = () => {
             )}
           </View>
         )}
+        ListHeaderComponent={() => (
+          <View>
+            <SpacesContainer
+              data={user?.spaces}
+              selected={selectedSpaces}
+              setSelected={setSlectedSpaces}
+            />
+          </View>
+        )}
       />
       <TouchableOpacity
         style={styles.addButton}
@@ -121,6 +134,12 @@ const Community = () => {
         onBackButtonPress={() => setAddPostModal(false)}
         onBackDropPress={() => setAddPostModal(false)}
         spaceName={selectedSpaces}
+      />
+      <WelcomeNoteModal
+        isVisible={general?.firstTimeLogin}
+        onBackButtonPress={() => setFirstTimeLoginStatus(false)}
+        onBackDropPress={() => setFirstTimeLoginStatus(false)}
+        user={user}
       />
     </CustomWrapper>
   );

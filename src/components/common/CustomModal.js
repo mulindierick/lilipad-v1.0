@@ -12,13 +12,19 @@ const CustomModal = ({
   containerStyle,
   isVisible,
   children,
+  backdropOpacity = null,
+  animationIn = 'slideInUp',
+  animationOut = 'slideOutDown',
 }) => {
   return (
     <ReactNativeModal
       onBackButtonPress={onBackButtonPress}
       onBackdropPress={onBackdropPress}
       style={[styles.modalContainer, containerStyle]}
-      isVisible={isVisible}>
+      isVisible={isVisible}
+      backdropOpacity={backdropOpacity != null ? backdropOpacity : 0.5}
+      animationIn={animationIn}
+      animationOut={animationOut}>
       {children}
     </ReactNativeModal>
   );

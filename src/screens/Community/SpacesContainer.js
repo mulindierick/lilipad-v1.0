@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useRef, useEffect, useCallback} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {
   Menu,
@@ -16,17 +16,13 @@ import useUser from '../../utils/hooks/useUser';
 import PopUpMenuItem from './PopUpMenuItem';
 import SpacesRelatedActivity from '../../utils/hooks/SpacesRelatedActivity';
 import {useNavigation} from '@react-navigation/native';
-const SpacesContainer = ({
-  data = [],
-  selected,
-  setSelected,
-  setSpacesIndex,
-}) => {
+import {FlatList} from 'react-native-gesture-handler';
+const SpacesContainer = ({data = [], selected, setSelected}) => {
   const navigation = useNavigation();
   const {user} = useUser();
   const [toggleMenu, setToggleMenu] = useState(false);
   const {removeSpace} = SpacesRelatedActivity();
-  const removeAndUpdateSpaces = async item => {
+  const removeAndUpdateSpaces = useCallback(async item => {
     try {
       if (selected == item) {
         setSelected('Skidmore College');
@@ -35,7 +31,12 @@ const SpacesContainer = ({
     } catch (err) {
       console.log({err});
     }
+  }, []);
+
+  const handleSpacesClick = (item, index) => {
+    setSelected(item);
   };
+
   return (
     <>
       <View style={styles.secondContainer}>
@@ -50,9 +51,11 @@ const SpacesContainer = ({
           Browse All
         </TextNormal>
       </View>
+
       <ScrollView
         horizontal={true}
         showsHorizontalScrollIndicator={false}
+        persistentScrollbar={true}
         contentContainerStyle={{
           flexGrow: 1,
           paddingHorizontal: wp(0.5),
@@ -68,13 +71,21 @@ const SpacesContainer = ({
                   },
                 }}
                 triggerOnLongPress={true}
-                onAlternativeAction={() => {
-                  setSelected(item), setSpacesIndex(index);
-                }}
-                style={selected == item ? styles.selected : styles.container}>
+                onAlternativeAction={() => handleSpacesClick(item, index)}
+                style={
+                  selected == item
+                    ? [
+                        styles.selected,
+                        item.split(' ').length == 1 && styles.selected2,
+                      ]
+                    : [
+                        styles.container,
+                        item.split(' ').length == 1 && styles.container2,
+                      ]
+                }>
                 <TextNormal
                   textStyle={styles.textStyle}
-                  numberOfLines={2}
+                  numberOfLines={item.split(' ').length > 1 ? 2 : 1}
                   color={selected == item ? COLORS.white : COLORS.black}>
                   {item}
                 </TextNormal>
@@ -139,9 +150,10 @@ const styles = StyleSheet.create({
     marginRight: wp(2),
     borderRadius: 10,
     alignItems: 'center',
-    justifyContent: 'center',
     paddingHorizontal: wp(2),
     marginVertical: hp(1.5),
+    justifyContent: 'flex-end',
+    paddingBottom: hp(0.2),
     // For Shadow
     borderWidth: 0.1,
     borderColor: '#CCCCCC',
@@ -160,16 +172,26 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.blue,
     marginRight: wp(2),
     borderRadius: 10,
+    paddingBottom: hp(0.2),
+
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     paddingHorizontal: wp(2),
     marginVertical: hp(1.5),
   },
-
+  selected2: {
+    paddingBottom: 0,
+    justifyContent: 'center',
+  },
+  container2: {
+    paddingBottom: 0,
+    justifyContent: 'center',
+  },
   textStyle: {
     textAlign: 'center',
-    fontWeight: '700',
-    fontSize: hp(2.1),
+    fontWeight: '600',
+    fontSize: wp(5),
+    lineHeight: hp(2.3),
   },
   totalPostNumbers: {
     position: 'absolute',

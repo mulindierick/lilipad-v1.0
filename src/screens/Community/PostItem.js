@@ -50,9 +50,11 @@ const PostItem = ({data}) => {
         name={user?.firstName + ' ' + user?.lastName}
         time={data?.createdAt}
       />
-      <View style={styles.postText}>
-        <TextNormal textStyle={styles.postTextStyle}>{data?.text}</TextNormal>
-      </View>
+      {data?.text ? (
+        <View style={styles.postText}>
+          <TextNormal textStyle={styles.postTextStyle}>{data?.text}</TextNormal>
+        </View>
+      ) : null}
       {data?.postPhoto && (
         <CustomImage
           source={{uri: data?.postPhoto}}

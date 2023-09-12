@@ -19,9 +19,11 @@ import {RuleTester} from 'eslint';
 import usePost from '../../utils/hooks/usePost';
 import {ActivityIndicator} from 'react-native';
 import useUser from '../../utils/hooks/useUser';
+import UseFirebaseAuth from '../../utils/hooks/UseFirebaseAuth';
 
 const ExploreSpaces = () => {
   const {user} = useUser();
+  const {joinSpaces} = UseFirebaseAuth();
   console.log({user});
   const [text, setText] = useState('');
   const [loading, setLoading] = useState(true);
@@ -40,6 +42,29 @@ const ExploreSpaces = () => {
       console.log({err});
     }
     setLoading(false);
+  };
+
+  const AddSpaces = async spaceName => {
+    try {
+      const res = await joinSpaces(spaceName);
+      if (res === 'Success') {
+        const changeData = filterData.map(item =>
+          item?._data?.spaceName === spaceName
+            ? {
+                ...item,
+                _data: {
+                  ...item._data,
+                  members: [...item._data.members, user?.firebaseUserId],
+                },
+              }
+            : item,
+        );
+        setFilterData(changeData);
+      }
+      console.log({res});
+    } catch (err) {
+      console.log({err});
+    }
   };
 
   useEffect(() => {
@@ -83,9 +108,10 @@ const ExploreSpaces = () => {
                   ? images.alreadyInGroupIcon
                   : images.joinGroupIcon
               }
+              disabled={user.spaces.includes(item?._data?.spaceName)}
+              onPressImage={() => AddSpaces(item?._data?.spaceName)}
               height={hp(5)}
               width={wp(8)}
-              disabled
             />
           </View>
         )}

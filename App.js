@@ -6,6 +6,7 @@ import RootStack from './src/navigation/RootStack';
 import {persistor, store} from './src/redux/store';
 import {LogBox} from 'react-native';
 import {MenuProvider} from 'react-native-popup-menu';
+import {ContextProvider} from './src/context/Context';
 
 const App = () => {
   LogBox.ignoreAllLogs(true);
@@ -17,12 +18,14 @@ const App = () => {
 
   return (
     <Provider store={store}>
-      <PersistGate persistor={persistor}>
-        <MenuProvider>
-          <RootStack />
-        </MenuProvider>
-        <Toast position="bottom" autoHide={true} />
-      </PersistGate>
+      <ContextProvider>
+        <PersistGate persistor={persistor}>
+          <MenuProvider>
+            <RootStack />
+          </MenuProvider>
+          <Toast position="bottom" autoHide={true} />
+        </PersistGate>
+      </ContextProvider>
     </Provider>
   );
 };

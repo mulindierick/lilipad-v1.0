@@ -33,7 +33,7 @@ const CustomImage = props => {
       <Pressable
         disabled={disabled}
         onPress={() =>
-          typeof onPressImage == 'function' ? onPressImage(id) : {}
+          typeof onPressImage == 'function' ? onPressImage() : {}
         }
         style={[
           styles.container,
