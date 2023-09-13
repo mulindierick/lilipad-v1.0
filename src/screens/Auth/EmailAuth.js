@@ -7,6 +7,7 @@ import {
   View,
   Keyboard,
   Platform,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import {
   heightPercentageToDP as hp,
@@ -62,60 +63,75 @@ const EmailAuth = () => {
   };
 
   return (
-    <CustomWrapper requiresHeader>
+    <CustomWrapper
+      requiresHeader
+      containerStyle={{backgroundColor: COLORS.white}}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : null}
-        style={styles.container}>
-        <View style={styles.textContainer}>
-          <TextBigger color={COLORS.black} textStyle={styles.heading}>
-            Begin By Sharing
-          </TextBigger>
-          <TextBigger color={COLORS.black} textStyle={[styles.heading]}>
-            Your School Email
-          </TextBigger>
-        </View>
-        <View style={styles.innerContainer}>
-          <CustomRHFTextInput
-            control={control}
-            rules={{
-              required: {value: true},
-              pattern: {
-                value: /^[^\d]+@skidmore\.edu$/,
-              },
-            }}
-            name="email"
-            key="email"
-            placeholder={'you@school.edu'}
-          />
-          {!isKeyboardVisible && (
-            <View style={styles.middleNoteContainer}>
-              <TextNormal italic textStyle={styles.italic} color={COLORS.grey}>
-                As of
-                <TextNormal
-                  color={COLORS.textColorGrey}
-                  textStyle={styles.normal}>
-                  {' '}
-                  Fall 2023, LiliPad{' '}
-                </TextNormal>
-                is only active at{' '}
-                <TextNormal
-                  color={COLORS.textColorGrey}
-                  textStyle={styles.normal}>
-                  Skidmore College.
-                </TextNormal>{' '}
-                We are planning to scale to other schools in the coming weeks.
-              </TextNormal>
+        style={styles.container}
+        keyboardVerticalOffset={Platform.select({ios: hp(-7)})}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.container}>
+            <View style={styles.textContainer}>
+              <TextBigger color={COLORS.black} textStyle={styles.heading}>
+                Begin By Sharing
+              </TextBigger>
+              <TextBigger color={COLORS.black} textStyle={[styles.heading]}>
+                Your School Email
+              </TextBigger>
             </View>
-          )}
-          <CustomButton
-            title="Send Code"
-            onPress={handleSubmit(onSendCode)}
-            loader={loader}
-            textStyle={styles.buttonText}
-            containerStyle={{height: hp(6.2)}}
-            disabled={!isValid}
-          />
-        </View>
+            <View style={styles.innerContainer}>
+              <CustomRHFTextInput
+                control={control}
+                rules={{
+                  required: {value: true},
+                  pattern: {
+                    value: /^[^\d]+@skidmore\.edu$/,
+                  },
+                }}
+                name="email"
+                key="email"
+                placeholder={'you@school.edu'}
+              />
+              {!isKeyboardVisible && (
+                <View style={styles.middleNoteContainer}>
+                  <TextNormal
+                    italic
+                    textStyle={styles.italic}
+                    color={COLORS.grey}>
+                    As of
+                    <TextNormal
+                      color={COLORS.textColorGrey}
+                      textStyle={styles.normal}>
+                      {' '}
+                      Fall 2023, LiliPad{' '}
+                    </TextNormal>
+                    is only active at{' '}
+                    <TextNormal
+                      color={COLORS.textColorGrey}
+                      textStyle={styles.normal}>
+                      Skidmore College.
+                    </TextNormal>{' '}
+                    We are planning to scale to other schools in the coming
+                    weeks.
+                  </TextNormal>
+                </View>
+              )}
+              <CustomButton
+                title="Send Code"
+                onPress={handleSubmit(onSendCode)}
+                loader={loader}
+                textStyle={styles.buttonText}
+                containerStyle={{
+                  height: hp(6.2),
+                  marginBottom: hp(7),
+                  width: wp(90),
+                }}
+                disabled={!isValid}
+              />
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
     </CustomWrapper>
   );

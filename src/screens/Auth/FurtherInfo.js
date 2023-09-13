@@ -93,7 +93,10 @@ const FurtherInfo = () => {
   };
 
   return (
-    <CustomWrapper requiresHeader forInfoFurtherScreen={true}>
+    <CustomWrapper
+      requiresHeader
+      forInfoFurtherScreen={true}
+      containerStyle={{backgroundColor: COLORS.white}}>
       <ScrollView
         nestedScrollEnabled={true}
         scrollEnabled={true}

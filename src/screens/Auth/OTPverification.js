@@ -100,7 +100,9 @@ const OTPverification = ({route}) => {
 
   const inputRef = React.useRef();
   return (
-    <CustomWrapper requiresHeader>
+    <CustomWrapper
+      requiresHeader
+      containerStyle={{backgroundColor: COLORS.white}}>
       <View style={styles.TextContainer}>
         <TextBigger textStyle={styles.textHeader}>
           Enter The Code We Sent
