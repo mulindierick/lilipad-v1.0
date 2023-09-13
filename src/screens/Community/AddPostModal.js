@@ -46,16 +46,23 @@ const AddPostModal = ({
       const res = await sharePost(spaceName, {
         text: text,
         image:
-          localImageUriArray.length > 0 ? localImageUriArray[0]?.image : null,
+          localImageUriArray.length > 0 ? localImageUriArray[0]?.path : null,
       });
       onBackDropPress();
       setText('');
       setLocalImageUriArray([]);
-      showToast('success', 'Post Shared Successfully!');
+      // showToast('success', 'Post Shared Successfully!');
     } catch (error) {
-      showToast('error', 'Something Went Wrong, Please Try Again!');
+      // showToast('error', 'Something Went Wrong, Please Try Again!');
+      console.log({error});
     }
     setLoader(false);
+  };
+
+  const handleClosureOfModal = () => {
+    onBackDropPress();
+    setText('');
+    setLocalImageUriArray([]);
   };
 
   return (
@@ -66,7 +73,7 @@ const AddPostModal = ({
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
           <AddPostHeader
-            onIconPress={onBackButtonPress}
+            onIconPress={() => handleClosureOfModal()}
             onPressShare={() => addPostOnFirebase(spaceName)}
             disabled={!localImageUriArray.length > 0 && !text}
             loader={loader}
@@ -89,7 +96,7 @@ const AddPostModal = ({
               <View style={styles.ShadowImageContainer}>
                 <CustomImage
                   source={{
-                    uri: localImageUriArray[0]?.image,
+                    uri: localImageUriArray[0]?.path,
                   }}
                   height={hp(25)}
                   width={wp(86)}
@@ -129,7 +136,7 @@ export default AddPostModal;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: COLORS.backgroundColor,
+    backgroundColor: COLORS.white,
     height: hp(92),
     width: wp(100),
     paddingHorizontal: wp(5),

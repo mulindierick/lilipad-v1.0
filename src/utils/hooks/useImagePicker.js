@@ -14,7 +14,7 @@ const useImagePicker = () => {
     let config = {
       forceJpg: true,
       // includeBase64: true,
-      cropping: true,
+      cropping: cropperCircleOverlay,
       multiple: false,
       maxFiles: 1,
       mediaType: 'photo',
@@ -36,8 +36,8 @@ const useImagePicker = () => {
         success: false,
         error: false,
       }));
-      let compressedImage = await compressSingleImages(res);
-      setLocalImageUriArray(compressedImage);
+      // let compressedImage = await compressSingleImages(res);
+      setLocalImageUriArray(res);
     } catch (err) {
       console.log(err.message);
       if (err?.message?.includes('permission')) {
@@ -59,7 +59,7 @@ const useImagePicker = () => {
     let config = {
       forceJpg: true,
       // includeBase64: true,
-      cropping: true,
+      cropping: cropperCircleOverlay,
       multiple: true,
       maxFiles: 1,
       mediaType: 'photo',

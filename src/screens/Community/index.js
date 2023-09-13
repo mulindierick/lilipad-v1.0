@@ -6,7 +6,7 @@ import React, {
   memo,
   useRef,
 } from 'react';
-import {Animated, StyleSheet, View, Easing} from 'react-native';
+import {Animated, StyleSheet, View, Easing, RefreshControl} from 'react-native';
 import {TextBig, TextNormal} from '../../components/common/CustomText';
 import CustomWrapper from '../../components/wrapper/CustomWrapper';
 import CommunityHeader from './CommunityHeader';
@@ -30,14 +30,23 @@ import WelcomeNoteModal from './WelcomeNoteModal';
 import {useDispatch} from 'react-redux';
 import {MyContext} from '../../context/Context';
 
+const headerHeight = hp(20);
+let scrollValue = 0;
+let headerVisible = true;
+let focused = false;
+
 const Community = () => {
   const {user, general, setFirstTimeLoginStatus} = useUser();
-  const [selectedSpaces, setSlectedSpaces] = useState(user?.spaces[0]);
-  const [upperBorderFlag, setUpperBorderFlag] = useState(false);
   const {fetchPostsOfAllSpaces, fetchPostsOfSpecificSpace} = usePost();
   const {PostFlatListRef} = useContext(MyContext);
-  const [refreshing, setRefreshing] = useState(false);
+  // useReducer
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [upperBorderFlag, setUpperBorderFlag] = useState(false);
+  const [selectedSpaces, setSlectedSpaces] = useState(user?.spaces[0]);
+  const [selectedFilter, setSelectedFilter] = useState('Recent');
+  const [addPostModal, setAddPostModal] = useState(false);
+
   // The below state is used to store the data of the selected space
   const [selectedSpaceData, setSelectedSpaceData] = useState(() => {
     let obj = {};
@@ -47,7 +56,10 @@ const Community = () => {
     });
     return obj;
   });
-  console.log('HELLO');
+  useEffect(() => {
+    console.log('HELLO');
+  }, []);
+
   const fetchPosts = async () => {
     setLoading(true);
     const data = await fetchPostsOfAllSpaces(user?.spaces);
@@ -58,20 +70,51 @@ const Community = () => {
   const fetchParticularSpacePosts = async spaceName => {
     setRefreshing(true);
     const data = await fetchPostsOfSpecificSpace(selectedSpaces);
+    setSelectedSpaceData({...selectedSpaceData, [selectedSpaces]: []});
     setSelectedSpaceData({...selectedSpaceData, [selectedSpaces]: data});
     setRefreshing(false);
   };
 
-  const AllSpacesData = useMemo(() => {
-    return selectedSpaceData[selectedSpaces];
-  }, [selectedSpaceData]);
-
   useEffect(() => {
-    const res = fetchPosts();
+    fetchPosts();
   }, []);
 
-  const [selectedFilter, setSelectedFilter] = useState('Recent');
-  const [addPostModal, setAddPostModal] = useState(false);
+  // For Animation
+
+  const animation = useRef(new Animated.Value(1)).current;
+  const translateY = animation.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, headerHeight / 2 - 2],
+  });
+  const inputTranslateY = animation.interpolate({
+    inputRange: [0, 1],
+    outputRange: [headerHeight / 4, 0],
+  });
+  const opacity = animation;
+  const onScroll = e => {
+    if (focused) return;
+    const y = e.nativeEvent.contentOffset.y;
+
+    if (y > scrollValue && headerVisible && y > headerHeight / 2) {
+      Animated.spring(animation, {
+        toValue: 0,
+        useNativeDriver: true,
+        bounciness: 0,
+      }).start();
+      headerVisible = false;
+      setUpperBorderFlag(true);
+    }
+    if (y < scrollValue && !headerVisible) {
+      Animated.spring(animation, {
+        toValue: 1,
+        useNativeDriver: true,
+        bounciness: 0,
+      }).start();
+      headerVisible = true;
+      setUpperBorderFlag(false);
+    }
+    scrollValue = y;
+  };
 
   return (
     <CustomWrapper containerStyle={{backgroundColor: '#F6F6F6'}}>
@@ -81,21 +124,42 @@ const Community = () => {
         upperBorderFlag={upperBorderFlag}
       />
 
+      <Animated.View
+        style={[styles.spaceContainer, {transform: [{translateY}]}]}>
+        <Animated.View
+          style={[
+            styles.spaceNestedContainer,
+            {opacity, transform: [{translateY: inputTranslateY}]},
+          ]}>
+          <SpacesContainer
+            data={user?.spaces}
+            selected={selectedSpaces}
+            setSelected={setSlectedSpaces}
+          />
+        </Animated.View>
+      </Animated.View>
+
       <FlatList
         ref={PostFlatListRef}
+        persistentScrollbar={true}
         keyExtractor={(item, index) => index.toString()}
         data={selectedSpaceData[selectedSpaces]}
-        // data={[]}
-        onScroll={event => {
-          event.nativeEvent.contentOffset.y > 0
-            ? setUpperBorderFlag(true)
-            : setUpperBorderFlag(false);
-        }}
-        refreshing={refreshing}
-        onRefresh={() => fetchParticularSpacePosts()}
+        onScroll={onScroll}
+        refreshControl={
+          <RefreshControl
+            tintColor={COLORS.grey}
+            refreshing={refreshing}
+            onRefresh={() => fetchParticularSpacePosts()}
+            enabled={true}
+            progressViewOffset={hp(10)}
+          />
+        }
         renderItem={({item}) => <PostItem data={item} />}
-        ListFooterComponent={() => <View style={{marginBottom: hp(15)}}></View>}
+        ListFooterComponent={() => (
+          <View style={{paddingBottom: hp(30)}}></View>
+        )}
         showsVerticalScrollIndicator={false}
+        // make this JSX componenet
         ListEmptyComponent={() => (
           <View
             style={{
@@ -105,7 +169,7 @@ const Community = () => {
               height: hp(50),
             }}>
             {loading ? (
-              <ActivityIndicator color={COLORS.blue} size="large" />
+              <ActivityIndicator color={COLORS.grey} size="large" />
             ) : (
               <TextNormal textStyle={styles.noDataFound}>
                 Nothing, Yet.
@@ -113,15 +177,8 @@ const Community = () => {
             )}
           </View>
         )}
-        ListHeaderComponent={() => (
-          <View>
-            <SpacesContainer
-              data={user?.spaces}
-              selected={selectedSpaces}
-              setSelected={setSlectedSpaces}
-            />
-          </View>
-        )}
+        style={{paddingTop: hp(12.5)}}
+        // make this JSX componenet
       />
       <TouchableOpacity
         style={styles.addButton}
@@ -164,5 +221,15 @@ const styles = StyleSheet.create({
     color: '#747474',
     fontFamily: FONTS.LightItalic,
     fontWeight: '400',
+  },
+  spaceContainer: {
+    height: headerHeight / 2,
+    position: 'absolute',
+    alignSelf: 'center',
+    top: hp(4),
+    zIndex: 10000,
+  },
+  spaceNestedContainer: {
+    backgroundColor: COLORS.backgroundColor,
   },
 });

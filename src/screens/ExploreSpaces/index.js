@@ -1,25 +1,18 @@
-import {StyleSheet, Text, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import CustomWrapper from '../../components/wrapper/CustomWrapper';
-import Header from './Header';
-import CustomTextInput from '../../components/common/CustomTextInput';
-import {FlatList} from 'react-native';
-import {
-  TextBig,
-  TextBigger,
-  TextNormal,
-} from '../../components/common/CustomText';
+import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {COLORS, FONTS, images} from '../../utils/constants/theme';
 import CustomImage from '../../components/common/CustomImage';
-import {RuleTester} from 'eslint';
-import usePost from '../../utils/hooks/usePost';
-import {ActivityIndicator} from 'react-native';
-import useUser from '../../utils/hooks/useUser';
+import {TextBig, TextNormal} from '../../components/common/CustomText';
+import CustomTextInput from '../../components/common/CustomTextInput';
+import CustomWrapper from '../../components/wrapper/CustomWrapper';
+import {COLORS, FONTS, images} from '../../utils/constants/theme';
 import UseFirebaseAuth from '../../utils/hooks/UseFirebaseAuth';
+import usePost from '../../utils/hooks/usePost';
+import useUser from '../../utils/hooks/useUser';
+import Header from './Header';
 
 const ExploreSpaces = () => {
   const {user} = useUser();
@@ -82,7 +75,12 @@ const ExploreSpaces = () => {
     <CustomWrapper>
       <Header />
       <View style={styles.marginTop}>
-        <CustomTextInput placeholder="Search" onChange={txt => setText(txt)} />
+        <CustomTextInput
+          placeholder="Search"
+          onChange={txt => setText(txt)}
+          containerStyle={styles.searchContainer}
+          placeholderTextColor="#575757"
+        />
       </View>
       <View style={styles.marginTop}>
         <TextBig textStyle={styles.AllSpaces}>All Spaces</TextBig>
@@ -131,6 +129,7 @@ const ExploreSpaces = () => {
             )}
           </View>
         )}
+        ListFooterComponent={() => <View style={{paddingBottom: hp(15)}} />}
       />
     </CustomWrapper>
   );
@@ -173,5 +172,8 @@ const styles = StyleSheet.create({
     marginTop: hp(0.2),
     fontFamily: FONTS.Regular,
     fontWeight: '400',
+  },
+  searchContainer: {
+    backgroundColor: '#E4E4E4',
   },
 });

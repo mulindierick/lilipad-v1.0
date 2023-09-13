@@ -26,6 +26,8 @@ const CustomTextInput = ({
   textInputStyle,
   showError = true,
   multiline = false,
+  exploreSpaces = false,
+  placeholderTextColor = COLORS.placeholder,
 }) => {
   const [visible, setVisible] = useState(secureTextEntry ? true : false);
 
@@ -54,7 +56,7 @@ const CustomTextInput = ({
             style={[styles.textInput, textInputStyle]}
             secureTextEntry={visible}
             placeholder={placeholder}
-            placeholderTextColor={COLORS.placeholder}
+            placeholderTextColor={placeholderTextColor}
             autoCapitalize="none"
             autoCorrect={false}
             onFocus={onFocus}
@@ -98,7 +100,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontFamily: 'IBMPlexSans-Regular',
     borderBottomColor: COLORS.white,
-    borderBottomWidth: 1,
+    borderBottomWidth: 0,
     paddingHorizontal: wp(4),
     justifyContent: 'space-between',
     flexDirection: 'row',

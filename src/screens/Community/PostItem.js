@@ -58,7 +58,7 @@ const PostItem = ({data}) => {
       {data?.postPhoto && (
         <CustomImage
           source={{uri: data?.postPhoto}}
-          height={hp(25)}
+          height={hp(30)}
           width={'100%'}
           resizeMode="cover"
           containerStyle={{borderRadius: 10, marginTop: hp(1.5)}}

@@ -16,7 +16,7 @@ const AddPostTextInput = ({text, setText}) => {
         multiline={true}
         containerStyle={styles.container}
         textInputStyle={[text ? styles.textInput : styles.placeholderStyle]}
-        placeholder={'Share with your Community...'}
+        placeholder={'Share With Your Community...'}
       />
     </View>
   );

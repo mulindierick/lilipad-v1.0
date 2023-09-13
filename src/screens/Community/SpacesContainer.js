@@ -20,7 +20,6 @@ import {FlatList} from 'react-native-gesture-handler';
 const SpacesContainer = ({data = [], selected, setSelected}) => {
   const navigation = useNavigation();
   const {user} = useUser();
-  const [toggleMenu, setToggleMenu] = useState(false);
   const {removeSpace} = SpacesRelatedActivity();
   const removeAndUpdateSpaces = useCallback(async item => {
     try {
@@ -51,72 +50,52 @@ const SpacesContainer = ({data = [], selected, setSelected}) => {
           Browse All
         </TextNormal>
       </View>
-
-      <ScrollView
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        persistentScrollbar={true}
-        contentContainerStyle={{
-          flexGrow: 1,
-          paddingHorizontal: wp(0.5),
-          marginVertical: hp(0.5),
-        }}>
-        {data.map((item, index) => {
-          return (
-            <Menu key={index} style={{activeOpacity: 1}}>
-              <MenuTrigger
-                customStyles={{
-                  triggerTouchable: {
-                    underlayColor: 'rgba(0, 0, 0, 0)',
-                  },
-                }}
-                triggerOnLongPress={true}
-                onAlternativeAction={() => handleSpacesClick(item, index)}
-                style={
-                  selected == item
-                    ? [
-                        styles.selected,
-                        item.split(' ').length == 1 && styles.selected2,
-                      ]
-                    : [
-                        styles.container,
-                        item.split(' ').length == 1 && styles.container2,
-                      ]
-                }>
-                <TextNormal
-                  textStyle={styles.textStyle}
-                  numberOfLines={item.split(' ').length > 1 ? 2 : 1}
-                  color={selected == item ? COLORS.white : COLORS.black}>
-                  {item}
-                </TextNormal>
-                <View style={styles.totalPostNumbers}>
-                  <TextSmall
-                    bold
-                    color={COLORS.white}
-                    textStyle={{fontSize: hp(1.4)}}>
-                    0
-                  </TextSmall>
-                </View>
-              </MenuTrigger>
-              <MenuOptions optionsContainerStyle={styles.filterPopMenu}>
-                <MenuOption
-                  onSelect={() => console.log('HELLo')}
+      <View style={{width: wp(100)}}>
+        <ScrollView
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          persistentScrollbar={true}
+          contentContainerStyle={{
+            flexGrow: 1,
+            // paddingHorizontal: wp(0.5),
+            marginLeft: wp(5),
+          }}>
+          {data.map((item, index) => {
+            return (
+              <Menu key={index} style={{activeOpacity: 1}}>
+                <MenuTrigger
                   customStyles={{
-                    optionTouchable: {
+                    triggerTouchable: {
                       underlayColor: 'rgba(0, 0, 0, 0)',
                     },
                   }}
-                  children={
-                    <PopUpMenuItem
-                      icon={images.viewMemberIcon}
-                      text={'View Members'}
-                      color={COLORS.blue}
-                    />
-                  }
-                />
-                {item != user?.major && item != 'Skidmore College' && (
+                  triggerOnLongPress={true}
+                  onAlternativeAction={() => handleSpacesClick(item, index)}
+                  style={[
+                    selected == item ? styles.selected : styles.container,
+                    index == data.length - 1 ? {marginRight: wp(10)} : {},
+                  ]}>
+                  <TextNormal
+                    textStyle={[
+                      styles.textStyle,
+                      selected == item && {fontWeight: '600'},
+                    ]}
+                    numberOfLines={item.split(' ').length > 1 ? 2 : 1}
+                    color={selected == item ? COLORS.white : COLORS.black}>
+                    {item}
+                  </TextNormal>
+                  <View style={styles.totalPostNumbers}>
+                    <TextSmall
+                      bold
+                      color={COLORS.white}
+                      textStyle={{fontSize: hp(1.4)}}>
+                      0
+                    </TextSmall>
+                  </View>
+                </MenuTrigger>
+                <MenuOptions optionsContainerStyle={styles.filterPopMenu}>
                   <MenuOption
-                    onSelect={() => removeAndUpdateSpaces(item)}
+                    onSelect={() => console.log('HELLo')}
                     customStyles={{
                       optionTouchable: {
                         underlayColor: 'rgba(0, 0, 0, 0)',
@@ -124,18 +103,35 @@ const SpacesContainer = ({data = [], selected, setSelected}) => {
                     }}
                     children={
                       <PopUpMenuItem
-                        icon={images.leaveGroupIcon}
-                        text={'Leave Space'}
-                        color={COLORS.red}
+                        icon={images.viewMemberIcon}
+                        text={'View Members'}
+                        color={COLORS.blue}
                       />
                     }
                   />
-                )}
-              </MenuOptions>
-            </Menu>
-          );
-        })}
-      </ScrollView>
+                  {item != user?.major && item != 'Skidmore College' && (
+                    <MenuOption
+                      onSelect={() => removeAndUpdateSpaces(item)}
+                      customStyles={{
+                        optionTouchable: {
+                          underlayColor: 'rgba(0, 0, 0, 0)',
+                        },
+                      }}
+                      children={
+                        <PopUpMenuItem
+                          icon={images.leaveGroupIcon}
+                          text={'Leave Space'}
+                          color={COLORS.red}
+                        />
+                      }
+                    />
+                  )}
+                </MenuOptions>
+              </Menu>
+            );
+          })}
+        </ScrollView>
+      </View>
     </>
   );
 };
@@ -144,16 +140,14 @@ export default SpacesContainer;
 
 const styles = StyleSheet.create({
   container: {
-    width: wp(28),
-    height: hp(6),
+    paddingVertical: hp(1),
     backgroundColor: COLORS.white,
     marginRight: wp(2),
     borderRadius: 10,
     alignItems: 'center',
     paddingHorizontal: wp(2),
     marginVertical: hp(1.5),
-    justifyContent: 'flex-end',
-    paddingBottom: hp(0.2),
+    justifyContent: 'center',
     // For Shadow
     borderWidth: 0.1,
     borderColor: '#CCCCCC',
@@ -162,36 +156,25 @@ const styles = StyleSheet.create({
       width: 0,
       height: 1,
     },
-    shadowOpacity: 0.14,
+    shadowOpacity: 0.05,
     shadowRadius: 1,
     elevation: 8,
   },
   selected: {
-    width: wp(29),
-    height: hp(6.2),
+    paddingVertical: hp(1),
     backgroundColor: COLORS.blue,
     marginRight: wp(2),
     borderRadius: 10,
-    paddingBottom: hp(0.2),
 
     alignItems: 'center',
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     paddingHorizontal: wp(2),
     marginVertical: hp(1.5),
   },
-  selected2: {
-    paddingBottom: 0,
-    justifyContent: 'center',
-  },
-  container2: {
-    paddingBottom: 0,
-    justifyContent: 'center',
-  },
   textStyle: {
-    textAlign: 'center',
-    fontWeight: '600',
+    fontWeight: '500',
     fontSize: wp(5),
-    lineHeight: hp(2.3),
+    // lineHeight: hp(2.3),
   },
   totalPostNumbers: {
     position: 'absolute',
@@ -205,7 +188,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   filterPopMenu: {
-    marginTop: hp(8.5),
+    marginTop: hp(7),
     width: wp(40),
     borderRadius: 5,
     backgroundColor: COLORS.white,
@@ -217,9 +200,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: hp(1),
+    paddingHorizontal: wp(5),
   },
   normalText: {
-    fontSize: hp(1.9),
+    fontSize: wp(4.5),
     fontWeight: '600',
   },
 });

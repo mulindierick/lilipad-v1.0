@@ -75,9 +75,11 @@ const usePost = () => {
         return {
           ...item.data(),
           user: await item.data().createdByReference.get(),
+          userLiked: false,
         };
       }),
     );
+    console.log({post});
     return post;
   };
 

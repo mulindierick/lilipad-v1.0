@@ -24,8 +24,8 @@ const CommunityHeader = ({selected, setSelected, upperBorderFlag}) => {
         <View style={styles.innerContainer}>
           <CustomImage
             source={images.search}
-            height={wp(8)}
-            width={wp(8)}
+            height={wp(9)}
+            width={wp(9)}
             resizeMode="cover"
             containerStyle={{marginRight: wp(7)}}
           />
@@ -38,8 +38,8 @@ const CommunityHeader = ({selected, setSelected, upperBorderFlag}) => {
               }}>
               <CustomImage
                 source={images.filter}
-                height={wp(9)}
-                width={wp(9)}
+                height={wp(10)}
+                width={wp(10)}
                 resizeMode="cover"
                 disabled
               />
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     fontFamily: FONTS.Bold,
-    fontSize: hp(4),
+    fontSize: wp(9),
     color: '#151313',
   },
   secondContainer: {
