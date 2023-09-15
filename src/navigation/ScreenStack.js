@@ -12,7 +12,11 @@ const ScreenStack = () => {
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="BottomTabNavigator" component={BottomTabNavigator} />
       <Stack.Screen name="ExploreSpaces" component={ExploreSpaces} />
-      <Stack.Screen name="PostDetails" component={PostDetails} />
+      <Stack.Screen
+        name="PostDetails"
+        component={PostDetails}
+        options={{gestureEnabled: false}}
+      />
     </Stack.Navigator>
   );
 };
