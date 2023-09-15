@@ -33,6 +33,14 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   [FIRApp configure];
+
+NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if (![defaults boolForKey:@"notFirstRun"]) {
+        [defaults setBool:YES forKey:@"notFirstRun"];
+        [defaults synchronize];
+        [[FIRAuth auth] signOut:NULL];
+   }
+
   RCTAppSetupPrepareApp(application);
 
   UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
