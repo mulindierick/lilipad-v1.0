@@ -42,11 +42,11 @@ const FurtherInfo = () => {
         image: localImageUriArray[0]?.image,
       });
       console.log({res});
-      if (res == 'Success') {
-        showToast('success', 'Account Created Successfully');
-      } else {
-        showToast('error', 'Some error occured! try again later.');
-      }
+      // if (res == 'Success') {
+      //   showToast('success', 'Account Created Successfully');
+      // } else {
+      //   showToast('error', 'Some error occured! try again later.');
+      // }
     } catch (err) {
       console.log({err});
     }
