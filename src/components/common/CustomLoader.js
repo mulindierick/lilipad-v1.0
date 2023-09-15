@@ -6,7 +6,7 @@ import {COLORS} from '../../utils/constants/theme';
 const CustomLoader = () => {
   return (
     <ReactNativeModal isVisible={true} style={styles.container}>
-      <ActivityIndicator size={'large'} color={COLORS.blue} />
+      <ActivityIndicator size={'large'} color={COLORS.grey} />
     </ReactNativeModal>
   );
 };

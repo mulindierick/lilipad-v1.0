@@ -52,6 +52,7 @@ const CustomSearchDropDown = ({data, setSelected, selected}) => {
         onFocus={() => turnFocusOn()}
         onBlur={() => setFocus(false)}
         placeholder="Search"
+        autoCapitalize="sentences"
       />
       {focus && (
         <View style={styles.listContainer}>

@@ -15,6 +15,7 @@ const CustomRHFTextInput = ({
   containerStyle,
   source,
   editable = true,
+  autoCapitalize = 'none',
 }) => {
   return (
     <Controller
@@ -38,6 +39,7 @@ const CustomRHFTextInput = ({
           onChange={onChange}
           error={error?.message}
           editable={editable}
+          autoCapitalize={autoCapitalize}
         />
       )}
     />

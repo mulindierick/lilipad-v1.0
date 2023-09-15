@@ -5,10 +5,10 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import CustomButton from '../../components/common/CustomButton';
+import CustomImage from '../../components/common/CustomImage';
 import {TextNormal} from '../../components/common/CustomText';
 import CustomWrapper from '../../components/wrapper/CustomWrapper';
 import {COLORS, FONTS, images} from '../../utils/constants/theme';
-import CustomImage from '../../components/common/CustomImage';
 
 const Auth = ({navigation}) => {
   return (

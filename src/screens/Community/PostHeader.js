@@ -6,16 +6,16 @@ import {
 } from 'react-native-responsive-screen';
 import CustomImage from '../../components/common/CustomImage';
 import {TextNormal} from '../../components/common/CustomText';
-import {images} from '../../utils/constants/theme';
-import {getAgoTime, getAgoTimeFullString} from '../../utils/constants/helper';
+import {getAgoTimeFullString} from '../../utils/constants/helper';
+import {FONTS, images} from '../../utils/constants/theme';
 
 const PostHeader = ({photo, name, time}) => {
   return (
     <View style={styles.postHeader}>
       <CustomImage
         source={{uri: photo}}
-        height={hp(7)}
-        width={hp(7)}
+        height={hp(6.5)}
+        width={hp(6.5)}
         containerStyle={{borderRadius: hp(10)}}
       />
       <View
@@ -51,12 +51,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   textNormal: {
-    fontSize: hp(1.9),
+    fontSize: wp(4.5),
     fontWeight: 'bold',
   },
   textTimeAgo: {
-    fontSize: hp(1.5),
+    fontSize: wp(3.3),
     color: 'rgba(87, 87, 87, 0.83)',
-    fontWeight: '400',
+    fontFamily: FONTS.Light,
   },
 });

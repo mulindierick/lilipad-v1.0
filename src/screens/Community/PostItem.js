@@ -1,21 +1,22 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import CustomImage from '../../components/common/CustomImage';
 import {TextNormal} from '../../components/common/CustomText';
-import CustomIcon from '../../components/common/CustomIcon';
-import {COLORS, images} from '../../utils/constants/theme';
-import useUser from '../../utils/hooks/useUser';
-import PostHeader from './PostHeader';
-import PostFooter from './PostFooter';
+import {COLORS} from '../../utils/constants/theme';
 import usePost from '../../utils/hooks/usePost';
-import {set} from 'react-hook-form';
-import {useNavigation} from '@react-navigation/native';
+import PostFooter from './PostFooter';
+import PostHeader from './PostHeader';
+import useUser from '../../utils/hooks/useUser';
+import {useDispatch} from 'react-redux';
+import {setPostId} from '../../redux/reducers/generalSlice';
 
 const PostItem = ({data}) => {
+  const {general} = useUser();
   const user = data?.user?._data;
   const [like, setLike] = useState(data?.userLiked);
   const [likeCount, setLikeCount] = useState(data?.likesCount);
@@ -23,16 +24,24 @@ const PostItem = ({data}) => {
   const [loader, setLoader] = useState(false);
   const {handlePostLike} = usePost();
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const handleLike = async () => {
     setLoader(true);
+    let userLike = general?.postId == data?.postId ? general?.userLiked : like;
+    setCommentCount(
+      general?.postId == data?.postId ? general?.commentCount : commentCount,
+    );
+    let count =
+      general?.postId == data?.postId ? general?.likeCount : likeCount;
     try {
-      const res = await handlePostLike(data?.spaceName, data?.postId, like);
+      const res = await handlePostLike(data?.spaceName, data?.postId, userLike);
     } catch (err) {
       console.log({err});
     }
-    like ? setLikeCount(likeCount - 1) : setLikeCount(likeCount + 1);
-    setLike(!like);
+    userLike ? setLikeCount(count - 1) : setLikeCount(count + 1);
+    setLike(!userLike);
+    dispatch(setPostId({postId: null}));
     setLoader(false);
   };
 
@@ -61,13 +70,20 @@ const PostItem = ({data}) => {
           height={hp(30)}
           width={'100%'}
           resizeMode="cover"
-          containerStyle={{borderRadius: 10, marginTop: hp(1.5)}}
+          containerStyle={{borderRadius: 6, marginTop: hp(1.5)}}
+          disabled
         />
       )}
       <PostFooter
-        likeCount={likeCount}
-        commentCount={commentCount}
-        userLiked={data?.userLiked}
+        likeCount={
+          general?.postId == data?.postId ? general?.likeCount : likeCount
+        }
+        commentCount={
+          general?.postId == data?.postId ? general?.commentCount : commentCount
+        }
+        userLiked={
+          general?.postId == data?.postId ? general?.userLiked : data?.userLiked
+        }
         onPressLike={() => handleLike()}
         loader={loader}
       />
@@ -100,12 +116,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  textNormal: {
-    fontSize: hp(1.9),
-    fontWeight: 'bold',
-  },
+
   textTimeAgo: {
-    fontSize: hp(1.5),
+    fontSize: wp(3.5),
     color: 'rgba(87, 87, 87, 0.83)',
     fontWeight: '400',
   },
@@ -114,7 +127,7 @@ const styles = StyleSheet.create({
     marginRight: wp(5),
   },
   postTextStyle: {
-    fontSize: hp(1.75),
+    fontSize: wp(4.3),
     color: '#151313',
   },
 });

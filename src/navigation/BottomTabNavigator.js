@@ -6,13 +6,11 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
+import {MyContext} from '../context/Context';
 import Community from '../screens/Community';
 import Profile from '../screens/Profile';
 import {COLORS, images} from '../utils/constants/theme';
-import CustomIcon from '../components/common/CustomIcon';
-import {TextSmaller} from '../components/common/CustomText';
 import CustomImage from '../components/common/CustomImage';
-import {MyContext} from '../context/Context';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();

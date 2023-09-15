@@ -1,16 +1,16 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import React from 'react';
-import CustomImage from '../../components/common/CustomImage';
-import {TextBigger, TextNormal} from '../../components/common/CustomText';
-import {images} from '../../utils/constants/theme';
+import {StyleSheet, View} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {useNavigation} from '@react-navigation/native';
-import {getAgoTime, getAgoTimeFullString} from '../../utils/constants/helper';
+import CustomImage from '../../components/common/CustomImage';
+import {TextNormal} from '../../components/common/CustomText';
+import {getAgoTimeFullString} from '../../utils/constants/helper';
+import {images} from '../../utils/constants/theme';
 
-const PostDetailHeader = ({FullName, timeInSeconds, photo}) => {
+const PostDetailHeader = ({FullName, timeInSeconds, photo, onBackPress}) => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
@@ -18,7 +18,7 @@ const PostDetailHeader = ({FullName, timeInSeconds, photo}) => {
         source={images.backButton}
         height={hp(5.5)}
         width={wp(8)}
-        onPressImage={() => navigation.goBack()}
+        onPressImage={onBackPress}
       />
       <View style={styles.middleContainer}>
         <View style={styles.imageContainer}>
@@ -62,12 +62,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   textNormal: {
-    fontSize: hp(1.9),
+    fontSize: wp(4.5),
     fontWeight: 'bold',
     marginTop: hp(1),
   },
   textTimeAgo: {
-    fontSize: hp(1.5),
+    fontSize: wp(3.5),
     color: 'rgba(87, 87, 87, 0.83)',
     fontWeight: '400',
     marginTop: hp(0.2),

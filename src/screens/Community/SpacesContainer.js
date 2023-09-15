@@ -11,7 +11,7 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import {TextNormal, TextSmall} from '../../components/common/CustomText';
-import {COLORS, images} from '../../utils/constants/theme';
+import {COLORS, images, svg} from '../../utils/constants/theme';
 import useUser from '../../utils/hooks/useUser';
 import PopUpMenuItem from './PopUpMenuItem';
 import SpacesRelatedActivity from '../../utils/hooks/SpacesRelatedActivity';
@@ -195,6 +195,15 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     paddingVertical: hp(1.5),
     borderRadius: 12,
+    shadowColor: '#000000',
+    borderWidth: 0.1,
+    borderColor: '#CCCCCC',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.12,
+    shadowRadius: 3,
   },
   secondContainer: {
     flexDirection: 'row',

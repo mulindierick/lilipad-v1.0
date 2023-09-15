@@ -15,16 +15,8 @@ const CustomHeader = ({forInfoFurtherScreen = false}) => {
   if (forInfoFurtherScreen) {
     return (
       <View style={styles.forInfoFurtherScreen}>
-        {/* <CustomImage
-          source={images.backButton}
-          height={hp(5)}
-          width={wp(7)}
-          onPressImage={() => navigation.goBack()}
-        /> */}
-        {/* <View style={{alignItems: 'center', marginLeft: wp(16.55)}}> */}
         <TextBigger textStyle={styles.headerText}>Tell Us A Bit</TextBigger>
         <TextBigger textStyle={styles.headerText}>About Yourself</TextBigger>
-        {/* </View> */}
       </View>
     );
   }

@@ -32,7 +32,7 @@ export default PopUpMenuItem;
 
 const styles = StyleSheet.create({
   filterPopMenuText: {
-    fontSize: hp(1.8),
+    fontSize: wp(3.8),
     fontWeight: 'bold',
     paddingLeft: wp(2),
   },

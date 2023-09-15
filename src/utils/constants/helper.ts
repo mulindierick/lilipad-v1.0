@@ -39,7 +39,6 @@ export const getAgoTimeFullString = timestamp => {
   const ago = new Date(timestamp * 1000);
 
   const agoInSeconds = Math.floor((now - ago) / 1000);
-
   if (agoInSeconds <= 60) {
     return `just now`;
   } else if (agoInSeconds <= 3600) {
@@ -62,9 +61,11 @@ export const getAgoTimeFullString = timestamp => {
     return `${Math.floor(agoInSeconds / 2628000)} ${
       Math.floor(agoInSeconds / 2628000) > 1 ? 'months' : 'month'
     } ago`;
-  } else {
+  } else if (agoInSeconds > 31536000) {
     return `${Math.floor(agoInSeconds / 31536000)} ${
       Math.floor(agoInSeconds / 31536000) > 1 ? 'years' : 'year'
     } ago`;
+  } else {
+    return 'just now';
   }
 };

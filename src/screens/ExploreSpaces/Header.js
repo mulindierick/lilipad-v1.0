@@ -1,13 +1,13 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import React from 'react';
-import {images} from '../../utils/constants/theme';
-import {TextBig, TextBigger} from '../../components/common/CustomText';
-import CustomImage from '../../components/common/CustomImage';
+import {StyleSheet, View} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {useNavigation} from '@react-navigation/native';
+import CustomImage from '../../components/common/CustomImage';
+import {TextBigger} from '../../components/common/CustomText';
+import {images} from '../../utils/constants/theme';
 
 const Header = () => {
   const navigation = useNavigation();

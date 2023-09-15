@@ -3,6 +3,7 @@ import useUser from './useUser';
 
 const usePost = () => {
   const {user} = useUser();
+
   const {uploadImage} = useUser();
 
   const fetchPostsOfAllSpaces = async arrayOfSpaces => {
@@ -173,11 +174,84 @@ const usePost = () => {
           userLiked = true;
         }
       }
+      const comments = await firestore()
+        .collection(`spaces/${spaceName}/posts/${postId}/comments`)
+        .orderBy('createdAt', 'desc')
+        .get();
+      let commentData = [];
+
+      if (comments.docs.length > 0) {
+        commentData = await Promise.all(
+          comments.docs.map(async item => {
+            return {
+              ...item.data(),
+              user: await item.data().createdByReference.get(),
+            };
+          }),
+        );
+      }
+
+      console.log({comments});
       return {
         data: data?._data,
         user: await data?._data?.createdByReference.get(),
         userLiked: userLiked,
+        comments: commentData,
       };
+    } catch (err) {
+      console.log({err});
+    }
+  };
+
+  const AddComment = async (spaceName, postId, text) => {
+    try {
+      const commentId = firestore()
+        .collection(`spaces/${spaceName}/posts/${postId}/comments`)
+        .doc();
+      const res = await firestore()
+        .collection(`spaces/${spaceName}/posts/${postId}/comments`)
+        .doc(commentId.id)
+        .set({
+          text: text,
+          createdAt: firestore.FieldValue.serverTimestamp(),
+          userId: user?.firebaseUserId,
+          createdByReference: firestore().doc(
+            `accounts/${user?.firebaseUserId}`,
+          ),
+          commentId: commentId.id,
+        });
+      const countIncrementTask = await firestore()
+        .collection(`spaces/${spaceName}/posts`)
+        .doc(postId)
+        .update({
+          commentsCount: firestore.FieldValue.increment(1),
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchUpdatedComments = async (spaceName, postId) => {
+    try {
+      console.log({spaceName, postId});
+      const comments = await firestore()
+        .collection(`spaces/${spaceName}/posts/${postId}/comments`)
+        .orderBy('createdAt', 'desc')
+        .get();
+
+      let commentData = [];
+      console.log({comments});
+      if (comments.docs.length > 0) {
+        commentData = await Promise.all(
+          comments.docs.map(async item => {
+            return {
+              ...item.data(),
+              user: await item.data().createdByReference.get(),
+            };
+          }),
+        );
+      }
+      return commentData;
     } catch (err) {
       console.log({err});
     }
@@ -190,6 +264,8 @@ const usePost = () => {
     fetchAllSpaces,
     handlePostLike,
     fetchPostById,
+    AddComment,
+    fetchUpdatedComments,
   };
 };
 

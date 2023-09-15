@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, StyleSheet, View} from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  Keyboard,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -8,30 +15,49 @@ import CustomImage from '../../components/common/CustomImage';
 import {TextNormal} from '../../components/common/CustomText';
 import CustomTextInput from '../../components/common/CustomTextInput';
 import CustomWrapper from '../../components/wrapper/CustomWrapper';
-import {COLORS, images} from '../../utils/constants/theme';
+import {COLORS, FONTS, images} from '../../utils/constants/theme';
 import usePost from '../../utils/hooks/usePost';
 import PostFooter from '../Community/PostFooter';
 import CommentItem from './CommentItem';
 import PostDetailHeader from './PostDetailHeader';
 import {KeyboardAvoidingView} from 'react-native';
+import useUser from '../../utils/hooks/useUser';
+import {SendSvg} from '../../components/common/CustomSvgItems';
+import firestore from '@react-native-firebase/firestore';
+import {set} from 'react-hook-form';
+import CustomLoader from '../../components/common/CustomLoader';
+import {useDispatch} from 'react-redux';
+import {
+  setLikeCountAnduserLiked,
+  setPostCommentCount,
+  setPostDetails,
+} from '../../redux/reducers/generalSlice';
+import {useNavigation} from '@react-navigation/native';
 
 const PostDetails = ({route}) => {
+  const {user} = useUser();
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+
   const postId = route?.params?.postId;
   const spaceName = route?.params?.spaceName;
   const [loader, setLoader] = useState(true);
   const [postData, setPostData] = useState({});
+  const [postComments, setPostComments] = useState([]);
   const [like, setLike] = useState(true);
   const [likeCount, setLikeCount] = useState(0);
   const [commentCount, setCommentCount] = useState(0);
-  const {handlePostLike} = usePost();
+  const [text, setText] = useState('');
 
-  const {fetchPostById} = usePost();
+  const {fetchPostById, handlePostLike, AddComment, fetchUpdatedComments} =
+    usePost();
 
   const fetchPost = async () => {
     setLoader(true);
     try {
       const res = await fetchPostById(postId, spaceName);
       setPostData(res);
+      setPostComments(res?.comments);
       setLike(res?.userLiked);
       setLikeCount(res?.data?.likesCount);
       setCommentCount(res?.data?.commentsCount);
@@ -46,59 +72,160 @@ const PostDetails = ({route}) => {
     fetchPost();
   }, []);
 
-  const handleLike = async () => {
-    setLoader(true);
+  const onCommentDocumentUpdate = async () => {
     try {
-      const res = await handlePostLike(data?.spaceName, data?.postId, like);
+      const res = await fetchUpdatedComments(spaceName, postId);
+      if (res.length > 0) {
+        setCommentCount(res.length);
+        setPostComments(res);
+      }
+    } catch (err) {
+      console.log({err});
+    }
+  };
+
+  useEffect(() => {
+    const liveUpdates = firestore()
+      .collection(`spaces/${spaceName}/posts/${postId}/comments`)
+      .onSnapshot(querySnapshot => {
+        onCommentDocumentUpdate();
+      });
+  }, []);
+
+  const handleLike = async () => {
+    try {
+      const res = await handlePostLike(spaceName, postId, like);
     } catch (err) {
       console.log({err});
     }
     like ? setLikeCount(likeCount - 1) : setLikeCount(likeCount + 1);
+    dispatch(
+      setLikeCountAnduserLiked({likeCount: likeCount, userLiked: !like}),
+    );
     setLike(!like);
-    setLoader(false);
   };
 
-  return (
-    <CustomWrapper>
+  const OnSendComment = async () => {
+    try {
+      if (text === '') return;
+      const res = await AddComment(spaceName, postId, text);
+      setText('');
+      console.log('HELLO');
+    } catch (err) {
+      console.log({err});
+    }
+  };
+
+  // FOr Handling Keyboard
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true); // or some other action
+      },
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false); // or some other action
+      },
+    );
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
+
+  const handleBackPress = () => {
+    dispatch(
+      setPostDetails({
+        postId: postId,
+        likeCount: likeCount,
+        commentCount: commentCount,
+        userLiked: like,
+        spaceName: spaceName,
+      }),
+    );
+    navigation.goBack();
+  };
+
+  return loader ? (
+    <CustomLoader />
+  ) : (
+    <CustomWrapper containerStyle={{backgroundColor: COLORS.white}}>
       <PostDetailHeader
         photo={postData?.user?._data?.photo}
         FullName={`${postData?.user?._data?.firstName} ${postData?.user?._data?.lastName}`}
         timeInSeconds={postData?.data?.createdAt?._seconds}
+        onBackPress={() => handleBackPress()}
       />
       <FlatList
-        data={[1, 2, 3]}
+        data={postComments}
         showsVerticalScrollIndicator={false}
         renderItem={({item}) => (
           <CommentItem
-            photo={postData?.user?._data?.photo}
-            fullName={`${postData?.user?._data?.firstName} ${postData?.user?._data?.lastName}`}
-            timeInSeconds={postData?.data?.createdAt?._seconds}
-            text={'JUST CHECKING'}
+            photo={item?.user?._data?.photo}
+            fullName={`${item?.user?._data?.firstName} ${item?.user?._data?.lastName}`}
+            timeInSeconds={item.createdAt?._seconds}
+            text={item?.text}
+            userOwnComment={
+              item?.user?._data?.firebaseUserId === user?.firebaseUserId
+            }
           />
+        )}
+        ListFooterComponent={() => (
+          <View
+            style={[
+              isKeyboardVisible
+                ? {marginBottom: hp(50)}
+                : {marginBottom: hp(10)},
+            ]}></View>
+        )}
+        ListEmptyComponent={() => (
+          <View
+            style={{
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: hp(10),
+            }}>
+            {loader ? (
+              <ActivityIndicator color={COLORS.grey} size="large" />
+            ) : (
+              <TextNormal textStyle={styles.noDataFound}>
+                Nothing, Yet.
+              </TextNormal>
+            )}
+          </View>
         )}
         ListHeaderComponent={() => (
           <View style={styles.borderLine}>
-            <View style={styles.postText}>
-              <TextNormal textStyle={styles.postTextStyle}>
-                {postData?.data?.text}
-              </TextNormal>
-            </View>
-            {postData?.data?.postPhoto && (
-              <CustomImage
-                source={{uri: postData?.data?.postPhoto}}
-                height={hp(25)}
-                width={'100%'}
-                resizeMode="cover"
-                containerStyle={{borderRadius: 10, marginTop: hp(1.5)}}
+            <View style={{paddingHorizontal: wp(5)}}>
+              <View style={styles.postText}>
+                <TextNormal textStyle={styles.postTextStyle}>
+                  {postData?.data?.text}
+                </TextNormal>
+              </View>
+              {postData?.data?.postPhoto && (
+                <CustomImage
+                  source={{uri: postData?.data?.postPhoto}}
+                  height={hp(25)}
+                  width={'100%'}
+                  resizeMode="cover"
+                  containerStyle={{borderRadius: 10, marginTop: hp(1.5)}}
+                />
+              )}
+              <PostFooter
+                likeCount={likeCount}
+                commentCount={commentCount}
+                userLiked={like}
+                onPressLike={() => handleLike()}
+                loader={loader}
               />
-            )}
-            <PostFooter
-              likeCount={likeCount}
-              commentCount={commentCount}
-              userLiked={like}
-              onPressLike={() => handleLike()}
-              loader={loader}
-            />
+            </View>
           </View>
         )}
       />
@@ -115,15 +242,19 @@ const PostDetails = ({route}) => {
           resizeMode="contain"
         />
         <View style={styles.footerTextInputContainer}>
-          <CustomTextInput containerStyle={styles.textInput} />
-          <CustomImage
-            source={images.send}
-            width={wp(7)}
-            height={hp(3)}
-            resizeMode="contain"
+          <CustomTextInput
+            containerStyle={styles.textInput}
+            onChange={txt => setText(txt)}
+            value={text}
+            autoCapitalize="sentences"
+            textInputStyle={{paddingHorizontal: wp(2)}}
           />
+          <TouchableOpacity onPress={() => OnSendComment()}>
+            <SendSvg />
+          </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
+      <View style={styles.footerBack}></View>
     </CustomWrapper>
   );
 };
@@ -132,11 +263,11 @@ export default PostDetails;
 
 const styles = StyleSheet.create({
   postText: {
-    marginTop: hp(1.5),
+    marginTop: hp(2),
     marginRight: wp(12),
   },
   postTextStyle: {
-    fontSize: hp(1.75),
+    fontSize: wp(4.3),
     color: '#151313',
   },
   borderLine: {
@@ -145,21 +276,12 @@ const styles = StyleSheet.create({
     borderBottomColor: '#DADADA',
     marginBottom: hp(2),
   },
-  //   footer: {
-  //     borderTopWidth: 1,
-  //     borderColor: COLORS.grey,
-  //     marginHorizontal: wp(-4),
-  //     alignItems: 'center',
-  //     paddingHorizontal: wp(4),
-  //     flexDirection: 'row',
-  //     paddingTop: hp(1),
-  //     alignSelf: 'center',
-  //   },
+
   footerTextInputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginLeft: wp(3),
-    backgroundColor: '#F6F6F6',
+    backgroundColor: COLORS.backgroundColor,
     height: hp(5),
     width: wp(78),
     borderRadius: 100,
@@ -178,6 +300,20 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     position: 'absolute',
     bottom: hp(4),
-    backgroundColor: COLORS.backgroundColor,
+    backgroundColor: COLORS.white,
+    zIndex: 1,
+  },
+  noDataFound: {
+    color: '#747474',
+    fontFamily: FONTS.LightItalic,
+    fontWeight: '400',
+  },
+  footerBack: {
+    alignSelf: 'center',
+    position: 'absolute',
+    bottom: hp(0),
+    backgroundColor: COLORS.white,
+    height: hp(5),
+    width: wp(100),
   },
 });

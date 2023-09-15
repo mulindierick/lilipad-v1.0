@@ -2,7 +2,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {TextBig, TextNormal} from '../../components/common/CustomText';
 import CustomImage from '../../components/common/CustomImage';
-import {COLORS, FONTS, images} from '../../utils/constants/theme';
+import {COLORS, FONTS, svg} from '../../utils/constants/theme';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -12,7 +12,10 @@ import {
   MenuOption,
   MenuOptions,
   MenuTrigger,
+  renderers,
 } from 'react-native-popup-menu';
+import Svg, {Path} from 'react-native-svg';
+import {FilterSvg, SearchSvg} from '../../components/common/CustomSvgItems';
 
 const CommunityHeader = ({selected, setSelected, upperBorderFlag}) => {
   return (
@@ -22,13 +25,7 @@ const CommunityHeader = ({selected, setSelected, upperBorderFlag}) => {
           Community
         </TextBig>
         <View style={styles.innerContainer}>
-          <CustomImage
-            source={images.search}
-            height={wp(9)}
-            width={wp(9)}
-            resizeMode="cover"
-            containerStyle={{marginRight: wp(7)}}
-          />
+          <SearchSvg />
           <Menu>
             <MenuTrigger
               customStyles={{
@@ -36,13 +33,7 @@ const CommunityHeader = ({selected, setSelected, upperBorderFlag}) => {
                   underlayColor: 'rgba(0, 0, 0, 0)',
                 },
               }}>
-              <CustomImage
-                source={images.filter}
-                height={wp(10)}
-                width={wp(10)}
-                resizeMode="cover"
-                disabled
-              />
+              <FilterSvg />
             </MenuTrigger>
             <MenuOptions optionsContainerStyle={styles.filterPopMenu}>
               <MenuOption
@@ -143,10 +134,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: hp(2),
   },
-  normalText: {
-    fontSize: hp(1.9),
-    fontWeight: '600',
-  },
   filterPopMenu: {
     marginTop: hp(5),
     width: wp(50),
@@ -155,9 +142,18 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     paddingVertical: hp(1.5),
     borderRadius: 12,
+    shadowColor: '#000000',
+    borderWidth: 0.1,
+    borderColor: '#CCCCCC',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.12,
+    shadowRadius: 3,
   },
   filterPopMenuText: {
-    fontSize: hp(1.8),
+    fontSize: wp(4.3),
     fontWeight: 'bold',
     paddingHorizontal: wp(3),
     marginVertical: hp(0.4),

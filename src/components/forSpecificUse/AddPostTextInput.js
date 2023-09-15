@@ -17,6 +17,7 @@ const AddPostTextInput = ({text, setText}) => {
         containerStyle={styles.container}
         textInputStyle={[text ? styles.textInput : styles.placeholderStyle]}
         placeholder={'Share With Your Community...'}
+        autoCapitalize="sentences"
       />
     </View>
   );
@@ -36,7 +37,7 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: 'transparent',
     justifyContent: 'flex-start',
-    marginTop: hp(2),
+    marginTop: hp(2.3),
   },
   textInput: {
     height: hp(35),
@@ -47,10 +48,13 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0,
     fontSize: wp(5),
     alignSelf: 'flex-start',
+    paddingHorizontal: wp(2),
   },
   placeholderStyle: {
-    fontSize: wp(5),
-    fontFamily: FONTS.MediumItalic,
+    fontSize: wp(5.3),
+    fontFamily: FONTS.LightItalic,
     alignSelf: 'flex-start',
+    fontWeight: '400',
+    paddingHorizontal: wp(2),
   },
 });

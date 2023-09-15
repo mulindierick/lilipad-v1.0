@@ -148,6 +148,7 @@ const FurtherInfo = () => {
             control={control}
             name="firstName"
             key="firstName"
+            autoCapitalize="sentences"
           />
         </View>
         <View style={styles.inputContainer}>
@@ -161,6 +162,7 @@ const FurtherInfo = () => {
             control={control}
             name="lastName"
             key="lastName"
+            autoCapitalize="sentences"
           />
         </View>
         <ScrollView

@@ -1,5 +1,11 @@
 import React, {useState} from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  Keyboard,
+  StyleSheet,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -12,9 +18,6 @@ import AddPostTextInput from '../../components/forSpecificUse/AddPostTextInput';
 import {COLORS, images} from '../../utils/constants/theme';
 import useImagePicker from '../../utils/hooks/useImagePicker';
 import usePost from '../../utils/hooks/usePost';
-import {showToast} from '../../utils/constants/helper';
-import {set} from 'react-hook-form';
-import {TouchableWithoutFeedback, Keyboard} from 'react-native';
 
 const AddPostModal = ({
   isVisible,
@@ -41,6 +44,7 @@ const AddPostModal = ({
   };
 
   const addPostOnFirebase = async spaceName => {
+    onBackDropPress();
     setLoader(true);
     try {
       const res = await sharePost(spaceName, {
@@ -48,7 +52,6 @@ const AddPostModal = ({
         image:
           localImageUriArray.length > 0 ? localImageUriArray[0]?.path : null,
       });
-      onBackDropPress();
       setText('');
       setLocalImageUriArray([]);
       // showToast('success', 'Post Shared Successfully!');
@@ -68,15 +71,15 @@ const AddPostModal = ({
   return (
     <CustomModal
       isVisible={isVisible}
-      onBackButtonPress={onBackButtonPress}
-      onBackdropPress={onBackDropPress}>
+      onBackButtonPress={() => handleClosureOfModal()}
+      onBackdropPress={() => handleClosureOfModal()}>
+      {/* <BlurView style={styles.BlurView} blurType="extraDark" blurAmount={2.5}> */}
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
           <AddPostHeader
             onIconPress={() => handleClosureOfModal()}
             onPressShare={() => addPostOnFirebase(spaceName)}
             disabled={!localImageUriArray.length > 0 && !text}
-            loader={loader}
           />
           <AddPostTextInput setText={setText} text={text} />
           {localImageUriArray.length > 0 ? (
@@ -112,22 +115,24 @@ const AddPostModal = ({
             <CustomImage
               source={images.image}
               resizeMode="cover"
-              height={hp(4)}
-              width={wp(8.9)}
-              containerStyle={{marginRight: wp(7)}}
+              height={hp(4.7)}
+              width={wp(10.5)}
+              containerStyle={{marginRight: wp(10)}}
               onPressImage={() => galleryHandler()}
             />
 
             <CustomImage
               source={images.camera}
               resizeMode="cover"
-              height={hp(4)}
-              width={wp(8.9)}
+              height={hp(4.5)}
+              width={wp(11)}
+              containerStyle={{marginRight: wp(7)}}
               onPressImage={() => cameraHandler()}
             />
           </View>
         </View>
       </TouchableWithoutFeedback>
+      {/* </BlurView> */}
     </CustomModal>
   );
 };
@@ -146,7 +151,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     backgroundColor: COLORS.backgroundColor,
     marginTop: hp(1),
-    borderRadius: 10,
+    borderRadius: 6,
   },
   ShadowImageContainer: {
     marginTop: hp(1),
@@ -157,8 +162,8 @@ const styles = StyleSheet.create({
       width: 0,
       height: 0,
     },
-    shadowOpacity: 0.6,
-    shadowRadius: 2,
+    shadowOpacity: 0.25,
+    shadowRadius: 5,
     elevation: 12,
   },
   footer: {
@@ -166,7 +171,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     justifyContent: 'flex-end',
     flexDirection: 'row',
-    bottom: hp(10),
+    bottom: hp(8),
   },
   removeIconContainer: {
     position: 'absolute',

@@ -1,4 +1,10 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  Touchable,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React from 'react';
 import {
   heightPercentageToDP as hp,
@@ -6,7 +12,9 @@ import {
 } from 'react-native-responsive-screen';
 import CustomIcon from '../../components/common/CustomIcon';
 import {TextNormal} from '../../components/common/CustomText';
-import {COLORS} from '../../utils/constants/theme';
+import {COLORS, svg} from '../../utils/constants/theme';
+import CustomImage from '../../components/common/CustomImage';
+import {CommentSvg, LikeSvg} from '../../components/common/CustomSvgItems';
 
 const PostFooter = ({
   likeCount,
@@ -19,17 +27,12 @@ const PostFooter = ({
   return (
     <View style={styles.postFooter}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <CustomIcon
-          type="antdesign"
-          icon="heart"
-          size={hp(3)}
-          color={COLORS.red}
-          onPress={onPressLike}
-          disabled={loader}
-        />
+        <TouchableOpacity onPress={onPressLike}>
+          <LikeSvg />
+        </TouchableOpacity>
         <TextNormal
           textStyle={{
-            fontSize: hp(1.75),
+            fontSize: wp(3.9),
             marginLeft: 5,
             fontWeight: '400',
             color: 'rgba(87, 87, 87, 0.83)',
@@ -43,15 +46,10 @@ const PostFooter = ({
           alignItems: 'center',
           marginLeft: wp(5),
         }}>
-        <CustomIcon
-          type="ionicons"
-          icon="chatbubble"
-          size={hp(3)}
-          color={COLORS.blue}
-        />
+        <CommentSvg />
         <TextNormal
           textStyle={{
-            fontSize: hp(1.75),
+            fontSize: wp(3.9),
             marginLeft: 5,
             fontWeight: '400',
             color: 'rgba(87, 87, 87, 0.83)',
@@ -68,6 +66,6 @@ export default PostFooter;
 const styles = StyleSheet.create({
   postFooter: {
     flexDirection: 'row',
-    marginTop: hp(1.5),
+    marginTop: hp(2),
   },
 });

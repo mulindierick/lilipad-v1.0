@@ -9,9 +9,19 @@ import CustomImage from '../../components/common/CustomImage';
 import {TextNormal} from '../../components/common/CustomText';
 import {getAgoTimeFullString} from '../../utils/constants/helper';
 
-const CommentItem = ({photo, text, timeInSeconds, fullName}) => {
+const CommentItem = ({
+  photo,
+  text,
+  timeInSeconds,
+  fullName,
+  userOwnComment,
+}) => {
   return (
-    <View style={styles.specificCommentContainer}>
+    <View
+      style={[
+        styles.specificCommentContainer,
+        userOwnComment && {flexDirection: 'row-reverse'},
+      ]}>
       <View style={styles.imageContainer}>
         <CustomImage
           source={{uri: photo}}
@@ -19,21 +29,34 @@ const CommentItem = ({photo, text, timeInSeconds, fullName}) => {
           resizeMode="cover"
         />
       </View>
-      <View style={styles.commentDataCoontainer}>
+      <View
+        style={[
+          styles.commentDataCoontainer,
+          userOwnComment && {marginRight: wp(2), backgroundColor: COLORS.blue},
+        ]}>
         <View
           style={{
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
           }}>
-          <TextNormal bold textStyle={styles.name}>
+          <TextNormal
+            bold
+            textStyle={styles.name}
+            numberOfLines={1}
+            color={userOwnComment && COLORS.white}>
             {fullName}
           </TextNormal>
-          <TextNormal textStyle={styles.time}>
-            {getAgoTimeFullString(timeInSeconds)}
+          <TextNormal
+            textStyle={[styles.time, userOwnComment && {color: COLORS.white}]}>
+            {getAgoTimeFullString(timeInSeconds) || 'just now'}
           </TextNormal>
         </View>
-        <TextNormal textStyle={styles.commentTextStyle}>{text}</TextNormal>
+        <TextNormal
+          textStyle={styles.commentTextStyle}
+          color={userOwnComment && COLORS.white}>
+          {text}
+        </TextNormal>
       </View>
     </View>
   );
@@ -53,7 +76,7 @@ const styles = StyleSheet.create({
     borderRadius: hp(10),
   },
   imageContainer: {
-    height: hp(6.5),
+    height: hp(5),
     aspectRatio: 1,
     borderRadius: hp(10),
     alignItems: 'center',
@@ -62,7 +85,7 @@ const styles = StyleSheet.create({
   commentDataCoontainer: {
     backgroundColor: '#EEEEEE',
     flex: 1,
-    paddingTop: hp(2),
+    paddingTop: hp(1),
     paddingBottom: hp(1.5),
     paddingHorizontal: wp(3),
     borderRadius: 10,
@@ -70,15 +93,16 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: wp(4.2),
+    width: wp(45),
   },
   time: {
-    fontSize: wp(3.5),
+    fontSize: wp(3.3),
     color: '#9C9CA3',
     fontWeight: '400',
+    marginRight: wp(1.5),
   },
   commentTextStyle: {
-    marginTop: hp(0.5),
-    fontSize: hp(1.75),
-    color: '#000000',
+    marginTop: hp(0.8),
+    fontSize: wp(4.3),
   },
 });

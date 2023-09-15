@@ -1,34 +1,31 @@
-import React, {
-  useEffect,
-  useState,
-  useMemo,
-  useContext,
-  memo,
-  useRef,
-} from 'react';
-import {Animated, StyleSheet, View, Easing, RefreshControl} from 'react-native';
-import {TextBig, TextNormal} from '../../components/common/CustomText';
-import CustomWrapper from '../../components/wrapper/CustomWrapper';
-import CommunityHeader from './CommunityHeader';
-import SpacesContainer from './SpacesContainer';
-import useUser from '../../utils/hooks/useUser';
-import {FlatList} from 'react-native';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {
-  widthPercentageToDP as wp,
+  ActivityIndicator,
+  Animated,
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import {
   heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {COLORS, FONTS, images} from '../../utils/constants/theme';
-import CustomImage from '../../components/common/CustomImage';
-import CustomIcon from '../../components/common/CustomIcon';
-import PostItem from './PostItem';
-import {TouchableOpacity} from 'react-native';
-import AddPostModal from './AddPostModal';
-import usePost from '../../utils/hooks/usePost';
-import {set} from 'react-hook-form';
-import {ActivityIndicator} from 'react-native';
-import WelcomeNoteModal from './WelcomeNoteModal';
-import {useDispatch} from 'react-redux';
+import {PlusSVG} from '../../components/common/CustomSvgItems';
+import {TextNormal} from '../../components/common/CustomText';
+import CustomWrapper from '../../components/wrapper/CustomWrapper';
 import {MyContext} from '../../context/Context';
+import {COLORS, FONTS} from '../../utils/constants/theme';
+import usePost from '../../utils/hooks/usePost';
+import useUser from '../../utils/hooks/useUser';
+import AddPostModal from './AddPostModal';
+import CommunityHeader from './CommunityHeader';
+import PostItem from './PostItem';
+import SpacesContainer from './SpacesContainer';
+import WelcomeNoteModal from './WelcomeNoteModal';
+import {setPostId} from '../../redux/reducers/generalSlice';
+import {useDispatch} from 'react-redux';
 
 const headerHeight = hp(20);
 let scrollValue = 0;
@@ -36,6 +33,7 @@ let headerVisible = true;
 let focused = false;
 
 const Community = () => {
+  const dispatch = useDispatch();
   const {user, general, setFirstTimeLoginStatus} = useUser();
   const {fetchPostsOfAllSpaces, fetchPostsOfSpecificSpace} = usePost();
   const {PostFlatListRef} = useContext(MyContext);
@@ -56,9 +54,6 @@ const Community = () => {
     });
     return obj;
   });
-  useEffect(() => {
-    console.log('HELLO');
-  }, []);
 
   const fetchPosts = async () => {
     setLoading(true);
@@ -79,6 +74,21 @@ const Community = () => {
     fetchPosts();
   }, []);
 
+  useEffect(() => {
+    if (general?.postId) {
+      const findIndex = selectedSpaceData[selectedSpaces].findIndex(item => {
+        return item?.postId === general?.postId;
+      });
+      if (findIndex >= 0) {
+        let temp = [...selectedSpaceData[general?.spaceName]];
+        console.log({temp});
+        temp[findIndex].likesCount = general?.likeCount;
+        temp[findIndex].commentsCount = general?.commentCount;
+        temp[findIndex].userLiked = general?.userLiked;
+        setSelectedSpaceData({...selectedSpaceData, [selectedSpaces]: temp});
+      }
+    }
+  }, [general?.postId]);
   // For Animation
 
   const animation = useRef(new Animated.Value(1)).current;
@@ -177,14 +187,14 @@ const Community = () => {
             )}
           </View>
         )}
-        style={{paddingTop: hp(12.5)}}
+        style={{paddingTop: hp(11.5)}}
         // make this JSX componenet
       />
       <TouchableOpacity
         style={styles.addButton}
         onPress={() => setAddPostModal(true)}
         activeOpacity={0.8}>
-        <CustomImage source={images.addButton} resizeMode="cover" disabled />
+        <PlusSVG />
       </TouchableOpacity>
       <AddPostModal
         isVisible={addPostModal}
@@ -212,9 +222,9 @@ const styles = StyleSheet.create({
   },
   addButton: {
     position: 'absolute',
-    height: wp(15),
-    width: wp(15),
-    bottom: hp(16),
+    height: wp(18),
+    width: wp(18),
+    bottom: hp(15),
     right: wp(5),
   },
   noDataFound: {
@@ -226,7 +236,7 @@ const styles = StyleSheet.create({
     height: headerHeight / 2,
     position: 'absolute',
     alignSelf: 'center',
-    top: hp(4),
+    top: hp(3.5),
     zIndex: 10000,
   },
   spaceNestedContainer: {
