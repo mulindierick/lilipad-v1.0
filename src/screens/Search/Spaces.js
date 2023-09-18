@@ -1,29 +1,32 @@
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native';
+import useUser from '../../utils/hooks/useUser';
+import UseFirebaseAuth from '../../utils/hooks/UseFirebaseAuth';
+import {TextBig, TextNormal} from '../../components/common/CustomText';
+import CustomImage from '../../components/common/CustomImage';
+import {COLORS, FONTS, images} from '../../utils/constants/theme';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {TextBig} from '../../components/common/CustomText';
-import CustomTextInput from '../../components/common/CustomTextInput';
-import SpacesItem from '../../components/common/SpacesItem';
-import CustomWrapper from '../../components/wrapper/CustomWrapper';
-import {COLORS} from '../../utils/constants/theme';
-import UseFirebaseAuth from '../../utils/hooks/UseFirebaseAuth';
 import usePost from '../../utils/hooks/usePost';
-import useUser from '../../utils/hooks/useUser';
-import Header from './Header';
+import SpacesItem from '../../components/common/SpacesItem';
 
-const ExploreSpaces = () => {
+const Spaces = () => {
   const {user} = useUser();
   const {joinSpaces} = UseFirebaseAuth();
-  console.log({user});
+  const {fetchAllSpaces} = usePost();
+
   const [text, setText] = useState('');
   const [loading, setLoading] = useState(true);
   const [spaceData, setSpaceData] = useState([]);
   const [filterData, setFilterData] = useState([]);
-
-  const {fetchAllSpaces} = usePost();
 
   const fetchSpaces = async () => {
     setLoading(true);
@@ -72,19 +75,7 @@ const ExploreSpaces = () => {
   }, [text]);
 
   return (
-    <CustomWrapper>
-      <Header />
-      <View style={styles.marginTop}>
-        <CustomTextInput
-          placeholder="Search"
-          onChange={txt => setText(txt)}
-          containerStyle={styles.searchContainer}
-          placeholderTextColor="#575757"
-        />
-      </View>
-      <View style={styles.marginTop}>
-        <TextBig textStyle={styles.AllSpaces}>All Spaces</TextBig>
-      </View>
+    <>
       <FlatList
         data={filterData}
         style={{paddingTop: hp(2)}}
@@ -107,16 +98,45 @@ const ExploreSpaces = () => {
         )}
         ListFooterComponent={() => <View style={{paddingBottom: hp(15)}} />}
       />
-    </CustomWrapper>
+    </>
   );
 };
 
-export default ExploreSpaces;
+export default Spaces;
 
 const styles = StyleSheet.create({
   AllSpaces: {
     fontWeight: '700',
     fontSize: wp(5.5),
+  },
+
+  spaceContainer: {
+    marginHorizontal: wp(1),
+    borderRadius: 15,
+    marginBottom: hp(2),
+    paddingHorizontal: wp(4),
+    paddingVertical: hp(1.5),
+    backgroundColor: COLORS.backgroundColor,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 2,
+    elevation: 12,
+  },
+  spaceContainerHeader: {
+    width: wp(70),
+    fontSize: wp(5.5),
+  },
+  peopleLengthText: {
+    marginTop: hp(0.2),
+    fontFamily: FONTS.Regular,
+    fontWeight: '400',
   },
   searchContainer: {
     backgroundColor: '#E4E4E4',

@@ -1,9 +1,9 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import FurtherInfo from '../screens/Auth/FurtherInfo';
 import ExploreSpaces from '../screens/ExploreSpaces';
-import BottomTabNavigator from './BottomTabNavigator';
 import PostDetails from '../screens/PostDetails';
+import Search from '../screens/Search';
+import BottomTabNavigator from './BottomTabNavigator';
 
 const Stack = createNativeStackNavigator();
 
@@ -12,11 +12,8 @@ const ScreenStack = () => {
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="BottomTabNavigator" component={BottomTabNavigator} />
       <Stack.Screen name="ExploreSpaces" component={ExploreSpaces} />
-      <Stack.Screen
-        name="PostDetails"
-        component={PostDetails}
-        options={{gestureEnabled: false}}
-      />
+      <Stack.Screen name="PostDetails" component={PostDetails} />
+      <Stack.Screen name="Search" component={Search} />
     </Stack.Navigator>
   );
 };

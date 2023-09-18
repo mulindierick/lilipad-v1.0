@@ -27,7 +27,7 @@ const PostFooter = ({
   return (
     <View style={styles.postFooter}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <TouchableOpacity onPress={onPressLike}>
+        <TouchableOpacity onPress={loader ? null : onPressLike}>
           <LikeSvg />
         </TouchableOpacity>
         <TextNormal

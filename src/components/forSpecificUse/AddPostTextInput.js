@@ -27,7 +27,7 @@ export default AddPostTextInput;
 
 const styles = StyleSheet.create({
   parentContainer: {
-    maxHeight: hp(35),
+    maxHeight: hp(40),
     minHeight: hp(7),
     overflow: 'hidden',
   },

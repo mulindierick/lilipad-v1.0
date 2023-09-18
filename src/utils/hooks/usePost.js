@@ -59,9 +59,8 @@ const usePost = () => {
 
     let SpaceDataObject = {};
     arrayOfSpaces.forEach((space, index) => {
-      SpaceDataObject[space] = data[index];
+      SpaceDataObject[space] = {data: data[index], filter: 'Recent'};
     });
-
     return SpaceDataObject;
   };
 
@@ -73,14 +72,66 @@ const usePost = () => {
 
     const post = await Promise.all(
       spaceData.docs.map(async item => {
+        let userLiked = false;
+        if (item.data().likesCount > 0) {
+          const likes = await firestore()
+            .collection(`spaces/${spaceName}/posts/${item.data().postId}/likes`)
+            .doc(user?.firebaseUserId)
+            .get();
+          if (likes?._data?.userId === user?.firebaseUserId) {
+            userLiked = true;
+          }
+        }
         return {
           ...item.data(),
           user: await item.data().createdByReference.get(),
-          userLiked: false,
+          userLiked: userLiked,
         };
       }),
     );
     console.log({post});
+    return post;
+  };
+
+  const fetchFilteredPostsOfSpecificSpace = async (spaceName, filter) => {
+    console.log({spaceName}, {filter});
+    let spaceData = null;
+    if (filter == 'Recent') {
+      spaceData = await firestore()
+        .collection(`spaces/${spaceName}/posts`)
+        .orderBy('createdAt', 'desc')
+        .get();
+    } else if (filter == 'Popular') {
+      spaceData = await firestore()
+        .collection(`spaces/${spaceName}/posts`)
+        .orderBy('likesCount', 'desc')
+        .get();
+    } else if (filter == 'My Posts') {
+      spaceData = await firestore()
+        .collection(`spaces/${spaceName}/posts`)
+        .where('createdBy', '==', user?.firebaseUserId)
+        .get();
+    }
+
+    const post = await Promise.all(
+      spaceData.docs.map(async item => {
+        let userLiked = false;
+        if (item.data().likesCount > 0) {
+          const likes = await firestore()
+            .collection(`spaces/${spaceName}/posts/${item.data().postId}/likes`)
+            .doc(user?.firebaseUserId)
+            .get();
+          if (likes?._data?.userId === user?.firebaseUserId) {
+            userLiked = true;
+          }
+        }
+        return {
+          ...item.data(),
+          user: await item.data().createdByReference.get(),
+          userLiked: userLiked,
+        };
+      }),
+    );
     return post;
   };
 
@@ -266,6 +317,7 @@ const usePost = () => {
     fetchPostById,
     AddComment,
     fetchUpdatedComments,
+    fetchFilteredPostsOfSpecificSpace,
   };
 };
 

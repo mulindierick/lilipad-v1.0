@@ -79,6 +79,15 @@ const PostDetails = ({route}) => {
         setCommentCount(res.length);
         setPostComments(res);
       }
+      dispatch(
+        setPostDetails({
+          postId: postId,
+          likeCount: likeCount,
+          commentCount: res.length,
+          userLiked: like,
+          spaceName: spaceName,
+        }),
+      );
     } catch (err) {
       console.log({err});
     }
@@ -98,10 +107,16 @@ const PostDetails = ({route}) => {
     } catch (err) {
       console.log({err});
     }
-    like ? setLikeCount(likeCount - 1) : setLikeCount(likeCount + 1);
     dispatch(
-      setLikeCountAnduserLiked({likeCount: likeCount, userLiked: !like}),
+      setPostDetails({
+        postId: postId,
+        likeCount: like ? likeCount - 1 : likeCount + 1,
+        commentCount: commentCount,
+        userLiked: !like,
+        spaceName: spaceName,
+      }),
     );
+    like ? setLikeCount(likeCount - 1) : setLikeCount(likeCount + 1);
     setLike(!like);
   };
 
@@ -140,15 +155,6 @@ const PostDetails = ({route}) => {
   }, []);
 
   const handleBackPress = () => {
-    dispatch(
-      setPostDetails({
-        postId: postId,
-        likeCount: likeCount,
-        commentCount: commentCount,
-        userLiked: like,
-        spaceName: spaceName,
-      }),
-    );
     navigation.goBack();
   };
 

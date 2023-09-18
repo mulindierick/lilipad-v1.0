@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import {TextBig, TextNormal} from '../../components/common/CustomText';
 import CustomImage from '../../components/common/CustomImage';
@@ -16,8 +16,10 @@ import {
 } from 'react-native-popup-menu';
 import Svg, {Path} from 'react-native-svg';
 import {FilterSvg, SearchSvg} from '../../components/common/CustomSvgItems';
+import {useNavigation} from '@react-navigation/native';
 
 const CommunityHeader = ({selected, setSelected, upperBorderFlag}) => {
+  const navigation = useNavigation();
   return (
     <>
       <View style={styles.container}>
@@ -25,7 +27,9 @@ const CommunityHeader = ({selected, setSelected, upperBorderFlag}) => {
           Community
         </TextBig>
         <View style={styles.innerContainer}>
-          <SearchSvg />
+          <TouchableOpacity onPress={() => navigation.navigate('Search')}>
+            <SearchSvg />
+          </TouchableOpacity>
           <Menu>
             <MenuTrigger
               customStyles={{

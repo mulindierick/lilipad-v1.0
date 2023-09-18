@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {
   heightPercentageToDP as hp,
@@ -28,6 +28,7 @@ const PostItem = ({data}) => {
 
   const handleLike = async () => {
     setLoader(true);
+
     let userLike = general?.postId == data?.postId ? general?.userLiked : like;
     setCommentCount(
       general?.postId == data?.postId ? general?.commentCount : commentCount,
@@ -41,9 +42,19 @@ const PostItem = ({data}) => {
     }
     userLike ? setLikeCount(count - 1) : setLikeCount(count + 1);
     setLike(!userLike);
-    dispatch(setPostId({postId: null}));
     setLoader(false);
   };
+
+  useEffect(() => {
+    if (general?.postId == data?.postId) {
+      setLike(general?.userLiked);
+      setLikeCount(general?.likeCount);
+      setCommentCount(general?.commentCount);
+      dispatch(setPostId({postId: null}));
+      console.log({text: data?.text});
+      console.log({general});
+    }
+  }, [general?.postId]);
 
   return (
     <TouchableOpacity

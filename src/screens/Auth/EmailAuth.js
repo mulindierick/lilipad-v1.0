@@ -57,6 +57,9 @@ const EmailAuth = () => {
       navigation.navigate('OTPverification', {email: data?.email});
       const res = await emailSenderFunction({email: data?.email});
       console.log({res});
+      if (res?.data && !res?.data?.message == 'OTP sent successfully') {
+        alert('Something went wrong. Please try again');
+      }
     } catch (err) {
       console.log({err});
     }

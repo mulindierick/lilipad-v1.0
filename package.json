@@ -46,7 +46,7 @@
     "react-native-material-menu": "^2.0.0",
     "react-native-modal": "^13.0.1",
     "react-native-otp-inputs": "^7.4.0",
-    "react-native-pager-view": "^6.2.0",
+    "react-native-pager-view": "^6.2.1",
     "react-native-permissions": "^3.8.4",
     "react-native-popup-menu": "^0.16.1",
     "react-native-push-notification": "^8.1.1",

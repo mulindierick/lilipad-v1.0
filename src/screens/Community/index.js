@@ -13,7 +13,6 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import {PlusSVG} from '../../components/common/CustomSvgItems';
-import {TextNormal} from '../../components/common/CustomText';
 import CustomWrapper from '../../components/wrapper/CustomWrapper';
 import {MyContext} from '../../context/Context';
 import {COLORS, FONTS} from '../../utils/constants/theme';
@@ -26,6 +25,7 @@ import SpacesContainer from './SpacesContainer';
 import WelcomeNoteModal from './WelcomeNoteModal';
 import {setPostId} from '../../redux/reducers/generalSlice';
 import {useDispatch} from 'react-redux';
+import {TextNormal} from '../../components/common/CustomText';
 
 const headerHeight = hp(20);
 let scrollValue = 0;
@@ -35,7 +35,11 @@ let focused = false;
 const Community = () => {
   const dispatch = useDispatch();
   const {user, general, setFirstTimeLoginStatus} = useUser();
-  const {fetchPostsOfAllSpaces, fetchPostsOfSpecificSpace} = usePost();
+  const {
+    fetchPostsOfAllSpaces,
+    fetchPostsOfSpecificSpace,
+    fetchFilteredPostsOfSpecificSpace,
+  } = usePost();
   const {PostFlatListRef} = useContext(MyContext);
   // useReducer
   const [loading, setLoading] = useState(true);
@@ -57,16 +61,42 @@ const Community = () => {
 
   const fetchPosts = async () => {
     setLoading(true);
-    const data = await fetchPostsOfAllSpaces(user?.spaces);
-    setSelectedSpaceData(data);
+    try {
+      const data = await fetchPostsOfAllSpaces(user?.spaces);
+      console.log({data});
+      setSelectedSpaceData(data);
+    } catch (e) {
+      console.log({e});
+    }
     setLoading(false);
   };
 
-  const fetchParticularSpacePosts = async spaceName => {
+  const fetchParticularSpaceOnFilter = async filter => {
+    console.log({filter});
     setRefreshing(true);
-    const data = await fetchPostsOfSpecificSpace(selectedSpaces);
-    setSelectedSpaceData({...selectedSpaceData, [selectedSpaces]: []});
-    setSelectedSpaceData({...selectedSpaceData, [selectedSpaces]: data});
+    try {
+      const data = await fetchFilteredPostsOfSpecificSpace(
+        selectedSpaces,
+        filter,
+      );
+      //There was some issue due to which the i had to empty the data before populating it again
+      setSelectedSpaceData({
+        ...selectedSpaceData,
+        [selectedSpaces]: {
+          data: [],
+          filter: filter,
+        },
+      });
+      setSelectedSpaceData({
+        ...selectedSpaceData,
+        [selectedSpaces]: {
+          data: data,
+          filter: filter,
+        },
+      });
+    } catch (e) {
+      console.log({e});
+    }
     setRefreshing(false);
   };
 
@@ -76,16 +106,24 @@ const Community = () => {
 
   useEffect(() => {
     if (general?.postId) {
-      const findIndex = selectedSpaceData[selectedSpaces].findIndex(item => {
-        return item?.postId === general?.postId;
-      });
+      const findIndex = selectedSpaceData[selectedSpaces].data.findIndex(
+        item => {
+          return item?.postId === general?.postId;
+        },
+      );
       if (findIndex >= 0) {
-        let temp = [...selectedSpaceData[general?.spaceName]];
+        let temp = [...selectedSpaceData[general?.spaceName].data];
         console.log({temp});
         temp[findIndex].likesCount = general?.likeCount;
         temp[findIndex].commentsCount = general?.commentCount;
         temp[findIndex].userLiked = general?.userLiked;
-        setSelectedSpaceData({...selectedSpaceData, [selectedSpaces]: temp});
+        setSelectedSpaceData({
+          ...selectedSpaceData,
+          [selectedSpaces]: {
+            data: temp,
+            filter: selectedSpaceData[selectedSpaces].filter,
+          },
+        });
       }
     }
   }, [general?.postId]);
@@ -129,8 +167,8 @@ const Community = () => {
   return (
     <CustomWrapper containerStyle={{backgroundColor: '#F6F6F6'}}>
       <CommunityHeader
-        selected={selectedFilter}
-        setSelected={setSelectedFilter}
+        selected={selectedSpaceData[selectedSpaces].filter}
+        setSelected={fetchParticularSpaceOnFilter}
         upperBorderFlag={upperBorderFlag}
       />
 
@@ -153,13 +191,17 @@ const Community = () => {
         ref={PostFlatListRef}
         persistentScrollbar={true}
         keyExtractor={(item, index) => index.toString()}
-        data={selectedSpaceData[selectedSpaces]}
+        data={selectedSpaceData[selectedSpaces].data}
         onScroll={onScroll}
         refreshControl={
           <RefreshControl
             tintColor={COLORS.grey}
             refreshing={refreshing}
-            onRefresh={() => fetchParticularSpacePosts()}
+            onRefresh={() =>
+              fetchParticularSpaceOnFilter(
+                selectedSpaceData[selectedSpaces].filter,
+              )
+            }
             enabled={true}
             progressViewOffset={hp(10)}
           />
