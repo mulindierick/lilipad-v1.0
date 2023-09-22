@@ -25,9 +25,12 @@ export const userSlice = createSlice({
       state.major = payload?.major || null;
       state.spaces = payload?.spaces || null;
     },
+    setSpaces: (state, {payload}) => {
+      state.spaces = payload?.spaces || null;
+    },
   },
 });
 
-export const {setUser} = userSlice.actions;
+export const {setUser, setSpaces} = userSlice.actions;
 
 export default userSlice.reducer;

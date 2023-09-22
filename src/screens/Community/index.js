@@ -54,7 +54,10 @@ const Community = () => {
     let obj = {};
     user?.spaces.forEach(space => {
       console.log({space});
-      obj[space] = [];
+      obj[space] = {
+        data: [],
+        filter: 'Recent',
+      };
     });
     return obj;
   });
@@ -100,9 +103,13 @@ const Community = () => {
     setRefreshing(false);
   };
 
+  const handleSelectingSpaces = async spaceName => {
+    setSlectedSpaces(spaceName);
+  };
+
   useEffect(() => {
     fetchPosts();
-  }, []);
+  }, [user?.spaces.length]);
 
   useEffect(() => {
     if (general?.postId) {
@@ -126,6 +133,7 @@ const Community = () => {
         });
       }
     }
+    console.log({general});
   }, [general?.postId]);
   // For Animation
 
@@ -182,7 +190,7 @@ const Community = () => {
           <SpacesContainer
             data={user?.spaces}
             selected={selectedSpaces}
-            setSelected={setSlectedSpaces}
+            setSelected={handleSelectingSpaces}
           />
         </Animated.View>
       </Animated.View>
@@ -206,7 +214,9 @@ const Community = () => {
             progressViewOffset={hp(10)}
           />
         }
-        renderItem={({item}) => <PostItem data={item} />}
+        renderItem={({item}) => {
+          return <PostItem data={item} key={item?.postId} />;
+        }}
         ListFooterComponent={() => (
           <View style={{paddingBottom: hp(30)}}></View>
         )}

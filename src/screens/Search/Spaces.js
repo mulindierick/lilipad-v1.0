@@ -18,7 +18,7 @@ import {
 import usePost from '../../utils/hooks/usePost';
 import SpacesItem from '../../components/common/SpacesItem';
 
-const Spaces = () => {
+const Spaces = ({searchText}) => {
   const {user} = useUser();
   const {joinSpaces} = UseFirebaseAuth();
   const {fetchAllSpaces} = usePost();
@@ -64,22 +64,25 @@ const Spaces = () => {
   };
 
   useEffect(() => {
+    console.log('===>', {searchText}, {loading});
     if (loading) {
       fetchSpaces();
     } else {
       let filter = spaceData.filter(item =>
-        item?._data?.spaceName.toLowerCase().includes(text.toLowerCase()),
+        item?._data?.spaceName.toLowerCase().includes(searchText.toLowerCase()),
       );
       setFilterData(filter);
     }
-  }, [text]);
+  }, [searchText]);
 
   return (
     <>
       <FlatList
         data={filterData}
         style={{paddingTop: hp(2)}}
-        renderItem={({item}) => <SpacesItem item={item} />}
+        renderItem={({item, index}) => (
+          <SpacesItem item={item} AddSpaces={AddSpaces} key={index} />
+        )}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={() => (
           <View

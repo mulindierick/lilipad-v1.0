@@ -88,7 +88,9 @@ const ExploreSpaces = () => {
       <FlatList
         data={filterData}
         style={{paddingTop: hp(2)}}
-        renderItem={({item}) => <SpacesItem item={item} />}
+        renderItem={({item}) => (
+          <SpacesItem item={item} AddSpaces={AddSpaces} />
+        )}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={() => (
           <View

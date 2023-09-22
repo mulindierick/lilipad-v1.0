@@ -1,31 +1,57 @@
-import {FlatList, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import algoliasearch from 'algoliasearch/lite';
+import React, {useEffect, useState} from 'react';
+import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native';
 import {
-  widthPercentageToDP as wp,
   heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {COLORS, FONTS, images} from '../../utils/constants/theme';
 import CustomImage from '../../components/common/CustomImage';
 import {TextBig} from '../../components/common/CustomText';
+import {COLORS, FONTS, images} from '../../utils/constants/theme';
+import StudentsItem from './StudentsItem';
 
-const Students = () => {
+const ALGOLIA_APP_ID = 'VGYLBZ9NVP';
+const ALGOLIA_API_KEY = '557b30279ba11eb89ecb208ab50ed432';
+const ALGOLIA_INDEX_NAME = 'fullName';
+
+const searchClient = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_API_KEY);
+const searchIndex = searchClient.initIndex(ALGOLIA_INDEX_NAME);
+
+const Students = ({searchText}) => {
+  const [results, setResults] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSearch = async () => {
+    setIsLoading(true);
+    try {
+      const {hits} = await searchIndex.search(searchText);
+      console.log({hits});
+      setResults(hits);
+    } catch (error) {
+      console.error('Error searching:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (searchText) {
+      handleSearch();
+    } else {
+      setResults([]);
+    }
+    console.log({searchText});
+  }, [searchText]);
+
   return (
     <>
       <FlatList
-        data={[1, 2, 3, 4]}
+        data={results}
         style={{paddingTop: hp(2)}}
-        renderItem={({item}) => (
-          <View style={styles.spaceContainer}>
-            <View style={styles.imageContainer}>
-              <CustomImage
-                resizeMode="cover"
-                source={images.dummyProfilePic}
-                containerStyle={styles.image}
-              />
-            </View>
-            <TextBig textStyle={styles.Text}>Mustafa Quaid</TextBig>
-          </View>
-        )}
+        refreshing={isLoading}
+        renderItem={({item}) => {
+          return <StudentsItem item={item} key={item.objectID} />;
+        }}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={() => (
           <View
@@ -35,11 +61,9 @@ const Students = () => {
               justifyContent: 'center',
               height: hp(50),
             }}>
-            {loading ? (
-              <ActivityIndicator color={COLORS.blue} size="large" />
-            ) : (
-              <TextBig color={COLORS.blue}>No Data Found</TextBig>
-            )}
+            {!isLoading ? (
+              <TextBig color={COLORS.grey}>Nothing, Yet!</TextBig>
+            ) : null}
           </View>
         )}
         ListFooterComponent={() => <View style={{paddingBottom: hp(15)}} />}
@@ -50,44 +74,4 @@ const Students = () => {
 
 export default Students;
 
-const styles = StyleSheet.create({
-  spaceContainer: {
-    marginHorizontal: wp(1),
-    borderRadius: 15,
-    marginBottom: hp(2),
-    paddingHorizontal: wp(4),
-    paddingVertical: hp(1.5),
-    backgroundColor: COLORS.backgroundColor,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 0.2,
-    borderColor: '#CCCCCC',
-    shadowColor: '#000000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 1,
-    elevation: 12,
-  },
-  spaceContainerHeader: {
-    width: wp(70),
-    fontSize: wp(5.5),
-  },
-  peopleLengthText: {
-    marginTop: hp(0.2),
-    fontFamily: FONTS.Regular,
-    fontWeight: '400',
-  },
-  image: {
-    height: hp(7),
-    aspectRatio: 1,
-    borderRadius: hp(10),
-  },
-  imageContainer: {height: hp(7), aspectRatio: 1, borderRadius: wp(7)},
-  Text: {
-    marginLeft: wp(4),
-    fontSize: wp(7),
-  },
-});
+const styles = StyleSheet.create({});

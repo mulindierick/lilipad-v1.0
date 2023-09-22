@@ -82,6 +82,7 @@ const UseFirebaseAuth = () => {
           photo: url,
           spaces: ['Skidmore College', classYear, major],
           isVerified: true,
+          fullName: firstName + ' ' + lastName,
         });
 
       console.log('Added Skidmore College');

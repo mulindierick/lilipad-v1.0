@@ -85,12 +85,12 @@ const OTPverification = ({route}) => {
       try {
         let res = await firebaseAuth(email, otp);
         console.log({res});
-        // if (res !== 'Success') {
-        //   setError(true);
-        //   showToast('error', res);
-        // } else {
-        //   showToast('success', 'Email Verified Scuccessfully');
-        // }
+        if (res !== 'Success') {
+          setError(true);
+          // showToast('error', res);
+        } else {
+          // showToast('success', 'Email Verified Scuccessfully');
+        }
       } catch (err) {
         console.log({err});
       }

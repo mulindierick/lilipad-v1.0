@@ -9,8 +9,9 @@ import {
 } from 'react-native-responsive-screen';
 import useUser from '../../utils/hooks/useUser';
 
-const SpacesItem = ({item}) => {
+const SpacesItem = ({item, AddSpaces}) => {
   const {user} = useUser();
+
   return (
     <View style={styles.spaceContainer}>
       <View>

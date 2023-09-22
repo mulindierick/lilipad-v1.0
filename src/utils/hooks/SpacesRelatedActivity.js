@@ -1,8 +1,11 @@
 import firestore from '@react-native-firebase/firestore';
 import useUser from './useUser';
+import {useDispatch} from 'react-redux';
+import {setSpaces} from '../../redux/reducers/userSlice';
 
 const SpacesRelatedActivity = () => {
   const {user} = useUser();
+  const dispatch = useDispatch();
   const removeSpace = async spaceName => {
     const array = [spaceName, user?.firebaseUserId];
     try {

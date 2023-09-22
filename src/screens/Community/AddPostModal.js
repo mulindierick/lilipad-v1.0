@@ -48,7 +48,7 @@ const AddPostModal = ({
     setLoader(true);
     try {
       const res = await sharePost(spaceName, {
-        text: text,
+        text: text.trim(),
         image:
           localImageUriArray.length > 0 ? localImageUriArray[0]?.path : null,
       });
@@ -79,7 +79,7 @@ const AddPostModal = ({
           <AddPostHeader
             onIconPress={() => handleClosureOfModal()}
             onPressShare={() => addPostOnFirebase(spaceName)}
-            disabled={!localImageUriArray.length > 0 && !text}
+            disabled={!localImageUriArray.length > 0 && !text.trim()}
           />
           <AddPostTextInput setText={setText} text={text} />
           {localImageUriArray.length > 0 ? (

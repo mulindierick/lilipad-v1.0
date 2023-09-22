@@ -1,5 +1,5 @@
 import {StyleSheet, Text, View} from 'react-native';
-import React, {useRef, useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import CustomTabBar from '../../components/customTabBar';
 import CustomWrapper from '../../components/wrapper/CustomWrapper';
 import CustomTextInput from '../../components/common/CustomTextInput';
@@ -11,24 +11,52 @@ import CustomIcon from '../../components/common/CustomIcon';
 import {COLORS} from '../../utils/constants/theme';
 import Students from './Students';
 import Spaces from './Spaces';
+import {set} from 'react-hook-form';
+import {debounce} from 'lodash';
 
 const Search = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const pagerRef = useRef(null);
-  const [text, setText] = useState('');
+  const [StudentText, setStudentText] = useState('');
+  const [SpaceText, setSpaceText] = useState('');
+  const [searchStudent, setSearchStudent] = useState('');
+  const [searchSpace, setSearchSpace] = useState('');
 
-  const onPressTab = index => {
-    pagerRef.current?.setPage(index);
-    // setActiveIndex(index)
+  const setSearchText = async txt => {
+    try {
+      if (activeIndex == 0) {
+        setStudentText(txt);
+      } else {
+        setSpaceText(txt);
+      }
+      // debounce logic
+      debouncedHandleInputChange(txt);
+    } catch (error) {
+      console.log('Search Error', error);
+    }
   };
+
+  const debouncedHandleInputChange = useCallback(
+    debounce(txt => {
+      // Handle the input change here
+      if (activeIndex == 0) {
+        setSearchStudent(txt);
+      } else {
+        setSearchSpace(txt);
+      }
+    }, 500),
+    [],
+  );
+
   return (
     <CustomWrapper>
       <View style={styles.searchContainer}>
         <CustomTextInput
           placeholder="Search"
-          onChange={txt => setText(txt)}
+          onChange={txt => setSearchText(txt)}
           containerStyle={styles.customTextInput}
           placeholderTextColor="#B0B0B0"
+          value={activeIndex === 0 ? StudentText : SpaceText}
         />
         <CustomIcon
           type="ionicons"
@@ -40,6 +68,15 @@ const Search = () => {
             alignItems: 'flex-end',
             paddingRight: wp(4),
           }}
+          onPress={() => {
+            if (activeIndex === 0) {
+              setStudentText('');
+              setSearchStudent('');
+            } else {
+              setSpaceText('');
+              setSearchSpace('');
+            }
+          }}
         />
       </View>
       <CustomTabBar
@@ -47,8 +84,8 @@ const Search = () => {
         activeIndex={activeIndex}
         setActiveIndex={setActiveIndex}
         pagerRef={pagerRef}>
-        <Students />
-        <Spaces />
+        <Students searchText={StudentText} />
+        <Spaces searchText={SpaceText} />
       </CustomTabBar>
     </CustomWrapper>
   );

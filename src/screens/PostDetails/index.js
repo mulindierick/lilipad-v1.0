@@ -78,22 +78,23 @@ const PostDetails = ({route}) => {
       if (res.length > 0) {
         setCommentCount(res.length);
         setPostComments(res);
+        dispatch(
+          setPostDetails({
+            postId: postId,
+            likeCount: likeCount,
+            commentCount: res.length,
+            userLiked: like,
+            spaceName: spaceName,
+          }),
+        );
       }
-      dispatch(
-        setPostDetails({
-          postId: postId,
-          likeCount: likeCount,
-          commentCount: res.length,
-          userLiked: like,
-          spaceName: spaceName,
-        }),
-      );
     } catch (err) {
       console.log({err});
     }
   };
 
   useEffect(() => {
+    console.log({commentLoader});
     const liveUpdates = firestore()
       .collection(`spaces/${spaceName}/posts/${postId}/comments`)
       .onSnapshot(querySnapshot => {
@@ -101,7 +102,9 @@ const PostDetails = ({route}) => {
       });
   }, []);
 
+  const [likeLoader, setLikeLoader] = useState(false);
   const handleLike = async () => {
+    setLikeLoader(true);
     try {
       const res = await handlePostLike(spaceName, postId, like);
     } catch (err) {
@@ -118,9 +121,12 @@ const PostDetails = ({route}) => {
     );
     like ? setLikeCount(likeCount - 1) : setLikeCount(likeCount + 1);
     setLike(!like);
+    setLikeLoader(false);
   };
 
+  const [commentLoader, setCommentLoader] = useState(false);
   const OnSendComment = async () => {
+    setCommentLoader(true);
     try {
       if (text === '') return;
       const res = await AddComment(spaceName, postId, text);
@@ -129,6 +135,7 @@ const PostDetails = ({route}) => {
     } catch (err) {
       console.log({err});
     }
+    setCommentLoader(false);
   };
 
   // FOr Handling Keyboard
@@ -229,7 +236,7 @@ const PostDetails = ({route}) => {
                 commentCount={commentCount}
                 userLiked={like}
                 onPressLike={() => handleLike()}
-                loader={loader}
+                loader={likeLoader}
               />
             </View>
           </View>
@@ -255,7 +262,8 @@ const PostDetails = ({route}) => {
             autoCapitalize="sentences"
             textInputStyle={{paddingHorizontal: wp(2)}}
           />
-          <TouchableOpacity onPress={() => OnSendComment()}>
+          <TouchableOpacity
+            onPress={commentLoader ? null : () => OnSendComment()}>
             <SendSvg />
           </TouchableOpacity>
         </View>

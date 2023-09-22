@@ -54,7 +54,7 @@ const PostItem = ({data}) => {
       console.log({text: data?.text});
       console.log({general});
     }
-  }, [general?.postId]);
+  }, [general?.postId == data?.postId]);
 
   return (
     <TouchableOpacity

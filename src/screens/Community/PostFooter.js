@@ -23,6 +23,7 @@ const PostFooter = ({
   onPressLike,
   onPressComment,
   loader,
+  commentLoader,
 }) => {
   return (
     <View style={styles.postFooter}>
