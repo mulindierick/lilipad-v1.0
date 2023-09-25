@@ -45,6 +45,7 @@ const RootStack = ({navigation}) => {
                   firebaseUserId: userData?.firebaseUserId,
                   major: userData?.major,
                   spaces: userData?.spaces,
+                  classYear: userData?.classYear,
                 }),
               );
             });

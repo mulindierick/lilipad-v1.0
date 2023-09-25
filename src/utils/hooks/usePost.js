@@ -308,6 +308,41 @@ const usePost = () => {
     }
   };
 
+  const fetchMyPost = async () => {
+    try {
+      const data = await firestore()
+        .collectionGroup(`posts`)
+        .where('createdBy', '==', user?.firebaseUserId)
+        .get();
+
+      const post = await Promise.all(
+        data.docs.map(async item => {
+          let userLiked = false;
+          if (item.data().likesCount > 0) {
+            const likes = await firestore()
+              .collection(
+                `spaces/${spaceName}/posts/${item.data().postId}/likes`,
+              )
+              .doc(user?.firebaseUserId)
+              .get();
+            if (likes?._data?.userId === user?.firebaseUserId) {
+              userLiked = true;
+            }
+          }
+          return {
+            ...item.data(),
+            user: await item.data().createdByReference.get(),
+            userLiked: userLiked,
+          };
+        }),
+      );
+      return post;
+      // return data.docs;
+    } catch (e) {
+      console.log({e});
+    }
+  };
+
   return {
     fetchPostsOfAllSpaces,
     sharePost,
@@ -318,6 +353,7 @@ const usePost = () => {
     AddComment,
     fetchUpdatedComments,
     fetchFilteredPostsOfSpecificSpace,
+    fetchMyPost,
   };
 };
 

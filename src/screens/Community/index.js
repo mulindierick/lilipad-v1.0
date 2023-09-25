@@ -175,7 +175,7 @@ const Community = () => {
   return (
     <CustomWrapper containerStyle={{backgroundColor: '#F6F6F6'}}>
       <CommunityHeader
-        selected={selectedSpaceData[selectedSpaces].filter}
+        selected={selectedSpaceData[selectedSpaces]?.filter || 'Recent'}
         setSelected={fetchParticularSpaceOnFilter}
         upperBorderFlag={upperBorderFlag}
       />
@@ -199,7 +199,7 @@ const Community = () => {
         ref={PostFlatListRef}
         persistentScrollbar={true}
         keyExtractor={(item, index) => index.toString()}
-        data={selectedSpaceData[selectedSpaces].data}
+        data={selectedSpaceData[selectedSpaces]?.data || []}
         onScroll={onScroll}
         refreshControl={
           <RefreshControl
@@ -286,9 +286,10 @@ const styles = StyleSheet.create({
   },
   spaceContainer: {
     height: headerHeight / 2,
-    position: 'absolute',
+    // position: 'absolute',
     alignSelf: 'center',
-    top: hp(3.5),
+    // top: 0,
+    marginTop: hp(-10),
     zIndex: 10000,
   },
   spaceNestedContainer: {

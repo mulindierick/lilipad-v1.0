@@ -45,11 +45,25 @@ const useUser = () => {
       });
   };
 
+  const updateProfilePhoto = async uri => {
+    const url = await uploadImage(uri);
+    if (url) {
+      await firestore()
+        .collection('accounts')
+        .doc(user?.firebaseUserId)
+        .update({
+          photo: url,
+        });
+      dispatch(setUser({...user, photo: url}));
+    }
+  };
+
   return {
     user,
     general,
     uploadImage,
     setFirstTimeLoginStatus,
+    updateProfilePhoto,
   };
 };
 

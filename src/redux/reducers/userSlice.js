@@ -9,6 +9,7 @@ const initialState = {
   firebaseUserId: null,
   major: null,
   spaces: null,
+  classYear: null,
 };
 
 export const userSlice = createSlice({
@@ -24,6 +25,7 @@ export const userSlice = createSlice({
       state.firebaseUserId = payload?.firebaseUserId || null;
       state.major = payload?.major || null;
       state.spaces = payload?.spaces || null;
+      state.classYear = payload?.classYear || null;
     },
     setSpaces: (state, {payload}) => {
       state.spaces = payload?.spaces || null;
