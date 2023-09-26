@@ -36,6 +36,7 @@ import {useNavigation} from '@react-navigation/native';
 
 const PostDetails = ({route}) => {
   const {user} = useUser();
+  const {general} = useUser();
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
@@ -44,7 +45,7 @@ const PostDetails = ({route}) => {
   const [loader, setLoader] = useState(true);
   const [postData, setPostData] = useState({});
   const [postComments, setPostComments] = useState([]);
-  const [like, setLike] = useState(true);
+  const [like, setLike] = useState(null);
   const [likeCount, setLikeCount] = useState(0);
   const [commentCount, setCommentCount] = useState(0);
   const [text, setText] = useState('');
@@ -78,16 +79,16 @@ const PostDetails = ({route}) => {
       if (res.length > 0) {
         setCommentCount(res.length);
         setPostComments(res);
-        dispatch(
-          setPostDetails({
-            postId: postId,
-            likeCount: likeCount,
-            commentCount: res.length,
-            userLiked: like,
-            spaceName: spaceName,
-          }),
-        );
       }
+      dispatch(
+        setPostDetails({
+          postId: postId,
+          likeCount: likeCount,
+          commentCount: res.length,
+          userLiked: like,
+          spaceName: spaceName,
+        }),
+      );
     } catch (err) {
       console.log({err});
     }
@@ -125,6 +126,7 @@ const PostDetails = ({route}) => {
   };
 
   const [commentLoader, setCommentLoader] = useState(false);
+
   const OnSendComment = async () => {
     setCommentLoader(true);
     try {

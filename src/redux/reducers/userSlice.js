@@ -21,18 +21,22 @@ export const userSlice = createSlice({
       state.photo = payload?.photo || null;
       state.firstName = payload?.firstName || null;
       state.lastName = payload?.lastName || null;
-      state.isVerified = payload?.isVerified || null;
+      state.isVerified = payload?.isVerified;
       state.firebaseUserId = payload?.firebaseUserId || null;
       state.major = payload?.major || null;
       state.spaces = payload?.spaces || null;
       state.classYear = payload?.classYear || null;
     },
     setSpaces: (state, {payload}) => {
+      console.log('HELLOO ITS WORKING ===> ', payload?.spaces);
       state.spaces = payload?.spaces || null;
+    },
+    setEmail: (state, {payload}) => {
+      state.email = payload?.email || null;
     },
   },
 });
 
-export const {setUser, setSpaces} = userSlice.actions;
+export const {setUser, setSpaces, setEmail} = userSlice.actions;
 
 export default userSlice.reducer;

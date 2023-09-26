@@ -1,4 +1,5 @@
-import React, {useState, useRef, useEffect, useCallback} from 'react';
+import {useNavigation} from '@react-navigation/native';
+import React, {useCallback} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {
   Menu,
@@ -11,26 +12,25 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import {TextNormal, TextSmall} from '../../components/common/CustomText';
-import {COLORS, images, svg} from '../../utils/constants/theme';
+import {COLORS, images} from '../../utils/constants/theme';
+import SpacesRelatedActivity from '../../utils/hooks/SpacesRelatedActivity';
 import useUser from '../../utils/hooks/useUser';
 import PopUpMenuItem from './PopUpMenuItem';
-import SpacesRelatedActivity from '../../utils/hooks/SpacesRelatedActivity';
-import {useNavigation} from '@react-navigation/native';
-import {FlatList} from 'react-native-gesture-handler';
-const SpacesContainer = ({data = [], selected, setSelected}) => {
+const SpacesContainer = ({data = [], selected, setSelected, newPostCount}) => {
   const navigation = useNavigation();
   const {user} = useUser();
   const {removeSpace} = SpacesRelatedActivity();
-  const removeAndUpdateSpaces = useCallback(async item => {
+
+  const removeAndUpdateSpaces = async item => {
     try {
       if (selected == item) {
         setSelected('Skidmore College');
       }
-      let res = await removeSpace(item);
+      let res = await removeSpace(item, user?.spaces);
     } catch (err) {
       console.log({err});
     }
-  }, []);
+  };
 
   const handleSpacesClick = (item, index) => {
     setSelected(item);
@@ -84,14 +84,16 @@ const SpacesContainer = ({data = [], selected, setSelected}) => {
                     color={selected == item ? COLORS.white : COLORS.black}>
                     {item}
                   </TextNormal>
-                  <View style={styles.totalPostNumbers}>
-                    <TextSmall
-                      bold
-                      color={COLORS.white}
-                      textStyle={{fontSize: hp(1.4)}}>
-                      0
-                    </TextSmall>
-                  </View>
+                  {newPostCount[item] != 0 && (
+                    <View style={styles.totalPostNumbers}>
+                      <TextSmall
+                        bold
+                        color={COLORS.white}
+                        textStyle={{fontSize: hp(1.4)}}>
+                        {newPostCount[item]}
+                      </TextSmall>
+                    </View>
+                  )}
                 </MenuTrigger>
                 <MenuOptions optionsContainerStyle={styles.filterPopMenu}>
                   <MenuOption

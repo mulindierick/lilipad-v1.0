@@ -2,7 +2,7 @@ import {firebase} from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import {useVerifyOTPMutation} from '../../redux/apis';
 import {useDispatch, useSelector} from 'react-redux';
-import {setUser} from '../../redux/reducers/userSlice';
+import {setEmail, setSpaces, setUser} from '../../redux/reducers/userSlice';
 import useUser from './useUser';
 import {setFirstTimeLogin} from '../../redux/reducers/generalSlice';
 
@@ -25,6 +25,7 @@ const UseFirebaseAuth = () => {
             // Signed in
             console.log('HERE', userCredential.user);
             var email = email;
+            dispatch(setEmail({email: email}));
             // ...
             return 'Success';
           })
@@ -83,6 +84,11 @@ const UseFirebaseAuth = () => {
           spaces: ['Skidmore College', classYear, major],
           isVerified: true,
           fullName: firstName + ' ' + lastName,
+          groupLastVisit: {
+            'Skidmore College': firestore.FieldValue.serverTimestamp(),
+            [classYear]: firestore.FieldValue.serverTimestamp(),
+            [major]: firestore.FieldValue.serverTimestamp(),
+          },
         });
 
       console.log('Added Skidmore College');
@@ -96,6 +102,7 @@ const UseFirebaseAuth = () => {
           spaces: ['Skidmore College', classYear, major],
           isVerified: true,
           firebaseUserId: user?.firebaseUserId,
+          classYear: classYear,
         }),
       );
       dispatch(setFirstTimeLogin({firstTimeLogin: true}));
@@ -109,6 +116,11 @@ const UseFirebaseAuth = () => {
 
   const joinSpaces = async spaceName => {
     try {
+      dispatch(
+        setSpaces({
+          spaces: [...user?.spaces, spaceName],
+        }),
+      );
       await firestore()
         .collection('accounts')
         .doc(user?.firebaseUserId)
@@ -130,6 +142,11 @@ const UseFirebaseAuth = () => {
       return 'Success';
     } catch (err) {
       console.log({err});
+      dispatch(
+        setSpaces({
+          spaces: [...user?.spaces],
+        }),
+      );
     }
     // if (res2?._data) {
     //   res2 = await firestore()

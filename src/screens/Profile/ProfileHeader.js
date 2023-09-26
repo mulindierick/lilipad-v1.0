@@ -19,8 +19,28 @@ import {
 } from '../../components/common/CustomSvgItems';
 import {TextBig, TextNormal} from '../../components/common/CustomText';
 import {COLORS, FONTS} from '../../utils/constants/theme';
+import {useDispatch} from 'react-redux';
+import auth from '@react-native-firebase/auth';
+import {setUser} from '../../redux/reducers/userSlice';
 
 const ProfileHeader = () => {
+  const dispatch = useDispatch();
+  const signOut = () => {
+    dispatch(
+      setUser({
+        email: null,
+        photo: null,
+        firstName: null,
+        lastName: null,
+        isVerified: null,
+        firebaseUserId: null,
+        major: null,
+        spaces: null,
+      }),
+    );
+    auth().signOut();
+  };
+
   const navigation = useNavigation();
   return (
     <>
@@ -32,7 +52,7 @@ const ProfileHeader = () => {
           <TouchableOpacity onPress={() => navigation.navigate('Search')}>
             <SettingSvg />
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => signOut()}>
             <NotificationSvg />
           </TouchableOpacity>
         </View>

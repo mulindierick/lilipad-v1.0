@@ -32,9 +32,11 @@ const RootStack = ({navigation}) => {
           setIslogin(true);
           let userDetail = firestore()
             .collection('accounts')
-            .doc(user?.uid)
-            .onSnapshot(userDetailData => {
+            .doc(user?._user?.uid)
+            .get()
+            .then(userDetailData => {
               const userData = userDetailData?.data();
+              console.log({userData});
               dispatch(
                 setUser({
                   email: userData?.email,
@@ -57,6 +59,7 @@ const RootStack = ({navigation}) => {
       }
       setLoading(false);
     });
+    console.log({user});
     return subscriber;
   }, []);
 
@@ -66,6 +69,8 @@ const RootStack = ({navigation}) => {
         <CustomLoader />
       ) : !isLogin ? (
         <AuthStack />
+      ) : user.isVerified == null ? (
+        <CustomLoader />
       ) : user.isVerified ? (
         <>
           <ScreenStack />

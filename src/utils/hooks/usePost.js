@@ -24,6 +24,23 @@ const usePost = () => {
       });
     });
 
+    const res = await firestore()
+      .collection('accounts')
+      .doc(user?.firebaseUserId)
+      .get();
+
+    const lastVisitTime = res.data().groupLastVisit;
+
+    const newPostsCount = await Promise.all(
+      arrayOfSpaces.map(async space => {
+        const data = await firestore()
+          .collection(`spaces/${space}/posts`)
+          .where('createdAt', '>', lastVisitTime[space])
+          .get();
+        return data.docs.length;
+      }),
+    );
+
     const data = await Promise.allSettled(promiseToGetPostOfAllSpaces).then(
       async data => {
         return await Promise.all(
@@ -58,10 +75,15 @@ const usePost = () => {
     );
 
     let SpaceDataObject = {};
+    let newPostsCountData = {};
     arrayOfSpaces.forEach((space, index) => {
-      SpaceDataObject[space] = {data: data[index], filter: 'Recent'};
+      SpaceDataObject[space] = {
+        data: data[index],
+        filter: 'Recent',
+      };
+      newPostsCountData[space] = newPostsCount[index];
     });
-    return SpaceDataObject;
+    return {data: SpaceDataObject, newPostsCount: newPostsCountData};
   };
 
   const fetchPostsOfSpecificSpace = async spaceName => {
@@ -321,7 +343,9 @@ const usePost = () => {
           if (item.data().likesCount > 0) {
             const likes = await firestore()
               .collection(
-                `spaces/${spaceName}/posts/${item.data().postId}/likes`,
+                `spaces/${item.data().spaceName}/posts/${
+                  item.data().postId
+                }/likes`,
               )
               .doc(user?.firebaseUserId)
               .get();

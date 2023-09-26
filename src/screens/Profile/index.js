@@ -1,4 +1,3 @@
-import auth from '@react-native-firebase/auth';
 import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native';
 import {useDispatch} from 'react-redux';
@@ -15,25 +14,9 @@ import {COLORS} from '../../utils/constants/theme';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 const Profile = () => {
-  const dispatch = useDispatch();
   const {user} = useUser();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
-  const signOut = () => {
-    dispatch(
-      setUser({
-        email: null,
-        photo: null,
-        firstName: null,
-        lastName: null,
-        isVerified: null,
-        firebaseUserId: null,
-        major: null,
-        spaces: null,
-      }),
-    );
-    auth().signOut();
-  };
 
   const {fetchMyPost} = usePost();
 
@@ -59,6 +42,8 @@ const Profile = () => {
         data={data}
         renderItem={({item}) => <PostItem data={item} key={item?.postId} />}
         ListHeaderComponent={() => <ListHeaderItem user={user} />}
+        showsVerticalScrollIndicator={false}
+        ListFooterComponent={() => <View style={{marginBottom: hp(15)}} />}
         ListEmptyComponent={() => (
           <View
             style={{

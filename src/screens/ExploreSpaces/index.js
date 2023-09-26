@@ -17,7 +17,6 @@ import Header from './Header';
 const ExploreSpaces = () => {
   const {user} = useUser();
   const {joinSpaces} = UseFirebaseAuth();
-  console.log({user});
   const [text, setText] = useState('');
   const [loading, setLoading] = useState(true);
   const [spaceData, setSpaceData] = useState([]);

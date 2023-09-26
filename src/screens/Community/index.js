@@ -48,6 +48,13 @@ const Community = () => {
   const [selectedSpaces, setSlectedSpaces] = useState(user?.spaces[0]);
   const [selectedFilter, setSelectedFilter] = useState('Recent');
   const [addPostModal, setAddPostModal] = useState(false);
+  const [newPostCount, setNewPostCount] = useState(() => {
+    let obj = {};
+    user?.spaces.forEach(space => {
+      obj[space] = 0;
+    });
+    return obj;
+  });
 
   // The below state is used to store the data of the selected space
   const [selectedSpaceData, setSelectedSpaceData] = useState(() => {
@@ -67,7 +74,8 @@ const Community = () => {
     try {
       const data = await fetchPostsOfAllSpaces(user?.spaces);
       console.log({data});
-      setSelectedSpaceData(data);
+      setSelectedSpaceData(data.data);
+      setNewPostCount(data.newPostsCount);
     } catch (e) {
       console.log({e});
     }
@@ -109,6 +117,7 @@ const Community = () => {
 
   useEffect(() => {
     fetchPosts();
+    console.log('YAHA DEKH ===> ', {user});
   }, [user?.spaces.length]);
 
   useEffect(() => {
@@ -191,6 +200,7 @@ const Community = () => {
             data={user?.spaces}
             selected={selectedSpaces}
             setSelected={handleSelectingSpaces}
+            newPostCount={newPostCount}
           />
         </Animated.View>
       </Animated.View>
