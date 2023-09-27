@@ -201,6 +201,7 @@ const Community = () => {
             selected={selectedSpaces}
             setSelected={handleSelectingSpaces}
             newPostCount={newPostCount}
+            setNewPostCount={setNewPostCount}
           />
         </Animated.View>
       </Animated.View>

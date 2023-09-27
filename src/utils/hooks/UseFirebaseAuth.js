@@ -5,6 +5,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {setEmail, setSpaces, setUser} from '../../redux/reducers/userSlice';
 import useUser from './useUser';
 import {setFirstTimeLogin} from '../../redux/reducers/generalSlice';
+import SpacesRelatedActivity from './SpacesRelatedActivity';
+import auth from '@react-native-firebase/auth';
 
 const UseFirebaseAuth = () => {
   const [verifyOTP] = useVerifyOTPMutation();
@@ -127,6 +129,9 @@ const UseFirebaseAuth = () => {
         .set(
           {
             spaces: firestore.FieldValue.arrayUnion(spaceName),
+            groupLastVisit: {
+              [spaceName]: firestore.FieldValue.serverTimestamp(),
+            },
           },
           {merge: true},
         );
@@ -169,10 +174,35 @@ const UseFirebaseAuth = () => {
     // }
   };
 
+  const DeleteUserAccountAndRelatedActivities = async () => {
+    try {
+      auth().signOut();
+      //Delete User Posts
+      await firestore()
+        .collectionGroup('posts')
+        .where('createdBy', '==', user?.firebaseUserId)
+        .get()
+        .then(querySnapshot => {
+          querySnapshot.forEach(doc => {
+            doc.ref.delete();
+          });
+        });
+      //Delete User Account
+      await firestore()
+        .collection('accounts')
+        .doc(user?.firebaseUserId)
+        .delete();
+      console.log('FINALLY COMPLETED');
+    } catch (e) {
+      console.log({e});
+    }
+  };
+
   return {
     firebaseAuth,
     createAccount,
     joinSpaces,
+    DeleteUserAccountAndRelatedActivities,
   };
 };
 

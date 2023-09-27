@@ -2,6 +2,7 @@ import firestore from '@react-native-firebase/firestore';
 import useUser from './useUser';
 import {useDispatch, useSelector} from 'react-redux';
 import {setSpaces, setUser} from '../../redux/reducers/userSlice';
+import {merge} from 'lodash';
 
 const SpacesRelatedActivity = () => {
   const dispatch = useDispatch();
@@ -29,6 +30,9 @@ const SpacesRelatedActivity = () => {
             .set(
               {
                 spaces: firestore.FieldValue.arrayRemove(spaceName),
+                groupLastVisit: {
+                  [spaceName]: firestore.FieldValue.delete(),
+                },
               },
               {merge: true},
             );
@@ -39,8 +43,27 @@ const SpacesRelatedActivity = () => {
     }
   };
 
+  const updateLastSpaceVisitTime = async spaceName => {
+    try {
+      let res = await firestore()
+        .collection('accounts')
+        .doc(user?.firebaseUserId)
+        .set(
+          {
+            groupLastVisit: {
+              [spaceName]: firestore.FieldValue.serverTimestamp(),
+            },
+          },
+          {merge: true},
+        );
+    } catch (e) {
+      console.log('UPDATELASTSPACEVISITTIME ', {e});
+    }
+  };
+
   return {
     removeSpace,
+    updateLastSpaceVisitTime,
   };
 };
 

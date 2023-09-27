@@ -49,7 +49,7 @@ const ProfileHeader = () => {
           Profile
         </TextBig>
         <View style={styles.innerContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate('Search')}>
+          <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
             <SettingSvg />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => signOut()}>

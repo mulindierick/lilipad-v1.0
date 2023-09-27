@@ -16,10 +16,16 @@ import {COLORS, images} from '../../utils/constants/theme';
 import SpacesRelatedActivity from '../../utils/hooks/SpacesRelatedActivity';
 import useUser from '../../utils/hooks/useUser';
 import PopUpMenuItem from './PopUpMenuItem';
-const SpacesContainer = ({data = [], selected, setSelected, newPostCount}) => {
+const SpacesContainer = ({
+  data = [],
+  selected,
+  setSelected,
+  newPostCount,
+  setNewPostCount,
+}) => {
   const navigation = useNavigation();
   const {user} = useUser();
-  const {removeSpace} = SpacesRelatedActivity();
+  const {removeSpace, updateLastSpaceVisitTime} = SpacesRelatedActivity();
 
   const removeAndUpdateSpaces = async item => {
     try {
@@ -34,6 +40,10 @@ const SpacesContainer = ({data = [], selected, setSelected, newPostCount}) => {
 
   const handleSpacesClick = (item, index) => {
     setSelected(item);
+    if (newPostCount[item] != 0) {
+      updateLastSpaceVisitTime(item);
+      setNewPostCount({...newPostCount, [item]: 0});
+    }
   };
 
   return (

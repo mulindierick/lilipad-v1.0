@@ -265,7 +265,8 @@ const PostDetails = ({route}) => {
             textInputStyle={{paddingHorizontal: wp(2)}}
           />
           <TouchableOpacity
-            onPress={commentLoader ? null : () => OnSendComment()}>
+            onPress={() => OnSendComment()}
+            disabled={commentLoader}>
             <SendSvg />
           </TouchableOpacity>
         </View>
