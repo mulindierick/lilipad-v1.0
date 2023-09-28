@@ -13,7 +13,7 @@ import PostFooter from './PostFooter';
 import PostHeader from './PostHeader';
 import useUser from '../../utils/hooks/useUser';
 import {useDispatch} from 'react-redux';
-import {setPostId} from '../../redux/reducers/generalSlice';
+import {setPostDetails, setPostId} from '../../redux/reducers/generalSlice';
 
 const PostItem = ({data}) => {
   const {general} = useUser();
@@ -40,6 +40,15 @@ const PostItem = ({data}) => {
     } catch (err) {
       console.log({err});
     }
+    dispatch(
+      setPostDetails({
+        postId: data?.postId,
+        likeCount: userLike ? count - 1 : count + 1,
+        userLiked: !userLike,
+        commentCount: commentCount,
+        spaceName: data?.spaceName,
+      }),
+    );
     userLike ? setLikeCount(count - 1) : setLikeCount(count + 1);
     setLike(!userLike);
     setLoader(false);
@@ -50,7 +59,16 @@ const PostItem = ({data}) => {
       setLike(general?.userLiked);
       setLikeCount(general?.likeCount);
       setCommentCount(general?.commentCount);
-      dispatch(setPostId({postId: null}));
+      dispatch(
+        setPostDetails({
+          postId: null,
+          likeCount: null,
+          userLiked: null,
+          commentCount: null,
+          spaceName: null,
+        }),
+      );
+
       console.log({text: data?.text});
       console.log({general});
     }

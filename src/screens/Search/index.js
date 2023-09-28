@@ -41,11 +41,13 @@ const Search = () => {
       // Handle the input change here
       if (activeIndex == 0) {
         setSearchStudent(txt);
+        console.log('searchStudent');
       } else {
         setSearchSpace(txt);
+        console.log('searchSpace');
       }
     }, 500),
-    [],
+    [activeIndex],
   );
 
   return (
@@ -84,8 +86,8 @@ const Search = () => {
         activeIndex={activeIndex}
         setActiveIndex={setActiveIndex}
         pagerRef={pagerRef}>
-        <Students searchText={StudentText} />
-        <Spaces searchText={SpaceText} />
+        <Students searchText={searchStudent} />
+        <Spaces searchText={searchSpace} />
       </CustomTabBar>
     </CustomWrapper>
   );

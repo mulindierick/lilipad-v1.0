@@ -2,6 +2,7 @@ import React, {useContext, useEffect, useRef, useState} from 'react';
 import {
   ActivityIndicator,
   Animated,
+  AppState,
   FlatList,
   RefreshControl,
   StyleSheet,
@@ -26,6 +27,7 @@ import WelcomeNoteModal from './WelcomeNoteModal';
 import {setPostId} from '../../redux/reducers/generalSlice';
 import {useDispatch} from 'react-redux';
 import {TextNormal} from '../../components/common/CustomText';
+import {app} from 'firebase-functions/v1';
 
 const headerHeight = hp(20);
 let scrollValue = 0;
@@ -73,7 +75,6 @@ const Community = () => {
     setLoading(true);
     try {
       const data = await fetchPostsOfAllSpaces(user?.spaces);
-      console.log({data});
       setSelectedSpaceData(data.data);
       setNewPostCount(data.newPostsCount);
     } catch (e) {
@@ -83,7 +84,6 @@ const Community = () => {
   };
 
   const fetchParticularSpaceOnFilter = async filter => {
-    console.log({filter});
     setRefreshing(true);
     try {
       const data = await fetchFilteredPostsOfSpecificSpace(
@@ -115,10 +115,29 @@ const Community = () => {
     setSlectedSpaces(spaceName);
   };
 
+  //For when the app is opened from background
+  const [appState, setAppState] = useState('active');
+
   useEffect(() => {
-    fetchPosts();
-    console.log('YAHA DEKH ===> ', {user});
-  }, [user?.spaces.length]);
+    const handleAppStateChange = nextAppState => {
+      console.log({nextAppState});
+      setAppState(nextAppState);
+    };
+
+    AppState.addEventListener('change', handleAppStateChange);
+
+    return () => {
+      AppState.addEventListener('change', handleAppStateChange);
+    };
+  }, [appState]);
+
+  // ENDS HERE
+
+  useEffect(() => {
+    if (appState === 'active') {
+      fetchPosts();
+    }
+  }, [user?.spaces.length, appState]);
 
   useEffect(() => {
     if (general?.postId) {

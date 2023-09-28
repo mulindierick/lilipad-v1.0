@@ -1,10 +1,13 @@
 import firestore from '@react-native-firebase/firestore';
 import useUser from './useUser';
+import {useDispatch} from 'react-redux';
+import {setPostCommentCount} from '../../redux/reducers/generalSlice';
 
 const usePost = () => {
   const {user} = useUser();
 
   const {uploadImage} = useUser();
+  const dispatch = useDispatch();
 
   const fetchPostsOfAllSpaces = async arrayOfSpaces => {
     // Here is the array of spaces, and you want to get all posts of these spaces from Promise.all through Firebase
@@ -117,6 +120,7 @@ const usePost = () => {
 
   const fetchFilteredPostsOfSpecificSpace = async (spaceName, filter) => {
     console.log({spaceName}, {filter});
+
     let spaceData = null;
     if (filter == 'Recent') {
       spaceData = await firestore()
@@ -134,7 +138,17 @@ const usePost = () => {
         .where('createdBy', '==', user?.firebaseUserId)
         .get();
     }
-
+    await firestore()
+      .collection('accounts')
+      .doc(user?.firebaseUserId)
+      .set(
+        {
+          groupLastVisit: {
+            [spaceName]: firestore.FieldValue.serverTimestamp(),
+          },
+        },
+        {merge: true},
+      );
     const post = await Promise.all(
       spaceData.docs.map(async item => {
         let userLiked = false;
@@ -306,14 +320,12 @@ const usePost = () => {
 
   const fetchUpdatedComments = async (spaceName, postId) => {
     try {
-      console.log({spaceName, postId});
       const comments = await firestore()
         .collection(`spaces/${spaceName}/posts/${postId}/comments`)
         .orderBy('createdAt', 'desc')
         .get();
 
       let commentData = [];
-      console.log({comments});
       if (comments.docs.length > 0) {
         commentData = await Promise.all(
           comments.docs.map(async item => {
@@ -324,6 +336,11 @@ const usePost = () => {
           }),
         );
       }
+      dispatch(
+        setPostCommentCount({
+          commentCount: commentData.length,
+        }),
+      );
       return commentData;
     } catch (err) {
       console.log({err});

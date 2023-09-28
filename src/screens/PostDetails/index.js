@@ -62,6 +62,15 @@ const PostDetails = ({route}) => {
       setLike(res?.userLiked);
       setLikeCount(res?.data?.likesCount);
       setCommentCount(res?.data?.commentsCount);
+      dispatch(
+        setPostDetails({
+          postId: postId,
+          likeCount: res?.data?.likesCount,
+          commentCount: res?.data?.commentsCount,
+          userLiked: res?.userLiked,
+          spaceName: spaceName,
+        }),
+      );
       console.log({res});
     } catch (err) {
       console.log({err});
@@ -80,22 +89,12 @@ const PostDetails = ({route}) => {
         setCommentCount(res.length);
         setPostComments(res);
       }
-      dispatch(
-        setPostDetails({
-          postId: postId,
-          likeCount: likeCount,
-          commentCount: res.length,
-          userLiked: like,
-          spaceName: spaceName,
-        }),
-      );
     } catch (err) {
       console.log({err});
     }
   };
 
   useEffect(() => {
-    console.log({commentLoader});
     const liveUpdates = firestore()
       .collection(`spaces/${spaceName}/posts/${postId}/comments`)
       .onSnapshot(querySnapshot => {
@@ -126,18 +125,28 @@ const PostDetails = ({route}) => {
   };
 
   const [commentLoader, setCommentLoader] = useState(false);
-
+  console.log({commentLoader});
   const OnSendComment = async () => {
-    setCommentLoader(true);
     try {
       if (text === '') return;
+      setCommentLoader(true);
       const res = await AddComment(spaceName, postId, text);
+      dispatch(
+        setPostDetails({
+          postId: postId,
+          likeCount: likeCount,
+          commentCount: commentCount + 1,
+          userLiked: like,
+          spaceName: spaceName,
+        }),
+      );
       setText('');
       console.log('HELLO');
     } catch (err) {
       console.log({err});
     }
     setCommentLoader(false);
+    console.log('HEREEEE ===> CHECK');
   };
 
   // FOr Handling Keyboard
