@@ -52,7 +52,7 @@ const ProfileHeader = () => {
           <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
             <SettingSvg />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => signOut()}>
+          <TouchableOpacity onPress={() => {}}>
             <NotificationSvg />
           </TouchableOpacity>
         </View>
