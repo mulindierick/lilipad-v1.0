@@ -14,6 +14,8 @@ import PostHeader from './PostHeader';
 import useUser from '../../utils/hooks/useUser';
 import {useDispatch} from 'react-redux';
 import {setPostDetails, setPostId} from '../../redux/reducers/generalSlice';
+import Video from 'react-native-video';
+import CustomVideo from '../../components/common/CustomVideo';
 
 const PostItem = ({data}) => {
   const {general} = useUser();
@@ -82,7 +84,8 @@ const PostItem = ({data}) => {
           postId: data?.postId,
           spaceName: data?.spaceName,
         })
-      }>
+      }
+      activeOpacity={1}>
       <PostHeader
         photo={user?.photo}
         name={user?.firstName + ' ' + user?.lastName}
@@ -102,6 +105,19 @@ const PostItem = ({data}) => {
           containerStyle={{borderRadius: 6, marginTop: hp(1.5)}}
           disabled
         />
+      )}
+      {data?.postVideo && (
+        <TouchableOpacity activeOpacity={1}>
+          <CustomVideo
+            uri={data?.postVideo}
+            containerStyle={{
+              height: hp(30),
+              width: '100%',
+              borderRadius: 6,
+              marginTop: hp(1.5),
+            }}
+          />
+        </TouchableOpacity>
       )}
       <PostFooter
         likeCount={

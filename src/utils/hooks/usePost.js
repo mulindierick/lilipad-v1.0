@@ -172,19 +172,24 @@ const usePost = () => {
   };
 
   const sharePost = async (spaceName, object) => {
-    const {text, image} = object;
+    const {text, image, video} = object;
     try {
       const postId = firestore().collection(`spaces/${spaceName}/posts`).doc();
-      let imageUrl = null;
+      let mediaUrl = null;
       if (image) {
-        imageUrl = await uploadImage(image, postId.id);
+        mediaUrl = await uploadImage(image, postId.id);
       }
+      if (video) {
+        mediaUrl = await uploadImage(video, postId.id);
+      }
+
       const res = await firestore()
         .collection(`spaces/${spaceName}/posts`)
         .doc(postId.id)
         .set({
           text: text,
-          postPhoto: imageUrl,
+          postPhoto: image ? mediaUrl : null,
+          postVideo: video ? mediaUrl : null,
           createdAt: firestore.FieldValue.serverTimestamp(),
           createdBy: user?.firebaseUserId,
           createdByReference: firestore().doc(

@@ -18,6 +18,9 @@ import AddPostTextInput from '../../components/forSpecificUse/AddPostTextInput';
 import {COLORS, images} from '../../utils/constants/theme';
 import useImagePicker from '../../utils/hooks/useImagePicker';
 import usePost from '../../utils/hooks/usePost';
+import Video from 'react-native-video';
+import {database} from 'firebase-functions/v1/firestore';
+import CustomVideo from '../../components/common/CustomVideo';
 
 const AddPostModal = ({
   isVisible,
@@ -46,12 +49,29 @@ const AddPostModal = ({
   const addPostOnFirebase = async spaceName => {
     onBackDropPress();
     setLoader(true);
-    try {
-      const res = await sharePost(spaceName, {
+    let data = {};
+
+    if (localImageUriArray.length > 0) {
+      if (localImageUriArray[0]?.mime.includes('video')) {
+        data = {
+          text: text.trim(),
+          video: localImageUriArray[0]?.path,
+        };
+      } else {
+        data = {
+          text: text.trim(),
+          image:
+            localImageUriArray.length > 0 ? localImageUriArray[0]?.path : null,
+        };
+      }
+    } else {
+      data = {
         text: text.trim(),
-        image:
-          localImageUriArray.length > 0 ? localImageUriArray[0]?.path : null,
-      });
+      };
+    }
+
+    try {
+      const res = await sharePost(spaceName, data);
       setText('');
       setLocalImageUriArray([]);
       // showToast('success', 'Post Shared Successfully!');
@@ -82,7 +102,43 @@ const AddPostModal = ({
             disabled={!localImageUriArray.length > 0 && !text.trim()}
           />
           <AddPostTextInput setText={setText} text={text} />
-          {localImageUriArray.length > 0 ? (
+          {!localImageUriArray.length >
+          0 ? null : localImageUriArray[0]?.mime.includes('video') ? (
+            <View>
+              <TouchableOpacity
+                style={styles.removeIconContainer}
+                activeOpacity={1}
+                onPress={() => setLocalImageUriArray([])}>
+                <CustomIcon
+                  type="ionicons"
+                  icon="close"
+                  size={wp(6)}
+                  color={'#B0B0B0'}
+                  disabled
+                />
+              </TouchableOpacity>
+              <View style={styles.ShadowImageContainer}>
+                <CustomVideo
+                  uri={localImageUriArray[0].path}
+                  containerStyle={[
+                    styles.imageContainer,
+                    {height: hp(25), width: wp(86)},
+                  ]}
+                />
+                {/* <CustomImage
+                    source={{
+                      uri: localImageUriArray[0]?.path,
+                    }}
+                    height={hp(25)}
+                    width={wp(86)}
+                    resizeMode="cover"
+                    containerStyle={styles.imageContainer}
+                    removeIcon
+                    onPressRemoveIcon={() => setLocalImageUriArray([])}
+                  /> */}
+              </View>
+            </View>
+          ) : (
             <View>
               <TouchableOpacity
                 style={styles.removeIconContainer}
@@ -110,7 +166,7 @@ const AddPostModal = ({
                 />
               </View>
             </View>
-          ) : null}
+          )}
           <View style={styles.footer}>
             <CustomImage
               source={images.image}
