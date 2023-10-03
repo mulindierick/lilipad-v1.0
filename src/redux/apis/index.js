@@ -23,8 +23,20 @@ export const lilipadCloudFunction = createApi({
         };
       },
     }),
+    sentNotification: build.mutation({
+      query(body) {
+        return {
+          method: 'POST',
+          url: 'sentNotification',
+          body,
+        };
+      },
+    }),
   }),
 });
 
-export const {useSendOTPemailMutation, useVerifyOTPMutation} =
-  lilipadCloudFunction;
+export const {
+  useSendOTPemailMutation,
+  useVerifyOTPMutation,
+  useSentNotificationMutation,
+} = lilipadCloudFunction;

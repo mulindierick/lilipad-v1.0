@@ -33,6 +33,7 @@ import {
   setPostDetails,
 } from '../../redux/reducers/generalSlice';
 import {useNavigation} from '@react-navigation/native';
+import {useSentNotificationMutation} from '../../redux/apis';
 
 const PostDetails = ({route}) => {
   const {user} = useUser();
@@ -52,6 +53,7 @@ const PostDetails = ({route}) => {
 
   const {fetchPostById, handlePostLike, AddComment, fetchUpdatedComments} =
     usePost();
+  const [sentNotification] = useSentNotificationMutation();
 
   const fetchPost = async () => {
     setLoader(true);
@@ -129,8 +131,17 @@ const PostDetails = ({route}) => {
   const OnSendComment = async () => {
     try {
       if (text === '') return;
+      const comment = text;
+      setText('');
       setCommentLoader(true);
-      const res = await AddComment(spaceName, postId, text);
+      const res = await AddComment(spaceName, postId, comment);
+      sentNotification({
+        userId: user?.firebaseUserId,
+        postId: postId,
+        spaceName: spaceName,
+        type: 'comment',
+        comment: comment,
+      });
       dispatch(
         setPostDetails({
           postId: postId,
@@ -140,7 +151,6 @@ const PostDetails = ({route}) => {
           spaceName: spaceName,
         }),
       );
-      setText('');
       console.log('HELLO');
     } catch (err) {
       console.log({err});

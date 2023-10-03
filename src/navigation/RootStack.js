@@ -1,4 +1,4 @@
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import AuthStack from './AuthStack';
 import SplashScreen from 'react-native-splash-screen';
@@ -14,9 +14,10 @@ import BottomTabNavigator from './BottomTabNavigator';
 import ScreenStack from './ScreenStack';
 import {setFirstTimeLogin} from '../redux/reducers/generalSlice';
 
-const RootStack = ({navigation}) => {
+const RootStack = () => {
   const [loading, setLoading] = useState(true);
   const {user} = useUser();
+  const navigation = useNavigation();
   useApp(navigation);
   useEffect(() => {
     SplashScreen.hide();
@@ -28,6 +29,7 @@ const RootStack = ({navigation}) => {
     const subscriber = auth().onAuthStateChanged(async user => {
       setLoading(true);
       try {
+        console.log({user});
         if (user) {
           setIslogin(true);
           let userDetail = firestore()
@@ -64,7 +66,7 @@ const RootStack = ({navigation}) => {
   }, []);
 
   return (
-    <NavigationContainer>
+    <>
       {loading ? (
         <CustomLoader />
       ) : !isLogin ? (
@@ -78,7 +80,7 @@ const RootStack = ({navigation}) => {
       ) : (
         <TakingUserInformationStep />
       )}
-    </NavigationContainer>
+    </>
   );
 };
 

@@ -2,9 +2,11 @@ import firestore from '@react-native-firebase/firestore';
 import useUser from './useUser';
 import {useDispatch} from 'react-redux';
 import {setPostCommentCount} from '../../redux/reducers/generalSlice';
+import {useSentNotificationMutation} from '../../redux/apis';
 
 const usePost = () => {
   const {user} = useUser();
+  const [sentNotification] = useSentNotificationMutation();
 
   const {uploadImage} = useUser();
   const dispatch = useDispatch();
@@ -36,6 +38,7 @@ const usePost = () => {
 
     const newPostsCount = await Promise.all(
       arrayOfSpaces.map(async space => {
+        if (!lastVisitTime[space]) return 0;
         const data = await firestore()
           .collection(`spaces/${space}/posts`)
           .where('createdAt', '>', lastVisitTime[space])
@@ -242,6 +245,12 @@ const usePost = () => {
           .update({
             likesCount: firestore.FieldValue.increment(1),
           });
+        sentNotification({
+          userId: user?.firebaseUserId,
+          postId: postId,
+          spaceName: spaceName,
+          type: 'like',
+        });
       }
     } catch (err) {
       console.log({err});

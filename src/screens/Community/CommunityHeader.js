@@ -123,6 +123,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
+    position: 'relative',
+    zIndex: 10000000,
   },
   innerContainer: {
     flexDirection: 'row',

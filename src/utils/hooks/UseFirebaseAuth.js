@@ -7,6 +7,7 @@ import useUser from './useUser';
 import {setFirstTimeLogin} from '../../redux/reducers/generalSlice';
 import SpacesRelatedActivity from './SpacesRelatedActivity';
 import auth from '@react-native-firebase/auth';
+import {GetFCMToken} from '../pushNotification_Helper';
 
 const UseFirebaseAuth = () => {
   const [verifyOTP] = useVerifyOTPMutation();
@@ -48,6 +49,7 @@ const UseFirebaseAuth = () => {
   //Will optimize later. This is just for testing
   const createAccount = async body => {
     const {email, firstName, lastName, major, classYear, image} = body;
+    const fcmToken = await GetFCMToken();
     const array = [major, classYear, 'Skidmore College'];
     try {
       let url = await uploadImage(image);
@@ -91,6 +93,7 @@ const UseFirebaseAuth = () => {
             [classYear]: firestore.FieldValue.serverTimestamp(),
             [major]: firestore.FieldValue.serverTimestamp(),
           },
+          fcmToken: fcmToken,
         });
 
       console.log('Added Skidmore College');
@@ -177,6 +180,19 @@ const UseFirebaseAuth = () => {
   const DeleteUserAccountAndRelatedActivities = async () => {
     try {
       auth().signOut();
+      dispatch(
+        setUser({
+          email: null,
+          firstName: null,
+          lastName: null,
+          major: null,
+          photo: null,
+          spaces: [],
+          isVerified: false,
+          firebaseUserId: null,
+          classYear: null,
+        }),
+      );
       //Delete User Posts
       await firestore()
         .collectionGroup('posts')

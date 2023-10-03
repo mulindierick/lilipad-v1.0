@@ -20,19 +20,21 @@ export async function requestUserPermission() {
 // Retrieve FCM token and store it in AsyncStorage
 export async function GetFCMToken() {
   let fcmtoken = await AsyncStorage.getItem('fcmtoken');
-  console.log('old token', fcmtoken);
 
   if (!fcmtoken) {
     try {
-      const fcmtoken = await messaging().getToken();
+      fcmtoken = await messaging().getToken();
 
       if (fcmtoken) {
         await AsyncStorage.setItem('fcmtoken', fcmtoken);
-        console.log('new token1', fcmtoken);
+        return fcmtoken;
       }
     } catch (error) {
       console.log('error in fcm token', error);
+      return null;
     }
+  } else {
+    return fcmtoken;
   }
 }
 
@@ -58,13 +60,19 @@ const channelSetup = () => {
 // Send local push notification
 const sendLocalPushNotification = (title, message, data) => {
   try {
+    console.log({data});
+    let userInfo = {};
+    if (data?.userInfo) {
+      userInfo = JSON.parse(data.userInfo);
+    }
     PushNotification.localNotification({
       channelId: 'channel-1',
       autoCancel: true,
       bigText: message,
       title: title,
       data: data,
-      message: 'Click to see more',
+      message: message,
+      userInfo: userInfo,
       vibrate: true,
       vibration: 300,
       playSound: true,

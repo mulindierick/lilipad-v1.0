@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {Linking} from 'react-native';
+import {Alert, Linking} from 'react-native';
 import {Image, Video} from 'react-native-compressor';
 import ImagePicker from 'react-native-image-crop-picker';
 import Toast from 'react-native-toast-message';
@@ -10,19 +10,38 @@ const useImagePicker = () => {
 
   const [loading, setLoading] = useState(false);
 
-  const accessGallery = async (cropperCircleOverlay = true) => {
+  const accessGallery = async (
+    cropperCircleOverlay = true,
+    mediaType = 'any',
+  ) => {
     let config = {
       forceJpg: true,
       // includeBase64: true,
       cropping: cropperCircleOverlay,
       multiple: false,
       maxFiles: 1,
-      mediaType: 'any',
+      mediaType: mediaType,
       cropperCircleOverlay: cropperCircleOverlay,
     };
 
     try {
+      var maxFileSizeInBytes = 50 * 1048576; // 50MB in bytes
       let res = await ImagePicker.openPicker(config);
+      console.log({res});
+      if (res.size > maxFileSizeInBytes) {
+        Alert.alert(
+          'File Size Exceeded',
+          'Please select a file with size less than 50MB',
+          [
+            {
+              text: 'Ok',
+              onPress: () => {},
+            },
+          ],
+        );
+        return;
+      }
+      console.log({res});
       res = [res];
       res = res.map(it => ({
         data: it.data,
@@ -54,21 +73,38 @@ const useImagePicker = () => {
     }
   };
 
-  const accessCamera = async (cropperCircleOverlay = true) => {
+  const accessCamera = async (
+    cropperCircleOverlay = true,
+    mediaType = 'any',
+  ) => {
     let config = {
       forceJpg: true,
       // includeBase64: true,
       cropping: cropperCircleOverlay,
       multiple: true,
       maxFiles: 1,
-      mediaType: 'any',
+      mediaType: mediaType,
       cropperCircleOverlay: cropperCircleOverlay,
     };
 
     try {
       let res = await ImagePicker.openCamera(config);
+      var maxFileSizeInBytes = 50 * 1048576; // 50MB in bytes
+      if (res.size > maxFileSizeInBytes) {
+        Alert.alert(
+          'File Size Exceeded',
+          'Please select a file with size less than 50MB',
+          [
+            {
+              text: 'Ok',
+              onPress: () => {},
+            },
+          ],
+        );
+        return;
+      }
+
       let resArray = [res];
-      console.log('CAmera RESSSS', resArray);
       resArray = resArray.map(it => ({
         data: it.data,
         height: it.height,

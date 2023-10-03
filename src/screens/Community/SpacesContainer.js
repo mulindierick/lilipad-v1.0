@@ -22,6 +22,7 @@ const SpacesContainer = ({
   setSelected,
   newPostCount,
   setNewPostCount,
+  upperBorderFlag,
 }) => {
   const navigation = useNavigation();
   const {user} = useUser();
@@ -48,7 +49,7 @@ const SpacesContainer = ({
 
   return (
     <>
-      <View style={styles.secondContainer}>
+      <View style={[styles.secondContainer]}>
         <TextNormal bold textStyle={styles.normalText}>
           My Spaces
         </TextNormal>
@@ -56,7 +57,8 @@ const SpacesContainer = ({
           bold
           color={COLORS.blue}
           textStyle={styles.normalText}
-          onPress={() => navigation.navigate('ExploreSpaces')}>
+          onPress={() => navigation.navigate('ExploreSpaces')}
+          disabled={upperBorderFlag}>
           Browse All
         </TextNormal>
       </View>
@@ -80,11 +82,16 @@ const SpacesContainer = ({
                     },
                   }}
                   triggerOnLongPress={true}
-                  onAlternativeAction={() => handleSpacesClick(item, index)}
+                  onAlternativeAction={
+                    upperBorderFlag
+                      ? null
+                      : () => handleSpacesClick(item, index)
+                  }
                   style={[
                     selected == item ? styles.selected : styles.container,
                     index == data.length - 1 ? {marginRight: wp(10)} : {},
-                  ]}>
+                  ]}
+                  disabled={upperBorderFlag}>
                   <TextNormal
                     textStyle={[
                       styles.textStyle,

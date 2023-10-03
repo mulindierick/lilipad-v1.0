@@ -27,14 +27,14 @@ const ListHeaderItem = ({user}) => {
   const cameraHandler = () => {
     setImageModal(false);
     setTimeout(() => {
-      accessCamera();
+      accessCamera(true, 'photo');
     }, 500);
   };
 
   const galleryHandler = () => {
     setImageModal(false);
     setTimeout(() => {
-      accessGallery();
+      accessGallery(true, 'photo');
     }, 500);
   };
 

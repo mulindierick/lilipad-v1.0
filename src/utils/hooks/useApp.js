@@ -14,22 +14,16 @@ export const useApp = navigation => {
     // onRegister: function (token: string) {},
     // (required) Called when a remote is received or opened, or local notification is opened
     onNotification: function (notification) {
-      let id = notification?.data?.jobId;
       console.log('-----> notification onOpened123', notification?.data);
 
-      console.log('NORERRSFSFSFSDFSFDSFSDFSDF', notification);
-      if (notification?.userInteraction) {
-        // if (notification?.data?.type == 'event') {
-        // if (notification?.data?.type == 'helperEmptiedCargo') {
-        //   navigation.navigate('JobComplete', {id: id});
-        // } else {
-        navigation.navigate('JobComplete');
-        // }
-        // }
-        // else {
-        // 	navigation.navigate('ListingDetails', {id: id});
-        // }
+      if (notification?.data?.route === 'PostDetails') {
+        navigation.navigate('PostDetails', {
+          postId: notification?.data?.postId,
+          spaceName: notification?.data?.spaceName,
+        });
       }
+
+      console.log('NORERRSFSFSFSDFSFDSFSDFSDF', notification);
 
       // process the notification
 

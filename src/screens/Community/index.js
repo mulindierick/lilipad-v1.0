@@ -85,6 +85,10 @@ const Community = () => {
 
   const fetchParticularSpaceOnFilter = async filter => {
     setRefreshing(true);
+    PostFlatListRef.current.scrollToOffset({
+      animated: true,
+      offset: 0,
+    });
     try {
       const data = await fetchFilteredPostsOfSpecificSpace(
         selectedSpaces,
@@ -132,11 +136,11 @@ const Community = () => {
   }, [appState]);
 
   // ENDS HERE
-
   useEffect(() => {
-    if (appState === 'active') {
-      fetchPosts();
-    }
+    // if (appState === 'active') {
+    fetchPosts();
+    console.log('HEREE AND THEREEEE');
+    // }
   }, [user?.spaces.length, appState]);
 
   useEffect(() => {
@@ -221,6 +225,7 @@ const Community = () => {
             setSelected={handleSelectingSpaces}
             newPostCount={newPostCount}
             setNewPostCount={setNewPostCount}
+            upperBorderFlag={upperBorderFlag}
           />
         </Animated.View>
       </Animated.View>
