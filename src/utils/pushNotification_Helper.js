@@ -60,7 +60,7 @@ const channelSetup = () => {
 // Send local push notification
 const sendLocalPushNotification = (title, message, data) => {
   try {
-    console.log({data});
+    console.log('CHECKKKK ===>', {data});
     let userInfo = {};
     if (data?.userInfo) {
       userInfo = JSON.parse(data.userInfo);

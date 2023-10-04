@@ -39,6 +39,8 @@
 	<string>This permission is not needed by the app, but it is required by an underlying API. If you see this dialog, contact us.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>To upload images</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>To upload videos</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>To upload images</string>
 	<key>UIAppFonts</key>

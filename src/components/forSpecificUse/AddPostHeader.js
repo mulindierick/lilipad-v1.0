@@ -21,6 +21,7 @@ const AddPostHeader = ({onIconPress, onPressShare, loader, disabled}) => {
         style={{
           flex: 1,
           marginTop: wp(1.8),
+          marginLeft: wp(-2),
         }}
       />
       <View
@@ -28,7 +29,6 @@ const AddPostHeader = ({onIconPress, onPressShare, loader, disabled}) => {
           flex: 3,
           alignItems: 'center',
           justifyContent: 'center',
-          // backgroundColor: 'red',
         }}>
         <CustomImage
           source={images.headerIcon}
@@ -40,7 +40,6 @@ const AddPostHeader = ({onIconPress, onPressShare, loader, disabled}) => {
         style={{
           flex: 1,
           alignItems: 'flex-end',
-          // backgroundColor: 'pink',
         }}>
         <TextNormal
           textStyle={styles.textStyle}

@@ -5,7 +5,12 @@ import {COLORS} from '../../utils/constants/theme';
 
 const CustomLoader = () => {
   return (
-    <ReactNativeModal isVisible={true} style={styles.container}>
+    <ReactNativeModal
+      isVisible={true}
+      style={styles.container}
+      animationIn={'fadeIn'}
+      animationOut={'fadeOut'}
+      backdropOpacity={0.1}>
       <ActivityIndicator size={'large'} color={COLORS.grey} />
     </ReactNativeModal>
   );

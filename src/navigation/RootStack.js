@@ -50,6 +50,7 @@ const RootStack = () => {
                   major: userData?.major,
                   spaces: userData?.spaces,
                   classYear: userData?.classYear,
+                  PushNotificationToken: userData?.fcmToken,
                 }),
               );
             });

@@ -277,7 +277,7 @@ const usePost = () => {
       }
       const comments = await firestore()
         .collection(`spaces/${spaceName}/posts/${postId}/comments`)
-        .orderBy('createdAt', 'desc')
+        .orderBy('createdAt', 'asc')
         .get();
       let commentData = [];
 
@@ -336,7 +336,7 @@ const usePost = () => {
     try {
       const comments = await firestore()
         .collection(`spaces/${spaceName}/posts/${postId}/comments`)
-        .orderBy('createdAt', 'desc')
+        .orderBy('createdAt', 'asc')
         .get();
 
       let commentData = [];

@@ -81,7 +81,6 @@ const useImagePicker = () => {
       forceJpg: true,
       // includeBase64: true,
       cropping: cropperCircleOverlay,
-      multiple: true,
       maxFiles: 1,
       mediaType: mediaType,
       cropperCircleOverlay: cropperCircleOverlay,

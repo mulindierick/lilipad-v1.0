@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {
   heightPercentageToDP as hp,
@@ -6,6 +6,7 @@ import {
 } from 'react-native-responsive-screen';
 import {COLORS, FONTS} from '../../utils/constants/theme';
 import CustomTextInput from '../common/CustomTextInput';
+import {useFocusEffect} from '@react-navigation/native';
 
 const AddPostTextInput = ({text, setText}) => {
   return (
@@ -18,6 +19,8 @@ const AddPostTextInput = ({text, setText}) => {
         textInputStyle={[text ? styles.textInput : styles.placeholderStyle]}
         placeholder={'Share With Your Community...'}
         autoCapitalize="sentences"
+        autoCorrect={true}
+        autoFocus={true}
       />
     </View>
   );

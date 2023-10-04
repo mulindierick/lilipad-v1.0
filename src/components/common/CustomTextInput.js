@@ -29,6 +29,10 @@ const CustomTextInput = ({
   exploreSpaces = false,
   autoCapitalize = 'none',
   placeholderTextColor = COLORS.placeholder,
+  spellCheck = false,
+  autoCorrect = false,
+  autoFocus = false,
+  ref = null,
 }) => {
   const [visible, setVisible] = useState(secureTextEntry ? true : false);
 
@@ -59,10 +63,12 @@ const CustomTextInput = ({
             placeholder={placeholder}
             placeholderTextColor={placeholderTextColor}
             autoCapitalize={autoCapitalize}
-            autoCorrect={false}
+            autoCorrect={autoCorrect}
             onFocus={onFocus}
             onBlur={onBlur}
             multiline={multiline}
+            spellCheck={spellCheck}
+            autoFocus={autoFocus}
           />
 
           {secureTextEntry && (

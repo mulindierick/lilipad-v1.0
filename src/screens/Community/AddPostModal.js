@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {
   Keyboard,
+  KeyboardAvoidingView,
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -13,14 +14,12 @@ import {
 import CustomIcon from '../../components/common/CustomIcon';
 import CustomImage from '../../components/common/CustomImage';
 import CustomModal from '../../components/common/CustomModal';
+import CustomVideo from '../../components/common/CustomVideo';
 import AddPostHeader from '../../components/forSpecificUse/AddPostHeader';
 import AddPostTextInput from '../../components/forSpecificUse/AddPostTextInput';
 import {COLORS, images} from '../../utils/constants/theme';
 import useImagePicker from '../../utils/hooks/useImagePicker';
 import usePost from '../../utils/hooks/usePost';
-import Video from 'react-native-video';
-import {database} from 'firebase-functions/v1/firestore';
-import CustomVideo from '../../components/common/CustomVideo';
 
 const AddPostModal = ({
   isVisible,
@@ -39,15 +38,18 @@ const AddPostModal = ({
   } = useImagePicker();
 
   const cameraHandler = () => {
-    accessCamera(false);
+    accessCamera(false, 'photo');
   };
 
   const galleryHandler = () => {
-    accessGallery(false);
+    accessGallery(false, 'any');
   };
 
   const addPostOnFirebase = async spaceName => {
-    onBackDropPress();
+    Keyboard.dismiss();
+    setTimeout(() => {
+      onBackDropPress();
+    }, 150);
     setLoader(true);
     let data = {};
 
@@ -83,9 +85,12 @@ const AddPostModal = ({
   };
 
   const handleClosureOfModal = () => {
-    onBackDropPress();
-    setText('');
-    setLocalImageUriArray([]);
+    Keyboard.dismiss();
+    setTimeout(() => {
+      onBackDropPress();
+      setText('');
+      setLocalImageUriArray([]);
+    }, 150);
   };
 
   return (
@@ -98,7 +103,7 @@ const AddPostModal = ({
         <View style={styles.container}>
           <AddPostHeader
             onIconPress={() => handleClosureOfModal()}
-            onPressShare={() => addPostOnFirebase(spaceName)}
+            onPressShare={loader ? null : () => addPostOnFirebase(spaceName)}
             disabled={!localImageUriArray.length > 0 && !text.trim()}
           />
           <AddPostTextInput setText={setText} text={text} />
@@ -167,25 +172,31 @@ const AddPostModal = ({
               </View>
             </View>
           )}
-          <View style={styles.footer}>
+          <KeyboardAvoidingView
+            style={styles.footer}
+            behavior="padding"
+            keyboardVerticalOffset={Platform.select({
+              ios: () => hp(10),
+              android: () => 0,
+            })()}>
             <CustomImage
               source={images.image}
-              resizeMode="cover"
+              resizeMode="contain"
               height={hp(4.7)}
               width={wp(10.5)}
-              containerStyle={{marginRight: wp(10)}}
+              containerStyle={{marginRight: wp(7)}}
               onPressImage={() => galleryHandler()}
             />
 
             <CustomImage
               source={images.camera}
-              resizeMode="cover"
+              resizeMode="contain"
               height={hp(4.5)}
               width={wp(11)}
               containerStyle={{marginRight: wp(7)}}
               onPressImage={() => cameraHandler()}
             />
-          </View>
+          </KeyboardAvoidingView>
         </View>
       </TouchableWithoutFeedback>
       {/* </BlurView> */}
@@ -223,11 +234,11 @@ const styles = StyleSheet.create({
     elevation: 12,
   },
   footer: {
-    flex: 1,
-    alignItems: 'flex-end',
-    justifyContent: 'flex-end',
+    // backgroundColor: COLORS.blue,
     flexDirection: 'row',
+    position: 'absolute',
     bottom: hp(8),
+    right: 0,
   },
   removeIconContainer: {
     position: 'absolute',
