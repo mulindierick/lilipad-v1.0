@@ -7,6 +7,7 @@ import Toast from 'react-native-toast-message';
 const useImagePicker = () => {
   const [localImageUriArray, setLocalImageUriArray] = useState([]);
   const [imageModal, setImageModal] = useState(false);
+  const [videoLoader, setVideoLoader] = useState(false);
 
   const [loading, setLoading] = useState(false);
 
@@ -88,6 +89,9 @@ const useImagePicker = () => {
 
     try {
       let res = await ImagePicker.openCamera(config);
+      if (res.mime.includes('video')) {
+        setVideoLoader(true);
+      }
       var maxFileSizeInBytes = 50 * 1048576; // 50MB in bytes
       if (res.size > maxFileSizeInBytes) {
         Alert.alert(
@@ -100,6 +104,7 @@ const useImagePicker = () => {
             },
           ],
         );
+        setVideoLoader(false);
         return;
       }
 
@@ -118,6 +123,7 @@ const useImagePicker = () => {
 
       let compressedImage = await compressImageSize(resArray[0]);
       setLocalImageUriArray([compressedImage]);
+      setVideoLoader(false);
     } catch (error) {
       console.log(error.message);
       if (error?.message?.includes('permission')) {
@@ -188,6 +194,7 @@ const useImagePicker = () => {
     loading,
     setImageModal,
     imageModal,
+    videoLoader,
   };
 };
 

@@ -13,9 +13,28 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import {COLORS} from '../../utils/constants/theme';
+import useUser from '../../utils/hooks/useUser';
+import {useDispatch} from 'react-redux';
+import {setFCMToken} from '../../redux/reducers/userSlice';
+import UseFirebaseAuth from '../../utils/hooks/UseFirebaseAuth';
 
 const CustomSettingsButton = ({text, containerStyle, onPress}) => {
-  const [popUp, setPopUp] = useState(false);
+  const {user} = useUser();
+  const {pushNotificationSwitch} = UseFirebaseAuth();
+  const [popUp, setPopUp] = useState(
+    user?.PushNotificationToken ? true : false,
+  );
+
+  console.log({user});
+
+  const updatePushNotificationToken = async () => {
+    try {
+      pushNotificationSwitch(popUp);
+      setPopUp(!popUp);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const SvgIcon = {
     'Privacy & Security': <PrivacyAndSecurity />,
@@ -39,7 +58,7 @@ const CustomSettingsButton = ({text, containerStyle, onPress}) => {
             value={popUp}
             thumbColor={popUp ? 'white' : 'white'}
             trackColor={{true: '#4CCF0F'}}
-            onValueChange={() => setPopUp(!popUp)}
+            onValueChange={() => updatePushNotificationToken()}
             //   style={{transform: [{scaleX: wp(0.25)}, {scaleY: wp(0.25)}]}}
           />
         </View>

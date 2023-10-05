@@ -2,7 +2,12 @@ import {firebase} from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import {useVerifyOTPMutation} from '../../redux/apis';
 import {useDispatch, useSelector} from 'react-redux';
-import {setEmail, setSpaces, setUser} from '../../redux/reducers/userSlice';
+import {
+  setEmail,
+  setFCMToken,
+  setSpaces,
+  setUser,
+} from '../../redux/reducers/userSlice';
 import useUser from './useUser';
 import {setFirstTimeLogin} from '../../redux/reducers/generalSlice';
 import SpacesRelatedActivity from './SpacesRelatedActivity';
@@ -19,6 +24,7 @@ const UseFirebaseAuth = () => {
     console.log(email, otp);
     try {
       let res = await verifyOTP({email: email, otp: otp});
+      let fcmToken = await GetFCMToken();
       console.log({res});
       if (res?.data?.message == 'Success') {
         let authStatus = firebase
@@ -26,9 +32,15 @@ const UseFirebaseAuth = () => {
           .signInWithCustomToken(res.data.data)
           .then(userCredential => {
             // Signed in
-            console.log('HERE', userCredential.user);
             var email = email;
             dispatch(setEmail({email: email}));
+            dispatch(setFCMToken({PushNotificationToken: fcmToken}));
+            firestore().collection('accounts').doc(userCredential.user.uid).set(
+              {
+                fcmToken: fcmToken,
+              },
+              {merge: true},
+            );
             // ...
             return 'Success';
           })
@@ -214,11 +226,45 @@ const UseFirebaseAuth = () => {
     }
   };
 
+  const pushNotificationSwitch = async pushNotificationValue => {
+    try {
+      const fcmToken = await GetFCMToken();
+      if (pushNotificationValue) {
+        await firestore()
+          .collection('accounts')
+          .doc(user?.firebaseUserId)
+          .update({
+            fcmToken: '',
+          });
+        dispatch(
+          setFCMToken({
+            PushNotificationToken: null,
+          }),
+        );
+      } else {
+        await firestore()
+          .collection('accounts')
+          .doc(user?.firebaseUserId)
+          .update({
+            fcmToken: fcmToken,
+          });
+        dispatch(
+          setFCMToken({
+            PushNotificationToken: fcmToken,
+          }),
+        );
+      }
+    } catch (e) {
+      console.log({e});
+    }
+  };
+
   return {
     firebaseAuth,
     createAccount,
     joinSpaces,
     DeleteUserAccountAndRelatedActivities,
+    pushNotificationSwitch,
   };
 };
 

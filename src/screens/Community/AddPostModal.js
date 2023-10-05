@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -20,6 +20,19 @@ import AddPostTextInput from '../../components/forSpecificUse/AddPostTextInput';
 import {COLORS, images} from '../../utils/constants/theme';
 import useImagePicker from '../../utils/hooks/useImagePicker';
 import usePost from '../../utils/hooks/usePost';
+import {
+  Menu,
+  MenuOption,
+  MenuOptions,
+  MenuProvider,
+  MenuTrigger,
+  renderers,
+} from 'react-native-popup-menu';
+import ReactNativeModal from 'react-native-modal';
+import {TextNormal} from '../../components/common/CustomText';
+import {UseKeyboardVisible} from 'react-native-popup-menu/src/helpers';
+import AddPostMenu from './AddPostMenu';
+import DeviceInfo from 'react-native-device-info';
 
 const AddPostModal = ({
   isVisible,
@@ -35,10 +48,15 @@ const AddPostModal = ({
     accessGallery,
     localImageUriArray,
     setLocalImageUriArray,
+    videoLoader,
   } = useImagePicker();
 
-  const cameraHandler = () => {
+  const cameraPhotoHandler = () => {
     accessCamera(false, 'photo');
+  };
+
+  const cameraVideoHandler = () => {
+    accessCamera(false, 'video');
   };
 
   const galleryHandler = () => {
@@ -98,39 +116,82 @@ const AddPostModal = ({
       isVisible={isVisible}
       onBackButtonPress={() => handleClosureOfModal()}
       onBackdropPress={() => handleClosureOfModal()}>
-      {/* <BlurView style={styles.BlurView} blurType="extraDark" blurAmount={2.5}> */}
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={styles.container}>
-          <AddPostHeader
-            onIconPress={() => handleClosureOfModal()}
-            onPressShare={loader ? null : () => addPostOnFirebase(spaceName)}
-            disabled={!localImageUriArray.length > 0 && !text.trim()}
-          />
-          <AddPostTextInput setText={setText} text={text} />
-          {!localImageUriArray.length >
-          0 ? null : localImageUriArray[0]?.mime.includes('video') ? (
-            <View>
-              <TouchableOpacity
-                style={styles.removeIconContainer}
-                activeOpacity={1}
-                onPress={() => setLocalImageUriArray([])}>
-                <CustomIcon
-                  type="ionicons"
-                  icon="close"
-                  size={wp(6)}
-                  color={'#B0B0B0'}
-                  disabled
-                />
-              </TouchableOpacity>
-              <View style={styles.ShadowImageContainer}>
-                <CustomVideo
-                  uri={localImageUriArray[0].path}
-                  containerStyle={[
-                    styles.imageContainer,
-                    {height: hp(25), width: wp(86)},
-                  ]}
-                />
-                {/* <CustomImage
+      <MenuProvider skipInstanceCheck style={styles.modalContainer}>
+        {/* <BlurView style={styles.BlurView} blurType="extraDark" blurAmount={2.5}> */}
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.container}>
+            <AddPostHeader
+              onIconPress={() => handleClosureOfModal()}
+              onPressShare={loader ? null : () => addPostOnFirebase(spaceName)}
+              disabled={!localImageUriArray.length > 0 && !text.trim()}
+            />
+            <AddPostTextInput setText={setText} text={text} />
+            {videoLoader && (
+              <View>
+                <TouchableOpacity
+                  style={styles.removeIconContainer}
+                  activeOpacity={1}
+                  onPress={() => setLocalImageUriArray([])}>
+                  <CustomIcon
+                    type="ionicons"
+                    icon="close"
+                    size={wp(6)}
+                    color={'#B0B0B0'}
+                    disabled
+                  />
+                </TouchableOpacity>
+                <View style={styles.ShadowImageContainer}>
+                  <CustomVideo
+                    uri={null}
+                    containerStyle={[
+                      styles.imageContainer,
+                      {height: hp(25), width: wp(86)},
+                    ]}
+                  />
+                </View>
+              </View>
+            )}
+            {!localImageUriArray.length >
+            0 ? null : localImageUriArray[0]?.mime.includes('video') ? (
+              <View>
+                <TouchableOpacity
+                  style={styles.removeIconContainer}
+                  activeOpacity={1}
+                  onPress={() => setLocalImageUriArray([])}>
+                  <CustomIcon
+                    type="ionicons"
+                    icon="close"
+                    size={wp(6)}
+                    color={'#B0B0B0'}
+                    disabled
+                  />
+                </TouchableOpacity>
+                <View style={styles.ShadowImageContainer}>
+                  <CustomVideo
+                    uri={localImageUriArray[0].path || null}
+                    containerStyle={[
+                      styles.imageContainer,
+                      {height: hp(25), width: wp(86)},
+                    ]}
+                  />
+                </View>
+              </View>
+            ) : (
+              <View>
+                <TouchableOpacity
+                  style={styles.removeIconContainer}
+                  activeOpacity={1}
+                  onPress={() => setLocalImageUriArray([])}>
+                  <CustomIcon
+                    type="ionicons"
+                    icon="close"
+                    size={wp(6)}
+                    color={'#B0B0B0'}
+                    disabled
+                  />
+                </TouchableOpacity>
+                <View style={styles.ShadowImageContainer}>
+                  <CustomImage
                     source={{
                       uri: localImageUriArray[0]?.path,
                     }}
@@ -140,66 +201,34 @@ const AddPostModal = ({
                     containerStyle={styles.imageContainer}
                     removeIcon
                     onPressRemoveIcon={() => setLocalImageUriArray([])}
-                  /> */}
+                  />
+                </View>
               </View>
-            </View>
-          ) : (
-            <View>
-              <TouchableOpacity
-                style={styles.removeIconContainer}
-                activeOpacity={1}
-                onPress={() => setLocalImageUriArray([])}>
-                <CustomIcon
-                  type="ionicons"
-                  icon="close"
-                  size={wp(6)}
-                  color={'#B0B0B0'}
-                  disabled
-                />
-              </TouchableOpacity>
-              <View style={styles.ShadowImageContainer}>
-                <CustomImage
-                  source={{
-                    uri: localImageUriArray[0]?.path,
-                  }}
-                  height={hp(25)}
-                  width={wp(86)}
-                  resizeMode="cover"
-                  containerStyle={styles.imageContainer}
-                  removeIcon
-                  onPressRemoveIcon={() => setLocalImageUriArray([])}
-                />
-              </View>
-            </View>
-          )}
-          <KeyboardAvoidingView
-            style={styles.footer}
-            behavior="padding"
-            keyboardVerticalOffset={Platform.select({
-              ios: () => hp(10),
-              android: () => 0,
-            })()}>
-            <CustomImage
-              source={images.image}
-              resizeMode="contain"
-              height={hp(4.7)}
-              width={wp(10.5)}
-              containerStyle={{marginRight: wp(7)}}
-              onPressImage={() => galleryHandler()}
-            />
-
-            <CustomImage
-              source={images.camera}
-              resizeMode="contain"
-              height={hp(4.5)}
-              width={wp(11)}
-              containerStyle={{marginRight: wp(7)}}
-              onPressImage={() => cameraHandler()}
-            />
-          </KeyboardAvoidingView>
-        </View>
-      </TouchableWithoutFeedback>
-      {/* </BlurView> */}
+            )}
+            <KeyboardAvoidingView
+              style={styles.footer}
+              behavior="padding"
+              keyboardVerticalOffset={Platform.select({
+                ios: () => hp(10),
+                android: () => 0,
+              })()}>
+              <CustomImage
+                source={images.image}
+                resizeMode="contain"
+                height={hp(4.7)}
+                width={wp(10.5)}
+                containerStyle={{marginRight: wp(7)}}
+                onPressImage={() => galleryHandler()}
+              />
+              <AddPostMenu
+                cameraPhotoHandler={cameraPhotoHandler}
+                cameraVideoHandler={cameraVideoHandler}
+              />
+            </KeyboardAvoidingView>
+          </View>
+        </TouchableWithoutFeedback>
+        {/* </BlurView> */}
+      </MenuProvider>
     </CustomModal>
   );
 };
@@ -207,6 +236,12 @@ const AddPostModal = ({
 export default AddPostModal;
 
 const styles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginBottom: 0,
+  },
   container: {
     backgroundColor: COLORS.white,
     height: hp(92),

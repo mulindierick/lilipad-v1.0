@@ -36,9 +36,12 @@ export const userSlice = createSlice({
     setEmail: (state, {payload}) => {
       state.email = payload?.email || null;
     },
+    setFCMToken: (state, {payload}) => {
+      state.PushNotificationToken = payload?.PushNotificationToken || null;
+    },
   },
 });
 
-export const {setUser, setSpaces, setEmail} = userSlice.actions;
+export const {setUser, setSpaces, setEmail, setFCMToken} = userSlice.actions;
 
 export default userSlice.reducer;

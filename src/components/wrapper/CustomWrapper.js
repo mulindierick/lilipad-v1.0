@@ -1,7 +1,11 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {
+  SafeAreaInsetsContext,
+  SafeAreaView,
+  withSafeAreaInsets,
+} from 'react-native-safe-area-context';
 import {COLORS} from '../../utils/constants/theme';
 import CustomHeader from '../common/CustomHeader';
 
