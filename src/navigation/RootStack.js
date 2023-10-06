@@ -23,7 +23,6 @@ const RootStack = () => {
     setTimeout(() => {
       SplashScreen.hide();
     }, 1500);
-    console.log('RootStack');
   }, []);
 
   const [isLogin, setIslogin] = useState(null);
