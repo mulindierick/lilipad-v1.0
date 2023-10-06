@@ -20,7 +20,10 @@ const RootStack = () => {
   const navigation = useNavigation();
   useApp(navigation);
   useEffect(() => {
-    SplashScreen.hide();
+    setTimeout(() => {
+      SplashScreen.hide();
+    }, 1500);
+    console.log('RootStack');
   }, []);
 
   const [isLogin, setIslogin] = useState(null);

@@ -205,6 +205,19 @@ const UseFirebaseAuth = () => {
           classYear: null,
         }),
       );
+
+      user?.spaces.map(async space => {
+        await firestore()
+          .collection('spaces')
+          .doc(space)
+          .set(
+            {
+              members: firestore.FieldValue.arrayRemove(user?.firebaseUserId),
+            },
+            {merge: true},
+          );
+      });
+
       //Delete User Posts
       await firestore()
         .collectionGroup('posts')

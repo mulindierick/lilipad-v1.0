@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import useImagePicker from '../../utils/hooks/useImagePicker';
 import {
@@ -14,6 +14,7 @@ import {
   TextNormal,
 } from '../../components/common/CustomText';
 import useUser from '../../utils/hooks/useUser';
+import {ProfileCamera} from '../../components/common/CustomSvgItems';
 
 const ListHeaderItem = ({user}) => {
   const {
@@ -63,14 +64,11 @@ const ListHeaderItem = ({user}) => {
           containerStyle={styles.innerImageContainer}
           resizeMode="cover"
         />
-        <CustomImage
-          source={images.cameraIcon}
-          resizeMode="cover"
-          containerStyle={styles.iconContainer}
-          height={hp(4.5)}
-          width={hp(4.5)}
-          onPressImage={() => setImageModal(true)}
-        />
+        <TouchableOpacity
+          style={styles.iconContainer}
+          onPress={() => setImageModal(true)}>
+          <ProfileCamera />
+        </TouchableOpacity>
       </View>
       <CustomImagePickerModal
         showModal={imageModal}
@@ -123,10 +121,15 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     position: 'absolute',
-    left: 25,
-    bottom: 0,
+    right: 0,
+    bottom: 10,
     borderRadius: 100,
     zIndex: 1000,
+    height: wp(10),
+    aspectRatio: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   innerImageContainer: {
     height: hp(13),

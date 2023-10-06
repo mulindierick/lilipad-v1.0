@@ -34,6 +34,7 @@ import {
 } from '../../redux/reducers/generalSlice';
 import {useNavigation} from '@react-navigation/native';
 import {useSentNotificationMutation} from '../../redux/apis';
+import CustomVideo from '../../components/common/CustomVideo';
 
 const PostDetails = ({route}) => {
   const {user} = useUser();
@@ -243,6 +244,21 @@ const PostDetails = ({route}) => {
                   {postData?.data?.text}
                 </TextNormal>
               </View>
+
+              {postData?.data?.postVideo && (
+                <TouchableOpacity activeOpacity={1}>
+                  <CustomVideo
+                    uri={postData?.data?.postVideo}
+                    containerStyle={{
+                      height: hp(30),
+                      width: '100%',
+                      borderRadius: 6,
+                      marginTop: hp(1.5),
+                    }}
+                  />
+                </TouchableOpacity>
+              )}
+
               {postData?.data?.postPhoto && (
                 <CustomImage
                   source={{uri: postData?.data?.postPhoto}}

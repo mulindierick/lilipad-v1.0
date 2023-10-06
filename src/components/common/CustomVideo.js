@@ -2,8 +2,9 @@ import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
 import React, {useState} from 'react';
 import Video from 'react-native-video';
 import {COLORS} from '../../utils/constants/theme';
+import {useFocusEffect} from '@react-navigation/native';
 
-const CustomVideo = ({uri, containerStyle}) => {
+const CustomVideo = ({uri, containerStyle, pause}) => {
   const [loading, setLoading] = useState(true);
   return (
     <>
@@ -15,7 +16,7 @@ const CustomVideo = ({uri, containerStyle}) => {
         onBuffer={() => setLoading(false)}
         onLoadStart={() => setLoading(true)}
         onError={err => console.log(err)} // Callback when video cannot be loaded
-        paused={false}
+        paused={true}
       />
       {loading && (
         <ActivityIndicator
