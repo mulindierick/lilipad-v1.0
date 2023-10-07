@@ -120,6 +120,7 @@ const UseFirebaseAuth = () => {
           isVerified: true,
           firebaseUserId: user?.firebaseUserId,
           classYear: classYear,
+          PushNotificationToken: fcmToken,
         }),
       );
       dispatch(setFirstTimeLogin({firstTimeLogin: true}));
