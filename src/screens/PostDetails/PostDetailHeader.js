@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -9,9 +9,25 @@ import CustomImage from '../../components/common/CustomImage';
 import {TextNormal} from '../../components/common/CustomText';
 import {getAgoTimeFullString} from '../../utils/constants/helper';
 import {images} from '../../utils/constants/theme';
+import useUser from '../../utils/hooks/useUser';
 
-const PostDetailHeader = ({FullName, timeInSeconds, photo, onBackPress}) => {
+const PostDetailHeader = ({
+  FullName,
+  timeInSeconds,
+  photo,
+  onBackPress,
+  uid,
+}) => {
   const navigation = useNavigation();
+  const {user} = useUser();
+  const handleNavigation = () => {
+    if (user?.firebaseUserId == uid) {
+      navigation.navigate('Profile');
+    } else {
+      navigation.navigate('DifferentUserProfile', {uid});
+    }
+  };
+
   return (
     <View style={styles.container}>
       <CustomImage
@@ -20,19 +36,23 @@ const PostDetailHeader = ({FullName, timeInSeconds, photo, onBackPress}) => {
         width={wp(8)}
         onPressImage={onBackPress}
       />
-      <View style={styles.middleContainer}>
+      <TouchableOpacity
+        style={styles.middleContainer}
+        activeOpacity={1}
+        onPress={() => handleNavigation()}>
         <View style={styles.imageContainer}>
           <CustomImage
             source={{uri: photo}}
             containerStyle={styles.innerImageContainer}
             resizeMode="cover"
+            disabled
           />
         </View>
         <TextNormal textStyle={styles.textNormal}>{FullName}</TextNormal>
         <TextNormal textStyle={styles.textTimeAgo}>
           {getAgoTimeFullString(timeInSeconds)}
         </TextNormal>
-      </View>
+      </TouchableOpacity>
       <CustomImage source={images.postOptions} height={hp(5.5)} width={wp(9)} />
     </View>
   );

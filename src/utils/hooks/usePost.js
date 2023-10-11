@@ -238,6 +238,7 @@ const usePost = () => {
             userId: user?.firebaseUserId,
             postId: postId,
             likedAt: firestore.FieldValue.serverTimestamp(),
+            spaceName: spaceName,
           });
         const countIncrementTask = await firestore()
           .collection(`spaces/${spaceName}/posts`)
@@ -320,6 +321,8 @@ const usePost = () => {
             `accounts/${user?.firebaseUserId}`,
           ),
           commentId: commentId.id,
+          spaceName: spaceName,
+          postId: postId,
         });
       const countIncrementTask = await firestore()
         .collection(`spaces/${spaceName}/posts`)
@@ -361,11 +364,12 @@ const usePost = () => {
     }
   };
 
-  const fetchMyPost = async () => {
+  const fetchMyPost = async userId => {
     try {
       const data = await firestore()
         .collectionGroup(`posts`)
-        .where('createdBy', '==', user?.firebaseUserId)
+        .where('createdBy', '==', userId)
+        .orderBy('createdAt', 'desc')
         .get();
 
       const post = await Promise.all(
@@ -391,8 +395,13 @@ const usePost = () => {
           };
         }),
       );
+
+      if (user?.firebaseUserId != userId) {
+        const res = await firestore().collection('accounts').doc(userId).get();
+        return {post: post, user: res.data()};
+      }
+
       return post;
-      // return data.docs;
     } catch (e) {
       console.log({e});
     }

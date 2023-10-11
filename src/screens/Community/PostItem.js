@@ -17,7 +17,7 @@ import {setPostDetails, setPostId} from '../../redux/reducers/generalSlice';
 import Video from 'react-native-video';
 import CustomVideo from '../../components/common/CustomVideo';
 
-const PostItem = ({data}) => {
+const PostItem = ({data, disabledProfileClick = false}) => {
   const {general} = useUser();
   const user = data?.user?._data;
   const [like, setLike] = useState(data?.userLiked);
@@ -90,6 +90,8 @@ const PostItem = ({data}) => {
         photo={user?.photo}
         name={user?.firstName + ' ' + user?.lastName}
         time={data?.createdAt}
+        uid={user?.firebaseUserId}
+        disabledProfileClick={disabledProfileClick}
       />
       {data?.text ? (
         <View style={styles.postText}>

@@ -23,7 +23,7 @@ import {useDispatch} from 'react-redux';
 import auth from '@react-native-firebase/auth';
 import {setUser} from '../../redux/reducers/userSlice';
 
-const ProfileHeader = () => {
+const ProfileHeader = ({differentUserProfile}) => {
   const dispatch = useDispatch();
   const signOut = () => {
     dispatch(
@@ -40,6 +40,18 @@ const ProfileHeader = () => {
     );
     auth().signOut();
   };
+
+  if (differentUserProfile) {
+    return (
+      <>
+        <View style={styles.container}>
+          <TextBig textStyle={styles.textStyle} bold>
+            Profile
+          </TextBig>
+        </View>
+      </>
+    );
+  }
 
   const navigation = useNavigation();
   return (

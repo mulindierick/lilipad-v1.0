@@ -1,6 +1,9 @@
 import {firebase} from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import {useVerifyOTPMutation} from '../../redux/apis';
+import {
+  useDeleteUserAccountMutation,
+  useVerifyOTPMutation,
+} from '../../redux/apis';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   setEmail,
@@ -16,6 +19,7 @@ import {GetFCMToken} from '../pushNotification_Helper';
 
 const UseFirebaseAuth = () => {
   const [verifyOTP] = useVerifyOTPMutation();
+  const [deleteUserAccount] = useDeleteUserAccountMutation();
   const {uploadImage} = useUser();
   const dispatch = useDispatch();
   const {user} = useSelector(state => ({user: state.userSlice}));
@@ -193,6 +197,10 @@ const UseFirebaseAuth = () => {
   const DeleteUserAccountAndRelatedActivities = async () => {
     try {
       auth().signOut();
+      deleteUserAccount({
+        userId: user?.firebaseUserId,
+        spaces: user?.spaces,
+      });
       dispatch(
         setUser({
           email: null,
@@ -206,34 +214,6 @@ const UseFirebaseAuth = () => {
           classYear: null,
         }),
       );
-
-      user?.spaces.map(async space => {
-        await firestore()
-          .collection('spaces')
-          .doc(space)
-          .set(
-            {
-              members: firestore.FieldValue.arrayRemove(user?.firebaseUserId),
-            },
-            {merge: true},
-          );
-      });
-
-      //Delete User Posts
-      await firestore()
-        .collectionGroup('posts')
-        .where('createdBy', '==', user?.firebaseUserId)
-        .get()
-        .then(querySnapshot => {
-          querySnapshot.forEach(doc => {
-            doc.ref.delete();
-          });
-        });
-      //Delete User Account
-      await firestore()
-        .collection('accounts')
-        .doc(user?.firebaseUserId)
-        .delete();
       console.log('FINALLY COMPLETED');
     } catch (e) {
       console.log({e});

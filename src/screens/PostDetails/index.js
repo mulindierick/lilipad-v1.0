@@ -196,6 +196,7 @@ const PostDetails = ({route}) => {
         FullName={`${postData?.user?._data?.firstName} ${postData?.user?._data?.lastName}`}
         timeInSeconds={postData?.data?.createdAt?._seconds}
         onBackPress={() => handleBackPress()}
+        uid={postData?.user?._data?.firebaseUserId}
       />
       <FlatList
         data={postComments}

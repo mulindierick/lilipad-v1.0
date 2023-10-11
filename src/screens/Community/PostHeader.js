@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -8,8 +8,21 @@ import CustomImage from '../../components/common/CustomImage';
 import {TextNormal} from '../../components/common/CustomText';
 import {getAgoTimeFullString} from '../../utils/constants/helper';
 import {FONTS, images} from '../../utils/constants/theme';
+import useUser from '../../utils/hooks/useUser';
+import {useNavigation} from '@react-navigation/native';
 
-const PostHeader = ({photo, name, time}) => {
+const PostHeader = ({photo, name, time, uid, disabledProfileClick}) => {
+  const {user} = useUser();
+  const navigation = useNavigation();
+  const handleNavigation = () => {
+    console.log({uid, userId: user?.firebaseUserId});
+    if (uid == user?.firebaseUserId) {
+      navigation.navigate('Profile');
+    } else {
+      navigation.navigate('DifferentUserProfile', {uid});
+    }
+  };
+
   return (
     <View style={styles.postHeader}>
       <CustomImage
@@ -17,15 +30,18 @@ const PostHeader = ({photo, name, time}) => {
         height={hp(6.5)}
         width={hp(6.5)}
         containerStyle={{borderRadius: hp(10)}}
+        onPressImage={disabledProfileClick ? null : () => handleNavigation()}
       />
-      <View
+      <TouchableOpacity
         style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
           flex: 1,
           paddingHorizontal: wp(3),
           alignItems: 'flex-start',
-        }}>
+        }}
+        activeOpacity={1}
+        onPress={disabledProfileClick ? null : () => handleNavigation()}>
         <View>
           <TextNormal textStyle={styles.textNormal}>{name}</TextNormal>
           <TextNormal textStyle={styles.textTimeAgo}>
@@ -38,7 +54,7 @@ const PostHeader = ({photo, name, time}) => {
           width={hp(3)}
           containerStyle={{marginTop: hp(0.4)}}
         />
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };

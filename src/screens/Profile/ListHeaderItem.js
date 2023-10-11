@@ -16,7 +16,7 @@ import {
 import useUser from '../../utils/hooks/useUser';
 import {ProfileCamera} from '../../components/common/CustomSvgItems';
 
-const ListHeaderItem = ({user}) => {
+const ListHeaderItem = ({user, differentUserProfile}) => {
   const {
     accessCamera,
     accessGallery,
@@ -50,6 +50,43 @@ const ListHeaderItem = ({user}) => {
       updateProfilePhoto(localImageUriArray[0]?.image);
     }
   }, [localImageUriArray.length]);
+
+  if (differentUserProfile) {
+    return (
+      <View>
+        <View style={styles.imageContainer}>
+          <CustomImage
+            source={{
+              uri:
+                localImageUriArray.length > 0
+                  ? localImageUriArray[0]?.image
+                  : user?.photo,
+            }}
+            containerStyle={styles.innerImageContainer}
+            resizeMode="cover"
+          />
+        </View>
+        <View style={styles.userDetail}>
+          <TextBigger textStyle={{fontSize: wp(7)}}>
+            {user?.firstName + ' ' + user?.lastName}
+          </TextBigger>
+          <TextBig
+            textStyle={[styles.classInformation, {marginTop: hp(1.3)}]}
+            color={'rgba(21, 19, 19, 0.69)'}>
+            {user?.classYear}
+          </TextBig>
+          <TextBig
+            textStyle={styles.classInformation}
+            color={'rgba(21, 19, 19, 0.69)'}>
+            {user?.major}
+          </TextBig>
+        </View>
+        <TextNormal textStyle={styles.postsTitle}>
+          {user?.firstName + `'s` + ' Posts'}
+        </TextNormal>
+      </View>
+    );
+  }
 
   return (
     <View>

@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import CustomImage from '../../components/common/CustomImage';
 import {
@@ -7,10 +7,27 @@ import {
 } from 'react-native-responsive-screen';
 import {COLORS, FONTS, images} from '../../utils/constants/theme';
 import {TextBig} from '../../components/common/CustomText';
+import useUser from '../../utils/hooks/useUser';
+import {useNavigation} from '@react-navigation/native';
 
 const StudentsItem = ({item}) => {
+  const {user} = useUser();
+  const navigation = useNavigation();
+
+  const handleNavigation = () => {
+    console.log({user, item});
+    if (user?.firebaseUserId == item?.objectID) {
+      navigation.navigate('Profile');
+    } else {
+      navigation.navigate('DifferentUserProfile', {uid: item?.objectID});
+    }
+  };
+
   return (
-    <View style={styles.spaceContainer}>
+    <TouchableOpacity
+      style={styles.spaceContainer}
+      activeOpacity={1}
+      onPress={() => handleNavigation()}>
       <View style={styles.imageContainer}>
         <CustomImage
           resizeMode="cover"
@@ -25,7 +42,7 @@ const StudentsItem = ({item}) => {
         />
       </View>
       <TextBig textStyle={styles.Text}>{item?.fullName}</TextBig>
-    </View>
+    </TouchableOpacity>
   );
 };
 

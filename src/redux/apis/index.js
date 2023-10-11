@@ -32,6 +32,15 @@ export const lilipadCloudFunction = createApi({
         };
       },
     }),
+    DeleteUserAccount: build.mutation({
+      query(body) {
+        return {
+          method: 'POST',
+          url: 'DeleteUserAccount',
+          body,
+        };
+      },
+    }),
   }),
 });
 
@@ -39,4 +48,5 @@ export const {
   useSendOTPemailMutation,
   useVerifyOTPMutation,
   useSentNotificationMutation,
+  useDeleteUserAccountMutation,
 } = lilipadCloudFunction;

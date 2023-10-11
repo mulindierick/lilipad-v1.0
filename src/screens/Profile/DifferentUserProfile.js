@@ -13,11 +13,17 @@ import {TextNormal} from '../../components/common/CustomText';
 import {COLORS} from '../../utils/constants/theme';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {MyContext} from '../../context/Context';
+import CustomLoader from '../../components/common/CustomLoader';
+import SplashScreen from 'react-native-splash-screen';
 
-const Profile = () => {
+const DifferentUserProfile = ({route}) => {
+  console.log({route});
+  const {uid} = route?.params;
   const {user} = useUser();
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [data, setData] = useState([]);
+  const [userDetails, setUserDetails] = useState({});
   const {ProfileFlatListRef} = useContext(MyContext);
 
   const {fetchMyPost} = usePost();
@@ -25,26 +31,52 @@ const Profile = () => {
   const fetchPosts = async () => {
     setLoading(true);
     try {
-      let res = await fetchMyPost(user?.firebaseUserId);
-      setData(res);
+      let res = await fetchMyPost(uid);
+      setData(res?.post || []);
+      setUserDetails(res?.user || {});
     } catch (e) {
       console.log({e});
     }
+    SplashScreen.hide();
     setLoading(false);
+  };
+
+  const fetchPostAgain = async () => {
+    setRefreshing(true);
+    try {
+      let res = await fetchMyPost(uid);
+      setData(res?.post || []);
+      setUserDetails(res?.user || {});
+    } catch (e) {
+      console.log({e});
+    }
+    setRefreshing(false);
   };
 
   useEffect(() => {
     fetchPosts();
   }, []);
 
-  return (
+  console.log({userDetails});
+
+  return loading ? (
+    <CustomLoader />
+  ) : (
     <CustomWrapper>
-      <ProfileHeader />
+      <ProfileHeader differentUserProfile />
       <FlatList
         data={data}
         ref={ProfileFlatListRef}
-        renderItem={({item}) => <PostItem data={item} key={item?.postId} />}
-        ListHeaderComponent={() => <ListHeaderItem user={user} />}
+        renderItem={({item}) => (
+          <PostItem
+            data={item}
+            key={item?.postId}
+            disabledProfileClick={true}
+          />
+        )}
+        ListHeaderComponent={() => (
+          <ListHeaderItem user={userDetails} differentUserProfile />
+        )}
         showsVerticalScrollIndicator={false}
         ListFooterComponent={() => <View style={{marginBottom: hp(15)}} />}
         ListEmptyComponent={() => (
@@ -64,13 +96,13 @@ const Profile = () => {
             )}
           </View>
         )}
-        refreshing={loading}
-        onRefresh={() => fetchPosts()}
+        refreshing={refreshing}
+        onRefresh={() => fetchPostAgain()}
       />
     </CustomWrapper>
   );
 };
 
-export default Profile;
+export default DifferentUserProfile;
 
 const styles = StyleSheet.create({});

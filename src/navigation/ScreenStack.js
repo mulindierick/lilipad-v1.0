@@ -5,6 +5,7 @@ import PostDetails from '../screens/PostDetails';
 import Search from '../screens/Search';
 import BottomTabNavigator from './BottomTabNavigator';
 import Setting from '../screens/Settings';
+import DifferentUserProfile from '../screens/Profile/DifferentUserProfile';
 
 const Stack = createNativeStackNavigator();
 
@@ -16,6 +17,10 @@ const ScreenStack = () => {
       <Stack.Screen name="PostDetails" component={PostDetails} />
       <Stack.Screen name="Search" component={Search} />
       <Stack.Screen name="Settings" component={Setting} />
+      <Stack.Screen
+        name="DifferentUserProfile"
+        component={DifferentUserProfile}
+      />
     </Stack.Navigator>
   );
 };
