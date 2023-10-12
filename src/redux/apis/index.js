@@ -41,6 +41,15 @@ export const lilipadCloudFunction = createApi({
         };
       },
     }),
+    ActivityRecorder: build.mutation({
+      query(body) {
+        return {
+          method: 'POST',
+          url: 'ActivityRecorder',
+          body,
+        };
+      },
+    }),
   }),
 });
 
@@ -49,4 +58,5 @@ export const {
   useVerifyOTPMutation,
   useSentNotificationMutation,
   useDeleteUserAccountMutation,
+  useActivityRecorderMutation,
 } = lilipadCloudFunction;

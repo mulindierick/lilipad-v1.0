@@ -109,7 +109,12 @@ const PostDetails = ({route}) => {
   const handleLike = async () => {
     setLikeLoader(true);
     try {
-      const res = await handlePostLike(spaceName, postId, like);
+      const res = await handlePostLike(
+        spaceName,
+        postId,
+        like,
+        postData?.user?._data?.firebaseUserId,
+      );
     } catch (err) {
       console.log({err});
     }
@@ -135,7 +140,12 @@ const PostDetails = ({route}) => {
       const comment = text;
       setText('');
       setCommentLoader(true);
-      const res = await AddComment(spaceName, postId, comment);
+      const res = await AddComment(
+        spaceName,
+        postId,
+        comment,
+        postData?.user?._data?.firebaseUserId,
+      );
       sentNotification({
         userId: user?.firebaseUserId,
         postId: postId,

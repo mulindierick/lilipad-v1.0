@@ -6,6 +6,7 @@ import Search from '../screens/Search';
 import BottomTabNavigator from './BottomTabNavigator';
 import Setting from '../screens/Settings';
 import DifferentUserProfile from '../screens/Profile/DifferentUserProfile';
+import Activity from '../screens/Activity';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,6 +22,7 @@ const ScreenStack = () => {
         name="DifferentUserProfile"
         component={DifferentUserProfile}
       />
+      <Stack.Screen name="Activity" component={Activity} />
     </Stack.Navigator>
   );
 };

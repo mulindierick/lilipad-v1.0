@@ -35,8 +35,7 @@ const TABS = [
 const BottomTabNavigator = () => {
   const tabsBar = TABS;
   const [selectedTab, setSelectedTab] = useState(tabsBar[0].name);
-  const {PostFlatListRef} = useContext(MyContext);
-  const {ProfileFlatListRef} = useContext(MyContext);
+  const {PostFlatListRef, ProfileFlatListRef} = useContext(MyContext);
   return (
     <Tab.Navigator
       screenOptions={{
@@ -82,15 +81,19 @@ const BottomTabNavigator = () => {
                     props.onPress();
                     if (tab.name === selectedTab) {
                       if (tab.name === 'Profile') {
-                        ProfileFlatListRef.current.scrollToOffset({
-                          animated: true,
-                          offset: 0,
-                        });
+                        if (ProfileFlatListRef.current) {
+                          ProfileFlatListRef.current.scrollToOffset({
+                            animated: true,
+                            offset: 0,
+                          });
+                        }
                       } else {
-                        PostFlatListRef.current.scrollToOffset({
-                          animated: true,
-                          offset: 0,
-                        });
+                        if (PostFlatListRef.current) {
+                          PostFlatListRef.current.scrollToOffset({
+                            animated: true,
+                            offset: 0,
+                          });
+                        }
                       }
                     } else {
                       setSelectedTab(tab.name);

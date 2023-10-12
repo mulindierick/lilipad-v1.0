@@ -2,11 +2,15 @@ import firestore from '@react-native-firebase/firestore';
 import useUser from './useUser';
 import {useDispatch} from 'react-redux';
 import {setPostCommentCount} from '../../redux/reducers/generalSlice';
-import {useSentNotificationMutation} from '../../redux/apis';
+import {
+  useActivityRecorderMutation,
+  useSentNotificationMutation,
+} from '../../redux/apis';
 
 const usePost = () => {
   const {user} = useUser();
   const [sentNotification] = useSentNotificationMutation();
+  const [activityRecorder] = useActivityRecorderMutation();
 
   const {uploadImage} = useUser();
   const dispatch = useDispatch();
@@ -217,7 +221,7 @@ const usePost = () => {
     }
   };
 
-  const handlePostLike = async (spaceName, postId, like) => {
+  const handlePostLike = async (spaceName, postId, like, postCreatorId) => {
     try {
       if (like) {
         const likeIdTask = await firestore()
@@ -230,6 +234,13 @@ const usePost = () => {
           .update({
             likesCount: firestore.FieldValue.increment(-1),
           });
+        activityRecorder({
+          postId: postId,
+          spaceName: spaceName,
+          type: 'unlike',
+          userId: postCreatorId,
+          userIdWhoPerforemedActivity: user?.firebaseUserId,
+        });
       } else {
         const likeIdTask = await firestore()
           .collection(`spaces/${spaceName}/posts/${postId}/likes`)
@@ -251,6 +262,13 @@ const usePost = () => {
           postId: postId,
           spaceName: spaceName,
           type: 'like',
+        });
+        activityRecorder({
+          postId: postId,
+          spaceName: spaceName,
+          type: 'like',
+          userId: postCreatorId,
+          userIdWhoPerforemedActivity: user?.firebaseUserId,
         });
       }
     } catch (err) {
@@ -305,7 +323,7 @@ const usePost = () => {
     }
   };
 
-  const AddComment = async (spaceName, postId, text) => {
+  const AddComment = async (spaceName, postId, text, postCreatorId) => {
     try {
       const commentId = firestore()
         .collection(`spaces/${spaceName}/posts/${postId}/comments`)
@@ -330,6 +348,13 @@ const usePost = () => {
         .update({
           commentsCount: firestore.FieldValue.increment(1),
         });
+      activityRecorder({
+        postId: postId,
+        spaceName: spaceName,
+        type: 'comment',
+        userId: postCreatorId,
+        userIdWhoPerforemedActivity: user?.firebaseUserId,
+      });
     } catch (error) {
       console.log(error);
     }
@@ -407,6 +432,42 @@ const usePost = () => {
     }
   };
 
+  const fetchActivities = async () => {
+    const data = await firestore()
+      .collection(`accounts/${user?.firebaseUserId}/activity`)
+      .orderBy('createdAt', 'desc')
+      .get();
+
+    const sectionListData = await Promise.all(
+      data.docs.map(async item => {
+        const dayData = await firestore()
+          .collection(
+            `accounts/${user?.firebaseUserId}/activity/${item.id}/activities`,
+          )
+          .orderBy('lastUpdated', 'desc')
+          .get();
+
+        console.log({dayData: dayData.docs});
+
+        const eachDayData = await Promise.all(
+          dayData.docs.map(async item => {
+            return {
+              ...item.data(),
+              lastUserDetail: await item.data().lastActivityPerformedBy.get(),
+            };
+          }),
+        );
+        console.log({eachDayData});
+        return {
+          title: item.id,
+          data: eachDayData,
+        };
+      }),
+    );
+
+    return sectionListData;
+  };
+
   return {
     fetchPostsOfAllSpaces,
     sharePost,
@@ -418,6 +479,7 @@ const usePost = () => {
     fetchUpdatedComments,
     fetchFilteredPostsOfSpecificSpace,
     fetchMyPost,
+    fetchActivities,
   };
 };
 

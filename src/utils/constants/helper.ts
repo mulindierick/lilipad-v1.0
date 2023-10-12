@@ -69,3 +69,40 @@ export const getAgoTimeFullString = timestamp => {
     return 'just now';
   }
 };
+
+export const formatDate = inputDate => {
+  const parts = inputDate.split('-');
+  const day = parseInt(parts[0], 10);
+  const month = parseInt(parts[1], 10);
+  const year = parseInt(parts[2], 10);
+
+  const inputDateTime = new Date(year, month - 1, day);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const timeDiff = today - inputDateTime;
+  const daysDiff = timeDiff / (1000 * 60 * 60 * 24);
+
+  if (daysDiff === 0) {
+    return 'Today';
+  } else if (daysDiff === 1) {
+    return 'Yesterday';
+  } else if (daysDiff < 7) {
+    const dayNames = [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+    ];
+    return dayNames[inputDateTime.getDay()];
+  } else if (today.getFullYear() === inputDateTime.getFullYear()) {
+    const options = {day: 'numeric', month: 'short'};
+    return inputDateTime.toLocaleDateString('en-US', options);
+  } else {
+    const options = {day: 'numeric', month: 'short', year: 'numeric'};
+    return inputDateTime.toLocaleDateString('en-US', options);
+  }
+};

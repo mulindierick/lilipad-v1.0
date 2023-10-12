@@ -7,9 +7,9 @@ import {
 } from 'react-native-responsive-screen';
 import {images} from '../../utils/constants/theme';
 import CustomImage from './CustomImage';
-import {TextBigger} from './CustomText';
+import {TextBig, TextBigger} from './CustomText';
 
-const CustomHeader = ({forInfoFurtherScreen = false}) => {
+const CustomHeader = ({forInfoFurtherScreen = false, Activty = false}) => {
   const navigation = useNavigation();
 
   if (forInfoFurtherScreen) {
@@ -17,6 +17,20 @@ const CustomHeader = ({forInfoFurtherScreen = false}) => {
       <View style={styles.forInfoFurtherScreen}>
         <TextBigger textStyle={styles.headerText}>Tell Us A Bit</TextBigger>
         <TextBigger textStyle={styles.headerText}>About Yourself</TextBigger>
+      </View>
+    );
+  }
+
+  if (Activty) {
+    return (
+      <View style={styles.container}>
+        <CustomImage
+          source={images.backButton}
+          height={hp(5)}
+          width={wp(7)}
+          onPressImage={() => navigation.goBack()}
+        />
+        <TextBig>Activity</TextBig>
       </View>
     );
   }

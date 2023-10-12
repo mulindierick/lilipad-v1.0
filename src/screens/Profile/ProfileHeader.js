@@ -64,7 +64,7 @@ const ProfileHeader = ({differentUserProfile}) => {
           <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
             <SettingSvg />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={() => navigation.navigate('Activity')}>
             <NotificationSvg />
           </TouchableOpacity>
         </View>

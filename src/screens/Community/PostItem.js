@@ -38,7 +38,12 @@ const PostItem = ({data, disabledProfileClick = false}) => {
     let count =
       general?.postId == data?.postId ? general?.likeCount : likeCount;
     try {
-      const res = await handlePostLike(data?.spaceName, data?.postId, userLike);
+      const res = await handlePostLike(
+        data?.spaceName,
+        data?.postId,
+        userLike,
+        data?.createdBy,
+      );
     } catch (err) {
       console.log({err});
     }
