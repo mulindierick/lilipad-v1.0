@@ -39,6 +39,7 @@ export const images = {
   alreadyInGroupIcon: require('../../assets/alreadyInGroupIcon.png'),
   plus: require('../../assets/plus.png'),
   send: require('../../assets/Send.png'),
+  loaderImage: require('../../assets/splashScreenAsLoader.png'),
 };
 
 export const FONTS = {

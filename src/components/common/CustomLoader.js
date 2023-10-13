@@ -1,9 +1,37 @@
 import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import ReactNativeModal from 'react-native-modal';
-import {COLORS} from '../../utils/constants/theme';
+import {COLORS, images} from '../../utils/constants/theme';
+import CustomImage from './CustomImage';
+import {
+  heightPercentageToDP,
+  widthPercentageToDP,
+} from 'react-native-responsive-screen';
 
-const CustomLoader = () => {
+const CustomLoader = ({splashScreen = false, isVisible}) => {
+  if (splashScreen) {
+    return (
+      <ReactNativeModal
+        isVisible={isVisible}
+        style={styles.container}
+        animationIn={'slideInRight'}
+        animationOut={'slideOutLeft'}
+        backdropOpacity={1}>
+        <View
+          style={{position: 'absolute', bottom: 0, right: 0, left: 0, top: 0}}>
+          <CustomImage
+            source={images.loaderImage}
+            containerStyle={{
+              height: heightPercentageToDP(100),
+              width: widthPercentageToDP(100),
+            }}
+            resizeMode="cover"
+          />
+        </View>
+      </ReactNativeModal>
+    );
+  }
+
   return (
     <ReactNativeModal
       isVisible={true}

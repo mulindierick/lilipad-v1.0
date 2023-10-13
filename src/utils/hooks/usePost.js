@@ -1,7 +1,10 @@
 import firestore from '@react-native-firebase/firestore';
 import useUser from './useUser';
 import {useDispatch} from 'react-redux';
-import {setPostCommentCount} from '../../redux/reducers/generalSlice';
+import {
+  setNewNotification,
+  setPostCommentCount,
+} from '../../redux/reducers/generalSlice';
 import {
   useActivityRecorderMutation,
   useSentNotificationMutation,
@@ -93,6 +96,7 @@ const usePost = () => {
       };
       newPostsCountData[space] = newPostsCount[index];
     });
+    CheckNewActivityUpdate();
     return {data: SpaceDataObject, newPostsCount: newPostsCountData};
   };
 
@@ -438,6 +442,11 @@ const usePost = () => {
       .orderBy('createdAt', 'desc')
       .get();
 
+    const userData = await firestore()
+      .collection('accounts')
+      .doc(user?.firebaseUserId)
+      .get();
+
     const sectionListData = await Promise.all(
       data.docs.map(async item => {
         const dayData = await firestore()
@@ -447,25 +456,86 @@ const usePost = () => {
           .orderBy('lastUpdated', 'desc')
           .get();
 
-        console.log({dayData: dayData.docs});
-
         const eachDayData = await Promise.all(
           dayData.docs.map(async item => {
-            return {
-              ...item.data(),
-              lastUserDetail: await item.data().lastActivityPerformedBy.get(),
-            };
+            if (item.data().users?.length > 0) {
+              return {
+                ...item.data(),
+                newActivity:
+                  item?.data()?.lastUpdated?._seconds >
+                  userData?.data()?.lastActivitiesChecked?._seconds,
+                lastUserDetail: await item.data().lastActivityPerformedBy.get(),
+              };
+            } else {
+              return 'noData';
+            }
           }),
         );
+
         console.log({eachDayData});
+
+        const pureEachDayData = eachDayData.filter(item => item != 'noData');
+
+        // const emptyValuesCheck = eachDayData.filter(item => item != 'noData');
+        // if (emptyValuesCheck.length == 0) {
+        //   return 'noData';
+        // }
+
         return {
           title: item.id,
-          data: eachDayData,
+          data: pureEachDayData,
         };
       }),
     );
 
-    return sectionListData;
+    const pureData = sectionListData.filter(item => item != 'noData');
+
+    await firestore().collection('accounts').doc(user?.firebaseUserId).set(
+      {
+        lastActivitiesChecked: firestore.FieldValue.serverTimestamp(),
+      },
+      {merge: true},
+    );
+    dispatch(setNewNotification({newNotification: false}));
+
+    return pureData;
+  };
+
+  const CheckNewActivityUpdate = async () => {
+    try {
+      const data = await firestore()
+        .collection(`accounts/${user?.firebaseUserId}/activity`)
+        .orderBy('createdAt', 'desc')
+        .get();
+
+      const userData = await firestore()
+        .collection('accounts')
+        .doc(user?.firebaseUserId)
+        .get();
+
+      await Promise.all(
+        data.docs.map(async item => {
+          const dayData = await firestore()
+            .collection(
+              `accounts/${user?.firebaseUserId}/activity/${item.id}/activities`,
+            )
+            .orderBy('lastUpdated', 'desc')
+            .get();
+
+          if (dayData.docs.length > 0) {
+            const lastUpdated = dayData.docs[0].data().lastUpdated;
+            if (
+              lastUpdated._seconds >
+              userData.data().lastActivitiesChecked._seconds
+            ) {
+              dispatch(setNewNotification({newNotification: true}));
+            }
+          }
+        }),
+      );
+    } catch (err) {
+      console.log({err});
+    }
   };
 
   return {
@@ -480,6 +550,7 @@ const usePost = () => {
     fetchFilteredPostsOfSpecificSpace,
     fetchMyPost,
     fetchActivities,
+    CheckNewActivityUpdate,
   };
 };
 

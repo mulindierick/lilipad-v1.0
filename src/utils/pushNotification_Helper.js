@@ -3,6 +3,8 @@ import messaging from '@react-native-firebase/messaging';
 import {showMessage} from 'react-native-flash-message';
 import PushNotification from 'react-native-push-notification';
 import {COLORS} from './constants/theme';
+import {useDispatch} from 'react-redux';
+import {setNewNotification} from '../redux/reducers/generalSlice';
 
 // Request user permission for push notifications
 export async function requestUserPermission() {
@@ -84,9 +86,13 @@ const sendLocalPushNotification = (title, message, data) => {
 };
 
 // Initialize notification listener
-export const NotificationListener = color => {
+export const NotificationListener = dispatch => {
   messaging().onMessage(async remoteMessage => {
-    console.log('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    dispatch(
+      setNewNotification({
+        newNotification: true,
+      }),
+    );
     sendLocalPushNotification(
       remoteMessage.notification?.title,
       remoteMessage.notification?.body,

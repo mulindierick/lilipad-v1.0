@@ -110,6 +110,7 @@ const UseFirebaseAuth = () => {
             [major]: firestore.FieldValue.serverTimestamp(),
           },
           fcmToken: fcmToken,
+          lastActivitiesChecked: firestore.FieldValue.serverTimestamp(),
         });
 
       console.log('Added Skidmore College');

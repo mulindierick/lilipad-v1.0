@@ -7,7 +7,7 @@ import {
 } from 'react-native-responsive-screen';
 import {images} from '../../utils/constants/theme';
 import CustomImage from './CustomImage';
-import {TextBig, TextBigger} from './CustomText';
+import {TextBig, TextBigger, TextNormal} from './CustomText';
 
 const CustomHeader = ({forInfoFurtherScreen = false, Activty = false}) => {
   const navigation = useNavigation();
@@ -23,14 +23,17 @@ const CustomHeader = ({forInfoFurtherScreen = false, Activty = false}) => {
 
   if (Activty) {
     return (
-      <View style={styles.container}>
-        <CustomImage
-          source={images.backButton}
-          height={hp(5)}
-          width={wp(7)}
-          onPressImage={() => navigation.goBack()}
-        />
-        <TextBig>Activity</TextBig>
+      <View style={styles.ActivityContainer}>
+        <View style={{flex: 1}}>
+          <CustomImage
+            source={images.backButton}
+            height={hp(5)}
+            width={wp(7)}
+            onPressImage={() => navigation.goBack()}
+          />
+        </View>
+        <TextNormal textStyle={styles.textStyle}>Activity</TextNormal>
+        <View style={{flex: 1}} />
       </View>
     );
   }
@@ -57,6 +60,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flexDirection: 'row',
   },
+  ActivityContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
   forInfoFurtherScreen: {
     alignItems: 'center',
     // flexDirection: 'row',
@@ -65,5 +72,11 @@ const styles = StyleSheet.create({
   headerText: {
     fontWeight: '600',
     fontSize: wp(6.5),
+  },
+  textStyle: {
+    fontWeight: '600',
+    fontSize: wp(7),
+    flex: 5,
+    textAlign: 'center',
   },
 });

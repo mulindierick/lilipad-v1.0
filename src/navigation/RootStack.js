@@ -13,20 +13,28 @@ import useUser from '../utils/hooks/useUser';
 import BottomTabNavigator from './BottomTabNavigator';
 import ScreenStack from './ScreenStack';
 import {setFirstTimeLogin} from '../redux/reducers/generalSlice';
+import {
+  GetFCMToken,
+  NotificationListener,
+  requestUserPermission,
+} from '../utils/pushNotification_Helper';
 
 const RootStack = () => {
   const [loading, setLoading] = useState(true);
   const {user} = useUser();
   const navigation = useNavigation();
-  useApp(navigation);
+  const dispatch = useDispatch();
+  useApp(navigation, dispatch);
   useEffect(() => {
+    requestUserPermission();
+    GetFCMToken();
+    NotificationListener(dispatch);
     setTimeout(() => {
       SplashScreen.hide();
     }, 1500);
   }, []);
 
   const [isLogin, setIslogin] = useState(null);
-  const dispatch = useDispatch();
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(async user => {
       setLoading(true);

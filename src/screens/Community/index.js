@@ -139,7 +139,6 @@ const Community = () => {
   useEffect(() => {
     // if (appState === 'active') {
     fetchPosts();
-    console.log('HEREE AND THEREEEE');
     // }
   }, [user?.spaces.length, appState]);
 
@@ -202,6 +201,16 @@ const Community = () => {
       setUpperBorderFlag(false);
     }
     scrollValue = y;
+  };
+
+  const fetchThePostAgainAfterTheOwnerHasPosted = async () => {
+    await fetchParticularSpaceOnFilter(
+      selectedSpaceData[selectedSpaces].filter,
+    );
+    PostFlatListRef.current.scrollToOffset({
+      animated: true,
+      offset: 0,
+    });
   };
 
   return (
@@ -288,6 +297,7 @@ const Community = () => {
         onBackButtonPress={() => setAddPostModal(false)}
         onBackDropPress={() => setAddPostModal(false)}
         spaceName={selectedSpaces}
+        afterAddingPost={fetchThePostAgainAfterTheOwnerHasPosted}
       />
       <WelcomeNoteModal
         isVisible={general?.firstTimeLogin}

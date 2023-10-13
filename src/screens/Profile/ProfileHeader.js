@@ -22,8 +22,10 @@ import {COLORS, FONTS} from '../../utils/constants/theme';
 import {useDispatch} from 'react-redux';
 import auth from '@react-native-firebase/auth';
 import {setUser} from '../../redux/reducers/userSlice';
+import useUser from '../../utils/hooks/useUser';
 
 const ProfileHeader = ({differentUserProfile}) => {
+  const {general} = useUser();
   const dispatch = useDispatch();
   const signOut = () => {
     dispatch(
@@ -66,6 +68,7 @@ const ProfileHeader = ({differentUserProfile}) => {
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('Activity')}>
             <NotificationSvg />
+            {general?.newNotification && <View style={styles.redDot} />}
           </TouchableOpacity>
         </View>
       </View>
@@ -119,5 +122,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp(3),
     marginVertical: hp(0.4),
     width: wp(47),
+  },
+  redDot: {
+    width: wp(2.5),
+    aspectRatio: 1,
+    position: 'absolute',
+    backgroundColor: COLORS.red,
+    borderRadius: wp(100),
+    right: wp(2),
   },
 });

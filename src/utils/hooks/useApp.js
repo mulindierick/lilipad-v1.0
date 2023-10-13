@@ -1,8 +1,9 @@
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import PushNotification from 'react-native-push-notification';
+import {setNewNotification} from '../../redux/reducers/generalSlice';
 // import notification from '../helpers/notifications';
 
-export const useApp = navigation => {
+export const useApp = (navigation, dispatch) => {
   // const {requestUserPermission} = notification();
   // useEffect(() => {
   // 	AvoidSoftInput.setEnabled(true);
@@ -17,6 +18,11 @@ export const useApp = navigation => {
       console.log('-----> notification onOpened123', notification?.data);
 
       if (notification?.data?.route === 'PostDetails') {
+        dispatch(
+          setNewNotification({
+            newNotification: true,
+          }),
+        );
         navigation.navigate('PostDetails', {
           postId: notification?.data?.postId,
           spaceName: notification?.data?.spaceName,

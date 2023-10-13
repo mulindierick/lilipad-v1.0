@@ -7,6 +7,7 @@ const initialState = {
   commentCount: null,
   userLiked: null,
   spaceName: null,
+  newNotification: false,
 };
 
 export const generalSlice = createSlice({
@@ -33,6 +34,9 @@ export const generalSlice = createSlice({
     setPostId: (state, {payload}) => {
       state.postId = payload.postId;
     },
+    setNewNotification: (state, {payload}) => {
+      state.newNotification = payload.newNotification;
+    },
   },
 });
 
@@ -42,6 +46,7 @@ export const {
   setPostCommentCount,
   setLikeCountAnduserLiked,
   setPostId,
+  setNewNotification,
 } = generalSlice.actions;
 
 export default generalSlice.reducer;

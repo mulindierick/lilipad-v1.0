@@ -18,19 +18,24 @@ import {
 import {COLORS} from '../../utils/constants/theme';
 import {formatDate} from '../../utils/constants/helper';
 import ActivityItem from './ActivityItem';
+import CustomLoader from '../../components/common/CustomLoader';
 
 const Activity = () => {
   const {fetchActivities} = usePost();
   const [data, setData] = useState([]);
   const [loader, setLoader] = useState(false);
+  const [screenLoader, setScreenLoader] = useState(true);
 
   const fetchAllActivities = async () => {
+    setLoader(true);
     try {
       const res = await fetchActivities();
       setData(res);
     } catch (err) {
       console.log({err});
     }
+    setLoader(false);
+    setScreenLoader(false);
   };
 
   useEffect(() => {
@@ -46,7 +51,9 @@ const Activity = () => {
     );
   };
 
-  return (
+  return screenLoader ? (
+    <CustomLoader />
+  ) : (
     <CustomWrapper>
       <CustomHeader Activty={true} />
       <SectionList
@@ -73,6 +80,8 @@ const Activity = () => {
           </View>
         )}
         showsVerticalScrollIndicator={false}
+        refreshing={loader}
+        onRefresh={() => fetchAllActivities()}
       />
     </CustomWrapper>
   );

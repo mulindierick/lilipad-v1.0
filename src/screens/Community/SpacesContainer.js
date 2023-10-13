@@ -107,7 +107,7 @@ const SpacesContainer = ({
                         bold
                         color={COLORS.white}
                         textStyle={{fontSize: hp(1.4)}}>
-                        {newPostCount[item]}
+                        {newPostCount[item] > 99 ? '99+' : newPostCount[item]}
                       </TextSmall>
                     </View>
                   )}
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: -9,
     right: -7,
-    height: hp(2.5),
+    height: wp(5),
     aspectRatio: 1,
     backgroundColor: COLORS.green,
     borderRadius: hp(2.5),
