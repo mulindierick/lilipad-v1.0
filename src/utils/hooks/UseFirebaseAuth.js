@@ -88,6 +88,10 @@ const UseFirebaseAuth = () => {
             .set({
               spaceName: item,
               members: [user?.firebaseUserId],
+              isActive: true,
+              admins: [],
+              isPrivate: false,
+              joinRequests: [],
             });
         }
       });

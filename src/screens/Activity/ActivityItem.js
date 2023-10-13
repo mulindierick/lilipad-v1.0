@@ -8,10 +8,19 @@ import {
 } from 'react-native-responsive-screen';
 import {COLORS} from '../../utils/constants/theme';
 import {getAgoTimeFullString} from '../../utils/constants/helper';
+import {useNavigation} from '@react-navigation/native';
 
 const ActivityItem = ({item}) => {
+  const navigation = useNavigation();
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={() =>
+        navigation.navigate('PostDetails', {
+          postId: item?.postId,
+          spaceName: item?.spaceName,
+        })
+      }>
       <View style={styles.imageContainer}>
         <CustomImage
           source={{uri: item?.lastUserDetail?._data?.photo}}
@@ -55,7 +64,7 @@ const ActivityItem = ({item}) => {
               ' ' +
               item?.lastUserDetail?._data?.lastName}
           </TextNormal>{' '}
-          and {item?.users?.length - 1} other replied your post.
+          and {item?.users?.length - 1} other replied to your post.
         </TextNormal>
       ) : item?.users?.length > 2 ? (
         <TextNormal textStyle={styles.text}>
@@ -64,17 +73,16 @@ const ActivityItem = ({item}) => {
               ' ' +
               item?.lastUserDetail?._data?.lastName}
           </TextNormal>{' '}
-          and {item?.users?.length - 1} others replied your post.
+          and {item?.users?.length - 1} others replied to your post.
         </TextNormal>
       ) : (
         <TextNormal textStyle={styles.text}>
-          {' '}
           <TextNormal bold textStyle={styles.text}>
             {item?.lastUserDetail?._data?.firstName +
               ' ' +
               item?.lastUserDetail?._data?.lastName}
           </TextNormal>{' '}
-          replied your post.
+          replied to your post.
         </TextNormal>
       )}
       {item?.newActivity && <View style={styles.blueDot} />}
@@ -91,7 +99,7 @@ export default ActivityItem;
 
 const styles = StyleSheet.create({
   text: {
-    marginLeft: wp(2),
+    marginLeft: wp(1.5),
     fontSize: wp(4.5),
     width: wp(65),
     paddingLeft: wp(2),

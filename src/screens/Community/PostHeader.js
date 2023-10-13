@@ -26,7 +26,7 @@ const PostHeader = ({photo, name, time, uid, disabledProfileClick}) => {
   return (
     <View style={styles.postHeader}>
       <CustomImage
-        source={{uri: photo}}
+        source={{uri: uid == user?.firebaseUserId ? user?.photo : photo}}
         height={hp(6.5)}
         width={hp(6.5)}
         containerStyle={{borderRadius: hp(10)}}

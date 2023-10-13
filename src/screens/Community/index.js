@@ -85,10 +85,6 @@ const Community = () => {
 
   const fetchParticularSpaceOnFilter = async filter => {
     setRefreshing(true);
-    PostFlatListRef.current.scrollToOffset({
-      animated: true,
-      offset: 0,
-    });
     try {
       const data = await fetchFilteredPostsOfSpecificSpace(
         selectedSpaces,
@@ -113,6 +109,32 @@ const Community = () => {
       console.log({e});
     }
     setRefreshing(false);
+  };
+
+  const AfterAddingNewPost = async filter => {
+    try {
+      const data = await fetchFilteredPostsOfSpecificSpace(
+        selectedSpaces,
+        filter,
+      );
+      //There was some issue due to which the i had to empty the data before populating it again
+      setSelectedSpaceData({
+        ...selectedSpaceData,
+        [selectedSpaces]: {
+          data: [],
+          filter: filter,
+        },
+      });
+      setSelectedSpaceData({
+        ...selectedSpaceData,
+        [selectedSpaces]: {
+          data: data,
+          filter: filter,
+        },
+      });
+    } catch (e) {
+      console.log({e});
+    }
   };
 
   const handleSelectingSpaces = async spaceName => {
@@ -204,10 +226,8 @@ const Community = () => {
   };
 
   const fetchThePostAgainAfterTheOwnerHasPosted = async () => {
-    await fetchParticularSpaceOnFilter(
-      selectedSpaceData[selectedSpaces].filter,
-    );
-    PostFlatListRef.current.scrollToOffset({
+    await AfterAddingNewPost(selectedSpaceData[selectedSpaces].filter);
+    PostFlatListRef?.current?.scrollToOffset({
       animated: true,
       offset: 0,
     });

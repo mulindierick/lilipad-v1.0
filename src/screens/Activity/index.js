@@ -15,7 +15,7 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {COLORS} from '../../utils/constants/theme';
+import {COLORS, FONTS} from '../../utils/constants/theme';
 import {formatDate} from '../../utils/constants/helper';
 import ActivityItem from './ActivityItem';
 import CustomLoader from '../../components/common/CustomLoader';
@@ -75,8 +75,13 @@ const Activity = () => {
               flex: 1,
               justifyContent: 'center',
               alignItems: 'center',
+              height: hp(80),
             }}>
-            {!loader && <TextBig>No Data Found</TextBig>}
+            {!loader && (
+              <TextNormal textStyle={styles.noDataFound}>
+                Nothing, Yet.
+              </TextNormal>
+            )}
           </View>
         )}
         showsVerticalScrollIndicator={false}
@@ -117,5 +122,10 @@ const styles = StyleSheet.create({
     height: wp(5),
     aspectRatio: 1,
     borderRadius: wp(100),
+  },
+  noDataFound: {
+    color: '#747474',
+    fontFamily: FONTS.LightItalic,
+    fontWeight: '400',
   },
 });

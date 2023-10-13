@@ -15,6 +15,8 @@ import {
 } from '../../components/common/CustomText';
 import useUser from '../../utils/hooks/useUser';
 import {ProfileCamera} from '../../components/common/CustomSvgItems';
+import {useDispatch} from 'react-redux';
+import {setProfilePhoto} from '../../redux/reducers/userSlice';
 
 const ListHeaderItem = ({user, differentUserProfile}) => {
   const {
@@ -38,7 +40,7 @@ const ListHeaderItem = ({user, differentUserProfile}) => {
       accessGallery(true, 'photo');
     }, 500);
   };
-
+  const dispatch = useDispatch();
   const {updateProfilePhoto} = useUser();
   const updatePhoto = async () => {
     const res = await updateProfilePhoto(localImageUriArray[0]?.image);
@@ -47,7 +49,7 @@ const ListHeaderItem = ({user, differentUserProfile}) => {
 
   useEffect(() => {
     if (localImageUriArray.length > 0) {
-      updateProfilePhoto(localImageUriArray[0]?.image);
+      updatePhoto();
     }
   }, [localImageUriArray.length]);
 
@@ -57,10 +59,7 @@ const ListHeaderItem = ({user, differentUserProfile}) => {
         <View style={styles.imageContainer}>
           <CustomImage
             source={{
-              uri:
-                localImageUriArray.length > 0
-                  ? localImageUriArray[0]?.image
-                  : user?.photo,
+              uri: user?.photo,
             }}
             containerStyle={styles.innerImageContainer}
             resizeMode="cover"
@@ -93,10 +92,7 @@ const ListHeaderItem = ({user, differentUserProfile}) => {
       <View style={styles.imageContainer}>
         <CustomImage
           source={{
-            uri:
-              localImageUriArray.length > 0
-                ? localImageUriArray[0]?.image
-                : user?.photo,
+            uri: user?.photo,
           }}
           containerStyle={styles.innerImageContainer}
           resizeMode="cover"

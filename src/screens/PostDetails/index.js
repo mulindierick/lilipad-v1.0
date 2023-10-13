@@ -220,6 +220,7 @@ const PostDetails = ({route}) => {
             userOwnComment={
               item?.user?._data?.firebaseUserId === user?.firebaseUserId
             }
+            uid={item?.user?._data?.firebaseUserId}
           />
         )}
         ListFooterComponent={() => (

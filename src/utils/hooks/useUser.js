@@ -2,7 +2,7 @@ import {firebase} from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import {useVerifyOTPMutation} from '../../redux/apis';
 import {shallowEqual, useDispatch, useSelector} from 'react-redux';
-import {setUser} from '../../redux/reducers/userSlice';
+import {setProfilePhoto, setUser} from '../../redux/reducers/userSlice';
 import storage from '@react-native-firebase/storage';
 import {setFirstTimeLogin} from '../../redux/reducers/generalSlice';
 
@@ -47,6 +47,7 @@ const useUser = () => {
 
   const updateProfilePhoto = async uri => {
     const url = await uploadImage(uri);
+    dispatch(setProfilePhoto({photo: url}));
     if (url) {
       await firestore()
         .collection('accounts')

@@ -8,6 +8,8 @@ import {COLORS, FONTS} from '../../utils/constants/theme';
 import CustomImage from '../../components/common/CustomImage';
 import {TextNormal} from '../../components/common/CustomText';
 import {getAgoTimeFullString} from '../../utils/constants/helper';
+import {useNavigation} from '@react-navigation/native';
+import useUser from '../../utils/hooks/useUser';
 
 const CommentItem = ({
   photo,
@@ -15,7 +17,18 @@ const CommentItem = ({
   timeInSeconds,
   fullName,
   userOwnComment,
+  uid,
 }) => {
+  const navigation = useNavigation();
+  const {user} = useUser();
+
+  const handleNavigation = () => {
+    if (user?.firebaseUserId == uid) {
+      navigation.navigate('Profile');
+    } else {
+      navigation.navigate('DifferentUserProfile', {uid});
+    }
+  };
   return (
     <View
       style={[
@@ -27,6 +40,7 @@ const CommentItem = ({
           source={{uri: photo}}
           containerStyle={styles.innerImageContainer}
           resizeMode="cover"
+          onPressImage={() => handleNavigation()}
         />
       </View>
       <View
@@ -44,7 +58,8 @@ const CommentItem = ({
             bold
             textStyle={styles.name}
             numberOfLines={1}
-            color={userOwnComment && COLORS.white}>
+            color={userOwnComment && COLORS.white}
+            onPress={() => handleNavigation()}>
             {fullName}
           </TextNormal>
           <TextNormal
