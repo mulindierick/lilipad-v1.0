@@ -18,8 +18,10 @@ import {COLORS, FONTS, images} from '../../utils/constants/theme';
 import UseFirebaseAuth from '../../utils/hooks/UseFirebaseAuth';
 import useImagePicker from '../../utils/hooks/useImagePicker';
 import ReasonForWhyWeAsk from './ReasonForWhyWeAsk';
+import useUser from '../../utils/hooks/useUser';
 
 const FurtherInfo = () => {
+  const {user} = useUser();
   const [modal, setModal] = useState(false);
   const [imageModal, setImageModal] = useState(false);
   const [majorsData, setMajorsData] = useState([]);
@@ -62,12 +64,13 @@ const FurtherInfo = () => {
 
   const getData = async () => {
     try {
+      console.log({user});
       let res = await firestore()
         .collection('Colleges')
-        .where('collegeName', '==', 'Skidmore College')
+        .doc(user?.college)
         .get();
-      setMajorsData(res?.docs[0]?.data()?.majorsOffered);
-      setClassYearData(res?.docs[0]?.data()?.classYear);
+      setMajorsData(res?.data()?.majorsOffered);
+      setClassYearData(res?.data()?.classYear);
       console.log({res});
     } catch (err) {
       console.log({err});

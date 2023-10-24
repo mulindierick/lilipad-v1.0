@@ -61,6 +61,7 @@ const RootStack = () => {
                   spaces: userData?.spaces,
                   classYear: userData?.classYear,
                   PushNotificationToken: userData?.fcmToken,
+                  college: userData?.college,
                 }),
               );
             });

@@ -66,14 +66,17 @@ const UseFirebaseAuth = () => {
   const createAccount = async body => {
     const {email, firstName, lastName, major, classYear, image} = body;
     const fcmToken = await GetFCMToken();
-    const array = [major, classYear, 'Skidmore College'];
+    const array = [major, classYear, user?.college];
     try {
       let url = await uploadImage(image);
       array.map(async item => {
-        let res2 = await firestore().collection('spaces').doc(item).get();
+        let res2 = await firestore()
+          .collection(`Colleges/${user?.college}/spaces`)
+          .doc(item)
+          .get();
         if (res2?._data) {
           res2 = await firestore()
-            .collection('spaces')
+            .collection(`Colleges/${user?.college}/spaces`)
             .doc(item)
             .set(
               {
@@ -83,7 +86,7 @@ const UseFirebaseAuth = () => {
             );
         } else {
           res2 = await firestore()
-            .collection('spaces')
+            .collection(`Colleges/${user?.college}/spaces`)
             .doc(item)
             .set({
               spaceName: item,
@@ -92,6 +95,7 @@ const UseFirebaseAuth = () => {
               admins: [],
               isPrivate: false,
               joinRequests: [],
+              category: null,
             });
         }
       });
@@ -105,11 +109,11 @@ const UseFirebaseAuth = () => {
           major: major,
           classYear: classYear,
           photo: url,
-          spaces: ['Skidmore College', classYear, major],
+          spaces: [user?.college, classYear, major],
           isVerified: true,
           fullName: firstName + ' ' + lastName,
           groupLastVisit: {
-            'Skidmore College': firestore.FieldValue.serverTimestamp(),
+            [user?.college]: firestore.FieldValue.serverTimestamp(),
             [classYear]: firestore.FieldValue.serverTimestamp(),
             [major]: firestore.FieldValue.serverTimestamp(),
           },
@@ -125,7 +129,7 @@ const UseFirebaseAuth = () => {
           lastName: lastName,
           major: major,
           photo: url,
-          spaces: ['Skidmore College', classYear, major],
+          spaces: [user?.college, classYear, major],
           isVerified: true,
           firebaseUserId: user?.firebaseUserId,
           classYear: classYear,

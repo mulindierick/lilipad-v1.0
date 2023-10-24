@@ -19,10 +19,14 @@ import {TextBigger, TextNormal} from '../../components/common/CustomText';
 import CustomWrapper from '../../components/wrapper/CustomWrapper';
 import {useSendOTPemailMutation} from '../../redux/apis';
 import {COLORS, FONTS} from '../../utils/constants/theme';
+import useUser from '../../utils/hooks/useUser';
 
 const EmailAuth = () => {
   const [emailSenderFunction] = useSendOTPemailMutation();
+  const {getCollegeDomains} = useUser();
   const [loader, setLoader] = useState(false);
+  const [regex, setRegex] = useState(/^[^\d]+@skidmore\.edu$/);
+  const [collegeName, setCollegeName] = useState([]);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false); // State to track keyboard visibility
   const navigation = useNavigation();
   const {
@@ -31,8 +35,19 @@ const EmailAuth = () => {
     formState: {isValid},
   } = useForm();
 
+  const regexSetup = async () => {
+    const res = await getCollegeDomains();
+    setCollegeName(res);
+    const domainPattern = res
+      .map(domain => domain.domain.replace(/\./g, '\\.'))
+      .join('|');
+    const regex = new RegExp(`^[^\\d]+(${domainPattern})$`);
+    setRegex(regex);
+  };
+
   // Effect to set keyboard visibility
   useEffect(() => {
+    regexSetup();
     const keyboardDidShowListener = Keyboard.addListener(
       Platform.OS === 'android' ? 'keyboardDidShow' : 'keyboardWillShow',
       () => {
@@ -54,9 +69,19 @@ const EmailAuth = () => {
 
   const onSendCode = async data => {
     try {
-      navigation.navigate('OTPverification', {email: data?.email});
-      const res = await emailSenderFunction({email: data?.email});
-      console.log({res});
+      const emailRegex = data?.email.split('@')[1];
+      const emailDomain = '@' + emailRegex;
+      const selectedCollegeName = collegeName.filter(
+        item => item.domain == emailDomain,
+      );
+      navigation.navigate('OTPverification', {
+        email: data?.email,
+        collegeName: selectedCollegeName[0]?.collegeName,
+      });
+      const res = await emailSenderFunction({
+        email: data?.email,
+        collegeName: selectedCollegeName[0]?.collegeName,
+      });
       if (res?.data && !res?.data?.message == 'OTP sent successfully') {
         alert('Something went wrong. Please try again');
       }
@@ -89,7 +114,7 @@ const EmailAuth = () => {
                 rules={{
                   required: {value: true},
                   pattern: {
-                    value: /^[^\d]+@skidmore\.edu$/,
+                    value: regex,
                   },
                 }}
                 name="email"

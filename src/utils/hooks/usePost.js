@@ -24,7 +24,7 @@ const usePost = () => {
       // return firestore().collection(`spaces/${space}/posts`).get();
       return new Promise((res, rej) => {
         firestore()
-          .collection(`spaces/${space}/posts`)
+          .collection(`Colleges/${user?.college}/spaces/${space}/posts`)
           .orderBy('createdAt', 'desc')
           .get()
           .then(data => {
@@ -47,7 +47,7 @@ const usePost = () => {
       arrayOfSpaces.map(async space => {
         if (!lastVisitTime[space]) return 0;
         const data = await firestore()
-          .collection(`spaces/${space}/posts`)
+          .collection(`Colleges/${user?.college}/spaces/${space}/posts`)
           .where('createdAt', '>', lastVisitTime[space])
           .get();
         return data.docs.length;
@@ -64,9 +64,9 @@ const usePost = () => {
                 if (doc.data().likesCount > 0) {
                   const likes = await firestore()
                     .collection(
-                      `spaces/${doc.data().spaceName}/posts/${
-                        doc.data().postId
-                      }/likes`,
+                      `Colleges/${user?.college}/spaces/${
+                        doc.data().spaceName
+                      }/posts/${doc.data().postId}/likes`,
                     )
                     .doc(user?.firebaseUserId)
                     .get();
@@ -102,7 +102,7 @@ const usePost = () => {
 
   const fetchPostsOfSpecificSpace = async spaceName => {
     const spaceData = await firestore()
-      .collection(`spaces/${spaceName}/posts`)
+      .collection(`Colleges/${user?.college}/spaces/${spaceName}/posts`)
       .orderBy('createdAt', 'desc')
       .get();
 
@@ -111,7 +111,11 @@ const usePost = () => {
         let userLiked = false;
         if (item.data().likesCount > 0) {
           const likes = await firestore()
-            .collection(`spaces/${spaceName}/posts/${item.data().postId}/likes`)
+            .collection(
+              `Colleges/${user?.college}/spaces/${spaceName}/posts/${
+                item.data().postId
+              }/likes`,
+            )
             .doc(user?.firebaseUserId)
             .get();
           if (likes?._data?.userId === user?.firebaseUserId) {
@@ -135,17 +139,17 @@ const usePost = () => {
     let spaceData = null;
     if (filter == 'Recent') {
       spaceData = await firestore()
-        .collection(`spaces/${spaceName}/posts`)
+        .collection(`Colleges/${user?.college}/spaces/${spaceName}/posts`)
         .orderBy('createdAt', 'desc')
         .get();
     } else if (filter == 'Popular') {
       spaceData = await firestore()
-        .collection(`spaces/${spaceName}/posts`)
+        .collection(`Colleges/${user?.college}/spaces/${spaceName}/posts`)
         .orderBy('likesCount', 'desc')
         .get();
     } else if (filter == 'My Posts') {
       spaceData = await firestore()
-        .collection(`spaces/${spaceName}/posts`)
+        .collection(`Colleges/${user?.college}/spaces/${spaceName}/posts`)
         .where('createdBy', '==', user?.firebaseUserId)
         .get();
     }
@@ -165,7 +169,11 @@ const usePost = () => {
         let userLiked = false;
         if (item.data().likesCount > 0) {
           const likes = await firestore()
-            .collection(`spaces/${spaceName}/posts/${item.data().postId}/likes`)
+            .collection(
+              `Colleges/${user?.college}/spaces/${spaceName}/posts/${
+                item.data().postId
+              }/likes`,
+            )
             .doc(user?.firebaseUserId)
             .get();
           if (likes?._data?.userId === user?.firebaseUserId) {
@@ -185,7 +193,9 @@ const usePost = () => {
   const sharePost = async (spaceName, object) => {
     const {text, image, video} = object;
     try {
-      const postId = firestore().collection(`spaces/${spaceName}/posts`).doc();
+      const postId = firestore()
+        .collection(`Colleges/${user?.college}/spaces/${spaceName}/posts`)
+        .doc();
       let mediaUrl = null;
       if (image) {
         mediaUrl = await uploadImage(image, postId.id);
@@ -195,7 +205,7 @@ const usePost = () => {
       }
 
       const res = await firestore()
-        .collection(`spaces/${spaceName}/posts`)
+        .collection(`Colleges/${user?.college}/spaces/${spaceName}/posts`)
         .doc(postId.id)
         .set({
           text: text,
@@ -218,7 +228,9 @@ const usePost = () => {
 
   const fetchAllSpaces = async () => {
     try {
-      const data = await firestore().collection('spaces').get();
+      const data = await firestore()
+        .collection(`Colleges/${user?.college}/spaces`)
+        .get();
       return data.docs;
     } catch (err) {
       console.log({err});
@@ -229,11 +241,13 @@ const usePost = () => {
     try {
       if (like) {
         const likeIdTask = await firestore()
-          .collection(`spaces/${spaceName}/posts/${postId}/likes`)
+          .collection(
+            `Colleges/${user?.college}/spaces/${spaceName}/posts/${postId}/likes`,
+          )
           .doc(user?.firebaseUserId)
           .delete();
         const countIncrementTask = await firestore()
-          .collection(`spaces/${spaceName}/posts`)
+          .collection(`Colleges/${user?.college}/spaces/${spaceName}/posts`)
           .doc(postId)
           .update({
             likesCount: firestore.FieldValue.increment(-1),
@@ -247,7 +261,9 @@ const usePost = () => {
         });
       } else {
         const likeIdTask = await firestore()
-          .collection(`spaces/${spaceName}/posts/${postId}/likes`)
+          .collection(
+            `Colleges/${user?.college}/spaces/${spaceName}/posts/${postId}/likes`,
+          )
           .doc(user?.firebaseUserId)
           .set({
             userId: user?.firebaseUserId,
@@ -256,7 +272,7 @@ const usePost = () => {
             spaceName: spaceName,
           });
         const countIncrementTask = await firestore()
-          .collection(`spaces/${spaceName}/posts`)
+          .collection(`Colleges/${user?.college}/spaces/${spaceName}/posts`)
           .doc(postId)
           .update({
             likesCount: firestore.FieldValue.increment(1),
@@ -283,14 +299,14 @@ const usePost = () => {
   const fetchPostById = async (postId, spaceName) => {
     try {
       const data = await firestore()
-        .collection(`spaces/${spaceName}/posts`)
+        .collection(`Colleges/${user?.college}/spaces/${spaceName}/posts`)
         .doc(postId)
         .get();
       let userLiked = false;
       if (data?._data.likesCount > 0) {
         const likes = await firestore()
           .collection(
-            `spaces/${data?._data.spaceName}/posts/${data?._data.postId}/likes`,
+            `Colleges/${user?.college}/spaces/${data?._data.spaceName}/posts/${data?._data.postId}/likes`,
           )
           .doc(user?.firebaseUserId)
           .get();
@@ -299,7 +315,9 @@ const usePost = () => {
         }
       }
       const comments = await firestore()
-        .collection(`spaces/${spaceName}/posts/${postId}/comments`)
+        .collection(
+          `Colleges/${user?.college}/spaces/${spaceName}/posts/${postId}/comments`,
+        )
         .orderBy('createdAt', 'asc')
         .get();
       let commentData = [];
@@ -330,10 +348,14 @@ const usePost = () => {
   const AddComment = async (spaceName, postId, text, postCreatorId) => {
     try {
       const commentId = firestore()
-        .collection(`spaces/${spaceName}/posts/${postId}/comments`)
+        .collection(
+          `Colleges/${user?.college}/spaces/${spaceName}/posts/${postId}/comments`,
+        )
         .doc();
       const res = await firestore()
-        .collection(`spaces/${spaceName}/posts/${postId}/comments`)
+        .collection(
+          `Colleges/${user?.college}/spaces/${spaceName}/posts/${postId}/comments`,
+        )
         .doc(commentId.id)
         .set({
           text: text,
@@ -347,7 +369,7 @@ const usePost = () => {
           postId: postId,
         });
       const countIncrementTask = await firestore()
-        .collection(`spaces/${spaceName}/posts`)
+        .collection(`Colleges/${user?.college}/spaces/${spaceName}/posts`)
         .doc(postId)
         .update({
           commentsCount: firestore.FieldValue.increment(1),
@@ -367,7 +389,9 @@ const usePost = () => {
   const fetchUpdatedComments = async (spaceName, postId) => {
     try {
       const comments = await firestore()
-        .collection(`spaces/${spaceName}/posts/${postId}/comments`)
+        .collection(
+          `Colleges/${user?.college}/spaces/${spaceName}/posts/${postId}/comments`,
+        )
         .orderBy('createdAt', 'asc')
         .get();
 
@@ -407,9 +431,9 @@ const usePost = () => {
           if (item.data().likesCount > 0) {
             const likes = await firestore()
               .collection(
-                `spaces/${item.data().spaceName}/posts/${
-                  item.data().postId
-                }/likes`,
+                `Colleges/${user?.college}/spaces/${
+                  item.data().spaceName
+                }/posts/${item.data().postId}/likes`,
               )
               .doc(user?.firebaseUserId)
               .get();

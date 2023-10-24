@@ -59,12 +59,26 @@ const useUser = () => {
     }
   };
 
+  const getCollegeDomains = async () => {
+    try {
+      const res = await firestore().collection('Colleges').get();
+      const data = res.docs.map(doc => ({
+        domain: doc.data().collegeEmailDomainExtension,
+        collegeName: doc.data().collegeName,
+      }));
+      return data;
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return {
     user,
     general,
     uploadImage,
     setFirstTimeLoginStatus,
     updateProfilePhoto,
+    getCollegeDomains,
   };
 };
 
