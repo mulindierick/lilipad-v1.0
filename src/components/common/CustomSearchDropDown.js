@@ -57,6 +57,7 @@ const CustomSearchDropDown = ({data, setSelected, selected}) => {
       {focus && (
         <View style={styles.listContainer}>
           <FlatList
+            showsVerticalScrollIndicator={false}
             data={filteredData}
             renderItem={({item}) => (
               <TouchableOpacity

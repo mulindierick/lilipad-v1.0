@@ -121,7 +121,6 @@ const UseFirebaseAuth = () => {
           lastActivitiesChecked: firestore.FieldValue.serverTimestamp(),
         });
 
-      console.log('Added Skidmore College');
       dispatch(
         setUser({
           email: user?.email,
@@ -134,6 +133,7 @@ const UseFirebaseAuth = () => {
           firebaseUserId: user?.firebaseUserId,
           classYear: classYear,
           PushNotificationToken: fcmToken,
+          college: user?.college,
         }),
       );
       dispatch(setFirstTimeLogin({firstTimeLogin: true}));

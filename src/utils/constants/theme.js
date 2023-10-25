@@ -17,7 +17,7 @@ export const images = {
   headerIcon: require('../../assets/headerIcon.png'),
   bigAppIcon: require('../../assets/BigAppIcon.png'),
   cameraIcon: require('../../assets/cameraIcon.png'),
-  dummyProfilePic: require('../../assets/dummyProfilePic.png'),
+  dummyProfilePic: require('../../assets/dummyProfilePicture.png'),
   profileSelected: require('../../assets/porfileSelected.png'),
   profileUnselected: require('../../assets/profileUnselected.png'),
   communitySelected: require('../../assets/communitySelected.png'),

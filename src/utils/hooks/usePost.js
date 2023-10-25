@@ -191,6 +191,7 @@ const usePost = () => {
   };
 
   const sharePost = async (spaceName, object) => {
+    console.log({user});
     const {text, image, video} = object;
     try {
       const postId = firestore()

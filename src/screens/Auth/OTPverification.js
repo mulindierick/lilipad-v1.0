@@ -29,7 +29,7 @@ const OTPverification = ({route}) => {
     Keyboard.dismiss();
     setTimeout(() => {
       inputRef.current.focus();
-    }, 300);
+    }, 800);
   }, []);
 
   const onSendCode = async data => {

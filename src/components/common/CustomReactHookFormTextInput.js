@@ -16,6 +16,9 @@ const CustomRHFTextInput = ({
   source,
   editable = true,
   autoCapitalize = 'none',
+  spellCheck = false,
+  autoCorrect = false,
+  textInputStyle,
 }) => {
   return (
     <Controller
@@ -40,6 +43,9 @@ const CustomRHFTextInput = ({
           error={error?.message}
           editable={editable}
           autoCapitalize={autoCapitalize}
+          spellCheck={spellCheck}
+          autoCorrect={autoCorrect}
+          textInputStyle={textInputStyle}
         />
       )}
     />

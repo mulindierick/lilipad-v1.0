@@ -120,6 +120,10 @@ const EmailAuth = () => {
                 name="email"
                 key="email"
                 placeholder={'you@school.edu'}
+                spellCheck={false}
+                autoCorrect={true}
+                containerStyle={{height: hp(6.5)}}
+                textInputStyle={{fontSize: wp(4)}}
               />
               {!isKeyboardVisible && (
                 <View style={styles.middleNoteContainer}>

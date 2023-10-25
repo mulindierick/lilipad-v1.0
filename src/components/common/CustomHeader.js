@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -8,6 +8,7 @@ import {
 import {images} from '../../utils/constants/theme';
 import CustomImage from './CustomImage';
 import {TextBig, TextBigger, TextNormal} from './CustomText';
+import {BackButton} from './CustomSvgItems';
 
 const CustomHeader = ({forInfoFurtherScreen = false, Activty = false}) => {
   const navigation = useNavigation();
@@ -40,13 +41,11 @@ const CustomHeader = ({forInfoFurtherScreen = false, Activty = false}) => {
 
   return (
     <View style={styles.container}>
-      <CustomImage
-        source={images.backButton}
-        height={hp(5)}
-        width={wp(7)}
-        onPressImage={() => navigation.goBack()}
-      />
-      <CustomImage source={images.headerIcon} height={hp(10)} width={wp(10)} />
+      <TouchableOpacity onPress={() => navigation.goBack()} activeOpacity={1}>
+        <BackButton />
+      </TouchableOpacity>
+      <CustomImage source={images.headerIcon} height={wp(15)} width={wp(15)} />
+      <View style={{width: wp(5)}} />
     </View>
   );
 };
@@ -55,10 +54,10 @@ export default CustomHeader;
 
 const styles = StyleSheet.create({
   container: {
-    width: wp(50),
     alignItems: 'center',
     justifyContent: 'space-between',
     flexDirection: 'row',
+    marginVertical: hp(2.5),
   },
   ActivityContainer: {
     alignItems: 'center',
