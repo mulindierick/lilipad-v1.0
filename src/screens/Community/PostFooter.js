@@ -1,20 +1,15 @@
-import {
-  StyleSheet,
-  Text,
-  Touchable,
-  TouchableOpacity,
-  View,
-} from 'react-native';
 import React from 'react';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import CustomIcon from '../../components/common/CustomIcon';
+import {
+  CommentSvg,
+  LikeSvg,
+  UnlikeSvg,
+} from '../../components/common/CustomSvgItems';
 import {TextNormal} from '../../components/common/CustomText';
-import {COLORS, svg} from '../../utils/constants/theme';
-import CustomImage from '../../components/common/CustomImage';
-import {CommentSvg, LikeSvg} from '../../components/common/CustomSvgItems';
 
 const PostFooter = ({
   likeCount,
@@ -28,9 +23,15 @@ const PostFooter = ({
   return (
     <View style={styles.postFooter}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <TouchableOpacity onPress={loader ? null : onPressLike}>
-          <LikeSvg />
-        </TouchableOpacity>
+        {userLiked ? (
+          <TouchableOpacity onPress={loader ? null : onPressLike}>
+            <LikeSvg />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity onPress={loader ? null : onPressLike}>
+            <UnlikeSvg />
+          </TouchableOpacity>
+        )}
         <TextNormal
           textStyle={{
             fontSize: wp(3.9),

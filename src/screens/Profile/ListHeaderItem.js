@@ -125,9 +125,7 @@ const ListHeaderItem = ({user, differentUserProfile}) => {
           {user?.major}
         </TextBig>
       </View>
-      <TextNormal textStyle={styles.postsTitle}>
-        {user?.firstName + `'s` + ' Posts'}
-      </TextNormal>
+      <TextNormal textStyle={styles.postsTitle}>My Posts</TextNormal>
     </View>
   );
 };
@@ -182,5 +180,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: hp(2),
     marginBottom: hp(1),
+    marginHorizontal: wp(4),
   },
 });

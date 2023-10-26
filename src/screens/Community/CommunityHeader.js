@@ -15,7 +15,11 @@ import {
   renderers,
 } from 'react-native-popup-menu';
 import Svg, {Path} from 'react-native-svg';
-import {FilterSvg, SearchSvg} from '../../components/common/CustomSvgItems';
+import {
+  FilterSvg,
+  SearchSvg,
+  ThreeDotsVertical,
+} from '../../components/common/CustomSvgItems';
 import {useNavigation} from '@react-navigation/native';
 
 const CommunityHeader = ({selected, setSelected, upperBorderFlag}) => {
@@ -37,7 +41,7 @@ const CommunityHeader = ({selected, setSelected, upperBorderFlag}) => {
                   underlayColor: 'rgba(0, 0, 0, 0)',
                 },
               }}>
-              <FilterSvg />
+              <ThreeDotsVertical />
             </MenuTrigger>
             <MenuOptions optionsContainerStyle={styles.filterPopMenu}>
               <MenuOption
@@ -125,10 +129,11 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     position: 'relative',
     zIndex: 10000000,
+    paddingHorizontal: wp(4),
   },
   innerContainer: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'center',
   },
   textStyle: {
     fontFamily: FONTS.Bold,

@@ -99,7 +99,9 @@ const PostDetails = ({route}) => {
 
   useEffect(() => {
     const liveUpdates = firestore()
-      .collection(`spaces/${spaceName}/posts/${postId}/comments`)
+      .collection(
+        `Colleges/${user.college}/spaces/${spaceName}/posts/${postId}/comments`,
+      )
       .onSnapshot(querySnapshot => {
         onCommentDocumentUpdate();
       });
@@ -108,16 +110,6 @@ const PostDetails = ({route}) => {
   const [likeLoader, setLikeLoader] = useState(false);
   const handleLike = async () => {
     setLikeLoader(true);
-    try {
-      const res = await handlePostLike(
-        spaceName,
-        postId,
-        like,
-        postData?.user?._data?.firebaseUserId,
-      );
-    } catch (err) {
-      console.log({err});
-    }
     dispatch(
       setPostDetails({
         postId: postId,
@@ -130,6 +122,16 @@ const PostDetails = ({route}) => {
     like ? setLikeCount(likeCount - 1) : setLikeCount(likeCount + 1);
     setLike(!like);
     setLikeLoader(false);
+    try {
+      const res = await handlePostLike(
+        spaceName,
+        postId,
+        like,
+        postData?.user?._data?.firebaseUserId,
+      );
+    } catch (err) {
+      console.log({err});
+    }
   };
 
   const [commentLoader, setCommentLoader] = useState(false);
@@ -310,6 +312,8 @@ const PostDetails = ({route}) => {
             value={text}
             autoCapitalize="sentences"
             textInputStyle={{paddingHorizontal: wp(2)}}
+            autoCorrect={true}
+            spellCheck={true}
           />
           <TouchableOpacity
             onPress={() => OnSendComment()}

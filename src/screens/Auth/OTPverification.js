@@ -33,15 +33,13 @@ const OTPverification = ({route}) => {
   }, []);
 
   const onSendCode = async data => {
+    setRemainingTime(initialTime);
+    setIsRunning(true);
     try {
-      setLoader(true);
       const res = await emailSenderFunction({email: data?.email});
     } catch (err) {
       console.log({err});
     }
-    setLoader(false);
-    setRemainingTime(initialTime);
-    setIsRunning(true);
   };
 
   //For Timer

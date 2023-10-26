@@ -1,7 +1,7 @@
 import firestore from '@react-native-firebase/firestore';
 import React, {useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -81,62 +81,78 @@ const FurtherInfoPart1 = () => {
 
   return (
     <CustomWrapper containerStyle={{backgroundColor: COLORS.white}}>
-      <TextBig textStyle={styles.textStyle}>Tell Us About Yourself</TextBig>
       <View style={{flex: 1, justifyContent: 'space-between'}}>
-        <View>
-          <View style={styles.topContainer}>
-            <TouchableOpacity
-              style={styles.imageContainer}
-              activeOpacity={1}
-              onPress={() => setImageModal(true)}>
-              <CustomImage
-                source={
-                  localImageUriArray.length > 0
-                    ? {
-                        uri: localImageUriArray[0]?.image,
-                      }
-                    : images.dummyProfilePic
-                }
-                containerStyle={styles.innerImageContainer}
-                resizeMode="cover"
-                disabled={true}
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+          automaticallyAdjustKeyboardInsets={true}
+          contentInsetAdjustmentBehavior="automatic"
+          scrollEnabled={false}>
+          <View>
+            <TextBig textStyle={styles.textStyle}>
+              Tell Us About Yourself
+            </TextBig>
+            <View style={styles.topContainer}>
+              <TouchableOpacity
+                style={styles.imageContainer}
+                activeOpacity={1}
+                onPress={() => setImageModal(true)}>
+                <CustomImage
+                  source={
+                    localImageUriArray.length > 0
+                      ? {
+                          uri: localImageUriArray[0]?.image,
+                        }
+                      : images.dummyProfilePic
+                  }
+                  containerStyle={styles.innerImageContainer}
+                  resizeMode="cover"
+                  disabled={true}
+                />
+                <View style={styles.iconContainer}>
+                  <AddProfilePictureIcon />
+                </View>
+              </TouchableOpacity>
+            </View>
+            <View style={{marginTop: hp(3)}}>
+              <TextNormal bold textStyle={{marginBottom: hp(1.3)}}>
+                Your First Name
+              </TextNormal>
+              <CustomRHFTextInput
+                rules={{
+                  required: {value: true, message: 'First Name is Required'},
+                }}
+                control={control}
+                name="firstName"
+                key="firstName"
+                autoCapitalize="sentences"
+                placeholder={'first name'}
+                containerStyle={{height: hp(6.5)}}
+                textInputStyle={{fontSize: wp(4)}}
+                autoCorrect={false}
+                spellCheck={true}
               />
-              <View style={styles.iconContainer}>
-                <AddProfilePictureIcon />
-              </View>
-            </TouchableOpacity>
+            </View>
+            <View style={styles.inputContainer}>
+              <TextNormal bold textStyle={{marginBottom: hp(1.3)}}>
+                Your Last Name
+              </TextNormal>
+              <CustomRHFTextInput
+                rules={{
+                  required: {value: true, message: 'Last Name is Required'},
+                }}
+                control={control}
+                name="lastName"
+                key="lastName"
+                autoCapitalize="sentences"
+                placeholder={'last name'}
+                containerStyle={{height: hp(6.5)}}
+                textInputStyle={{fontSize: wp(4)}}
+                autoCorrect={false}
+                spellCheck={true}
+              />
+            </View>
           </View>
-          <View style={{marginTop: hp(3)}}>
-            <TextNormal bold textStyle={{marginBottom: hp(1.3)}}>
-              Your First Name
-            </TextNormal>
-            <CustomRHFTextInput
-              rules={{
-                required: {value: true, message: 'First Name is Required'},
-              }}
-              control={control}
-              name="firstName"
-              key="firstName"
-              autoCapitalize="sentences"
-              placeholder={'First Name'}
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <TextNormal bold textStyle={{marginBottom: hp(1.3)}}>
-              Your Last Name
-            </TextNormal>
-            <CustomRHFTextInput
-              rules={{
-                required: {value: true, message: 'Last Name is Required'},
-              }}
-              control={control}
-              name="lastName"
-              key="lastName"
-              autoCapitalize="sentences"
-              placeholder={'Last Name'}
-            />
-          </View>
-        </View>
+        </ScrollView>
         <CustomButton
           title="Continue"
           onPress={handleSubmit(createAccountOfUser)}
@@ -162,7 +178,7 @@ export default FurtherInfoPart1;
 
 const styles = StyleSheet.create({
   topContainer: {
-    alignItems: 'center',
+    alignSelf: 'center',
     // marginTop: hp(1),
   },
   imageContainer: {

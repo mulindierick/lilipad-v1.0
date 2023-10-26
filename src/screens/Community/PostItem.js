@@ -17,7 +17,7 @@ import {setPostDetails, setPostId} from '../../redux/reducers/generalSlice';
 import Video from 'react-native-video';
 import CustomVideo from '../../components/common/CustomVideo';
 
-const PostItem = ({data, disabledProfileClick = false}) => {
+const PostItem = ({data, disabledProfileClick = false, index}) => {
   const {general} = useUser();
   const user = data?.user?._data;
   const [like, setLike] = useState(data?.userLiked);
@@ -30,23 +30,12 @@ const PostItem = ({data, disabledProfileClick = false}) => {
 
   const handleLike = async () => {
     setLoader(true);
-
     let userLike = general?.postId == data?.postId ? general?.userLiked : like;
     setCommentCount(
       general?.postId == data?.postId ? general?.commentCount : commentCount,
     );
     let count =
       general?.postId == data?.postId ? general?.likeCount : likeCount;
-    try {
-      const res = await handlePostLike(
-        data?.spaceName,
-        data?.postId,
-        userLike,
-        data?.createdBy,
-      );
-    } catch (err) {
-      console.log({err});
-    }
     dispatch(
       setPostDetails({
         postId: data?.postId,
@@ -59,6 +48,16 @@ const PostItem = ({data, disabledProfileClick = false}) => {
     userLike ? setLikeCount(count - 1) : setLikeCount(count + 1);
     setLike(!userLike);
     setLoader(false);
+    try {
+      const res = await handlePostLike(
+        data?.spaceName,
+        data?.postId,
+        userLike,
+        data?.createdBy,
+      );
+    } catch (err) {
+      console.log({err});
+    }
   };
 
   useEffect(() => {
@@ -75,15 +74,15 @@ const PostItem = ({data, disabledProfileClick = false}) => {
           spaceName: null,
         }),
       );
-
-      console.log({text: data?.text});
-      console.log({general});
     }
   }, [general?.postId == data?.postId]);
 
   return (
     <TouchableOpacity
-      style={styles.postContainer}
+      style={[
+        styles.postContainer,
+        index != 0 && {borderTopWidth: 0.4, borderTopColor: '#CCCCCC'},
+      ]}
       onPress={() =>
         navigation.navigate('PostDetails', {
           postId: data?.postId,
@@ -106,10 +105,13 @@ const PostItem = ({data, disabledProfileClick = false}) => {
       {data?.postPhoto && (
         <CustomImage
           source={{uri: data?.postPhoto}}
-          height={hp(30)}
-          width={'100%'}
+          height={hp(35)}
+          width={wp(101)}
           resizeMode="cover"
-          containerStyle={{borderRadius: 6, marginTop: hp(1.5)}}
+          containerStyle={{
+            marginTop: hp(1.5),
+            marginHorizontal: wp(-5),
+          }}
           disabled
         />
       )}
@@ -119,9 +121,9 @@ const PostItem = ({data, disabledProfileClick = false}) => {
             uri={data?.postVideo}
             containerStyle={{
               height: hp(30),
-              width: '100%',
-              borderRadius: 6,
+              width: wp(101),
               marginTop: hp(1.5),
+              marginHorizontal: wp(-5),
             }}
           />
         </TouchableOpacity>
@@ -134,7 +136,9 @@ const PostItem = ({data, disabledProfileClick = false}) => {
           general?.postId == data?.postId ? general?.commentCount : commentCount
         }
         userLiked={
-          general?.postId == data?.postId ? general?.userLiked : data?.userLiked
+          general?.postId == data?.postId
+            ? general?.userLiked
+            : data?.userLiked || like
         }
         onPressLike={() => handleLike()}
         loader={loader}
@@ -147,22 +151,20 @@ export default PostItem;
 
 const styles = StyleSheet.create({
   postContainer: {
-    marginHorizontal: wp(0.5),
-    paddingHorizontal: wp(3),
-    paddingVertical: hp(2),
-    marginBottom: hp(1),
-    borderRadius: 10,
+    paddingHorizontal: wp(4.5),
+    paddingVertical: wp(4.5),
+    // borderRadius: 10,
     backgroundColor: COLORS.white,
-    shadowColor: '#000000',
-    borderWidth: 0.1,
-    borderColor: '#CCCCCC',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 1,
-    elevation: 9,
+    // shadowColor: '#000000',
+    // borderWidth: 0.1,
+    // borderColor: '#CCCCCC',
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 1,
+    // },
+    // shadowOpacity: 0.1,
+    // shadowRadius: 1,
+    // elevation: 9,
   },
   postHeader: {
     flexDirection: 'row',

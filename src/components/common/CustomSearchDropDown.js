@@ -53,6 +53,8 @@ const CustomSearchDropDown = ({data, setSelected, selected}) => {
         onBlur={() => setFocus(false)}
         placeholder="Search"
         autoCapitalize="sentences"
+        autoCorrect={false}
+        spellCheck={true}
       />
       {focus && (
         <View style={styles.listContainer}>
@@ -88,7 +90,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp(4),
     paddingVertical: hp(1.2),
     borderWidth: 1,
-    borderRadius: 10,
+    borderRadius: 12,
     marginVertical: hp(0.2),
     borderColor: '#D9D9D9',
   },

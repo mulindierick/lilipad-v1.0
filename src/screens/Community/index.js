@@ -84,20 +84,31 @@ const Community = () => {
   };
 
   const fetchParticularSpaceOnFilter = async filter => {
+    PostFlatListRef?.current?.scrollToOffset({
+      animated: true,
+      offset: 0,
+    });
     setRefreshing(true);
     try {
+      setSelectedSpaceData({
+        ...selectedSpaceData,
+        [selectedSpaces]: {
+          data: selectedSpaceData[selectedSpaces].data,
+          filter: filter,
+        },
+      });
       const data = await fetchFilteredPostsOfSpecificSpace(
         selectedSpaces,
         filter,
       );
       //There was some issue due to which the i had to empty the data before populating it again
-      setSelectedSpaceData({
-        ...selectedSpaceData,
-        [selectedSpaces]: {
-          data: [],
-          filter: filter,
-        },
-      });
+      // setSelectedSpaceData({
+      //   ...selectedSpaceData,
+      //   [selectedSpaces]: {
+      //     data: [],
+      //     filter: filter,
+      //   },
+      // });
       setSelectedSpaceData({
         ...selectedSpaceData,
         [selectedSpaces]: {
@@ -118,13 +129,13 @@ const Community = () => {
         filter,
       );
       //There was some issue due to which the i had to empty the data before populating it again
-      setSelectedSpaceData({
-        ...selectedSpaceData,
-        [selectedSpaces]: {
-          data: [],
-          filter: filter,
-        },
-      });
+      // setSelectedSpaceData({
+      //   ...selectedSpaceData,
+      //   [selectedSpaces]: {
+      //     data: [],
+      //     filter: filter,
+      //   },
+      // });
       setSelectedSpaceData({
         ...selectedSpaceData,
         [selectedSpaces]: {
@@ -226,21 +237,23 @@ const Community = () => {
   };
 
   const fetchThePostAgainAfterTheOwnerHasPosted = async () => {
-    await AfterAddingNewPost(selectedSpaceData[selectedSpaces].filter);
     PostFlatListRef?.current?.scrollToOffset({
       animated: true,
       offset: 0,
     });
+    setRefreshing(true);
+    await AfterAddingNewPost(selectedSpaceData[selectedSpaces].filter);
+    setRefreshing(false);
   };
 
   return (
-    <CustomWrapper containerStyle={{backgroundColor: '#F6F6F6'}}>
+    <CustomWrapper
+      containerStyle={{backgroundColor: '#F6F6F6', paddingHorizontal: wp(-4)}}>
       <CommunityHeader
         selected={selectedSpaceData[selectedSpaces]?.filter || 'Recent'}
         setSelected={fetchParticularSpaceOnFilter}
         upperBorderFlag={upperBorderFlag}
       />
-
       <Animated.View
         style={[styles.spaceContainer, {transform: [{translateY}]}]}>
         <Animated.View
@@ -255,10 +268,13 @@ const Community = () => {
             newPostCount={newPostCount}
             setNewPostCount={setNewPostCount}
             upperBorderFlag={upperBorderFlag}
+            selectedFilter={
+              selectedSpaceData[selectedSpaces]?.filter || 'Recent'
+            }
+            setSelectedFilter={fetchParticularSpaceOnFilter}
           />
         </Animated.View>
       </Animated.View>
-
       <FlatList
         ref={PostFlatListRef}
         persistentScrollbar={true}
@@ -278,8 +294,8 @@ const Community = () => {
             progressViewOffset={hp(10)}
           />
         }
-        renderItem={({item}) => {
-          return <PostItem data={item} key={item?.postId} />;
+        renderItem={({item, index}) => {
+          return <PostItem data={item} key={item?.postId} index={index} />;
         }}
         ListFooterComponent={() => (
           <View style={{paddingBottom: hp(30)}}></View>

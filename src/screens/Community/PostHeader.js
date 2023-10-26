@@ -10,6 +10,7 @@ import {getAgoTimeFullString} from '../../utils/constants/helper';
 import {FONTS, images} from '../../utils/constants/theme';
 import useUser from '../../utils/hooks/useUser';
 import {useNavigation} from '@react-navigation/native';
+import {ThreeDotsHorizontal} from '../../components/common/CustomSvgItems';
 
 const PostHeader = ({photo, name, time, uid, disabledProfileClick}) => {
   const {user} = useUser();
@@ -48,12 +49,9 @@ const PostHeader = ({photo, name, time, uid, disabledProfileClick}) => {
             {getAgoTimeFullString(time._seconds)}
           </TextNormal>
         </View>
-        <CustomImage
-          source={images.postOptions}
-          height={hp(2)}
-          width={hp(3)}
-          containerStyle={{marginTop: hp(0.4)}}
-        />
+        <TouchableOpacity activeOpacity={1}>
+          <ThreeDotsHorizontal />
+        </TouchableOpacity>
       </TouchableOpacity>
     </View>
   );

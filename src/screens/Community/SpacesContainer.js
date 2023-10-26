@@ -16,6 +16,10 @@ import {COLORS, images} from '../../utils/constants/theme';
 import SpacesRelatedActivity from '../../utils/hooks/SpacesRelatedActivity';
 import useUser from '../../utils/hooks/useUser';
 import PopUpMenuItem from './PopUpMenuItem';
+import {
+  FilterSvg,
+  ThreeDotsVertical,
+} from '../../components/common/CustomSvgItems';
 const SpacesContainer = ({
   data = [],
   selected,
@@ -23,6 +27,8 @@ const SpacesContainer = ({
   newPostCount,
   setNewPostCount,
   upperBorderFlag,
+  selectedFilter,
+  setSelectedFilter,
 }) => {
   const navigation = useNavigation();
   const {user} = useUser();
@@ -53,14 +59,81 @@ const SpacesContainer = ({
         <TextNormal bold textStyle={styles.normalText}>
           My Spaces
         </TextNormal>
-        <TextNormal
-          bold
-          color={COLORS.blue}
-          textStyle={styles.normalText}
-          onPress={() => navigation.navigate('ExploreSpaces')}
-          disabled={upperBorderFlag}>
-          Browse All
-        </TextNormal>
+        <Menu>
+          <MenuTrigger
+            customStyles={{
+              triggerTouchable: {
+                underlayColor: 'rgba(0, 0, 0, 0)',
+              },
+            }}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <TextNormal
+                bold
+                textStyle={[
+                  styles.normalText,
+                  {marginRight: wp(2), fontWeight: '500'},
+                ]}
+                color={COLORS.blue}>
+                {selectedFilter}
+              </TextNormal>
+              <FilterSvg />
+            </View>
+          </MenuTrigger>
+          <MenuOptions optionsContainerStyle={styles.filterPopMenu}>
+            <MenuOption
+              onSelect={() => setSelectedFilter('Recent')}
+              cust
+              omStyles={{
+                optionTouchable: {
+                  underlayColor: 'rgba(0, 0, 0, 0)',
+                },
+              }}
+              children={
+                <TextNormal
+                  textStyle={[
+                    styles.filterPopMenuText,
+                    selectedFilter == 'Recent' && {color: COLORS.blue},
+                  ]}>
+                  Recent
+                </TextNormal>
+              }
+            />
+            <MenuOption
+              onSelect={() => setSelectedFilter('Popular')}
+              customStyles={{
+                optionTouchable: {
+                  underlayColor: 'rgba(0, 0, 0, 0)',
+                },
+              }}
+              children={
+                <TextNormal
+                  textStyle={[
+                    styles.filterPopMenuText,
+                    selectedFilter == 'Popular' && {color: COLORS.blue},
+                  ]}>
+                  Popular
+                </TextNormal>
+              }
+            />
+            <MenuOption
+              onSelect={() => setSelectedFilter('My Posts')}
+              customStyles={{
+                optionTouchable: {
+                  underlayColor: 'rgba(0, 0, 0, 0)',
+                },
+              }}
+              children={
+                <TextNormal
+                  textStyle={[
+                    styles.filterPopMenuText,
+                    selectedFilter == 'My Posts' && {color: COLORS.blue},
+                  ]}>
+                  My Posts
+                </TextNormal>
+              }
+            />
+          </MenuOptions>
+        </Menu>
       </View>
       <View style={{width: wp(100)}}>
         <ScrollView
@@ -233,5 +306,30 @@ const styles = StyleSheet.create({
   normalText: {
     fontSize: wp(4.5),
     fontWeight: '600',
+  },
+  filterPopMenu: {
+    marginTop: hp(3.8),
+    width: wp(30),
+    borderRadius: 5,
+    backgroundColor: COLORS.white,
+    alignItems: 'flex-start',
+    paddingVertical: hp(1.5),
+    borderRadius: 12,
+    shadowColor: '#000000',
+    borderWidth: 0.1,
+    borderColor: '#CCCCCC',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.12,
+    shadowRadius: 3,
+  },
+  filterPopMenuText: {
+    fontSize: wp(4.3),
+    fontWeight: 'bold',
+    paddingHorizontal: wp(3),
+    marginVertical: hp(0.4),
+    width: wp(47),
   },
 });

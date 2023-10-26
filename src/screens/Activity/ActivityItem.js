@@ -86,11 +86,6 @@ const ActivityItem = ({item}) => {
         </TextNormal>
       )}
       {item?.newActivity && <View style={styles.blueDot} />}
-      {!item?.newActivity && (
-        <TextNormal textStyle={styles.time}>
-          {getAgoTimeFullString(item?.lastUpdated?._seconds)}
-        </TextNormal>
-      )}
     </TouchableOpacity>
   );
 };
