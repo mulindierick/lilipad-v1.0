@@ -25,6 +25,7 @@ const RootStack = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   useApp(navigation, dispatch);
+
   useEffect(() => {
     requestUserPermission();
     GetFCMToken();
@@ -36,13 +37,13 @@ const RootStack = () => {
 
   const [isLogin, setIslogin] = useState(null);
   useEffect(() => {
+    setLoading(true);
     const subscriber = auth().onAuthStateChanged(async user => {
-      setLoading(true);
       try {
+        console.log('on Auth State Changed');
         console.log({user});
         if (user) {
-          setIslogin(true);
-          let userDetail = firestore()
+          let userDetail = await firestore()
             .collection('accounts')
             .doc(user?._user?.uid)
             .get()
@@ -64,6 +65,7 @@ const RootStack = () => {
                   college: userData?.college,
                 }),
               );
+              setIslogin(true);
             });
         } else {
           setIslogin(false);
@@ -73,7 +75,6 @@ const RootStack = () => {
       }
       setLoading(false);
     });
-    console.log({user});
     return subscriber;
   }, []);
 
@@ -83,8 +84,6 @@ const RootStack = () => {
         <CustomLoader />
       ) : !isLogin ? (
         <AuthStack />
-      ) : user.isVerified == null ? (
-        <CustomLoader />
       ) : user.isVerified ? (
         <>
           <ScreenStack />

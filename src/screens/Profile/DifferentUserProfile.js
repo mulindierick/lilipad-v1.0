@@ -11,7 +11,10 @@ import usePost from '../../utils/hooks/usePost';
 import PostItem from '../Community/PostItem';
 import {TextNormal} from '../../components/common/CustomText';
 import {COLORS} from '../../utils/constants/theme';
-import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP,
+} from 'react-native-responsive-screen';
 import {MyContext} from '../../context/Context';
 import CustomLoader from '../../components/common/CustomLoader';
 import SplashScreen from 'react-native-splash-screen';
@@ -62,16 +65,18 @@ const DifferentUserProfile = ({route}) => {
   return loading ? (
     <CustomLoader />
   ) : (
-    <CustomWrapper>
+    <CustomWrapper
+      containerStyle={{paddingHorizontal: widthPercentageToDP(-4)}}>
       <ProfileHeader differentUserProfile />
       <FlatList
         data={data}
         ref={ProfileFlatListRef}
-        renderItem={({item}) => (
+        renderItem={({item, index}) => (
           <PostItem
             data={item}
             key={item?.postId}
             disabledProfileClick={true}
+            index={index}
           />
         )}
         ListHeaderComponent={() => (

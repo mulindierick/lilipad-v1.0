@@ -124,6 +124,7 @@ const EmailAuth = () => {
                 autoCorrect={true}
                 containerStyle={{height: hp(6.5)}}
                 textInputStyle={{fontSize: wp(4)}}
+                keyboardType={'email-address'}
               />
               {!isKeyboardVisible && (
                 <View style={styles.middleNoteContainer}>

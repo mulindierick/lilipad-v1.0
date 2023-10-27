@@ -120,7 +120,6 @@ const UseFirebaseAuth = () => {
           fcmToken: fcmToken,
           lastActivitiesChecked: firestore.FieldValue.serverTimestamp(),
         });
-
       dispatch(
         setUser({
           email: user?.email,

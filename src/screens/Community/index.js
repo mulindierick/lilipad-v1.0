@@ -102,13 +102,13 @@ const Community = () => {
         filter,
       );
       //There was some issue due to which the i had to empty the data before populating it again
-      // setSelectedSpaceData({
-      //   ...selectedSpaceData,
-      //   [selectedSpaces]: {
-      //     data: [],
-      //     filter: filter,
-      //   },
-      // });
+      setSelectedSpaceData({
+        ...selectedSpaceData,
+        [selectedSpaces]: {
+          data: [],
+          filter: filter,
+        },
+      });
       setSelectedSpaceData({
         ...selectedSpaceData,
         [selectedSpaces]: {
@@ -129,13 +129,13 @@ const Community = () => {
         filter,
       );
       //There was some issue due to which the i had to empty the data before populating it again
-      // setSelectedSpaceData({
-      //   ...selectedSpaceData,
-      //   [selectedSpaces]: {
-      //     data: [],
-      //     filter: filter,
-      //   },
-      // });
+      setSelectedSpaceData({
+        ...selectedSpaceData,
+        [selectedSpaces]: {
+          data: [],
+          filter: filter,
+        },
+      });
       setSelectedSpaceData({
         ...selectedSpaceData,
         [selectedSpaces]: {

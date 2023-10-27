@@ -33,6 +33,7 @@ const CustomTextInput = ({
   autoCorrect = true,
   autoFocus = false,
   ref = null,
+  keyboardType = 'default',
 }) => {
   const [visible, setVisible] = useState(secureTextEntry ? true : false);
 
@@ -69,6 +70,7 @@ const CustomTextInput = ({
             multiline={multiline}
             spellCheck={spellCheck}
             autoFocus={autoFocus}
+            keyboardType={keyboardType}
           />
 
           {secureTextEntry && (
