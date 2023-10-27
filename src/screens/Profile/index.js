@@ -21,6 +21,7 @@ const Profile = () => {
   const {user} = useUser();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
+  const [upperBorderFlag, setUpperBorderFlag] = useState(false);
   const {ProfileFlatListRef} = useContext(MyContext);
 
   const {fetchMyPost} = usePost();
@@ -40,13 +41,24 @@ const Profile = () => {
     fetchPosts();
   }, []);
 
+  const onScroll = e => {
+    const y = e.nativeEvent.contentOffset.y;
+    if (y <= 0) {
+      // At the top of the FlatList
+      setUpperBorderFlag(false);
+    } else {
+      setUpperBorderFlag(true);
+    }
+  };
+
   return (
     <CustomWrapper
       containerStyle={{paddingHorizontal: widthPercentageToDP(-4)}}>
-      <ProfileHeader />
+      <ProfileHeader upperBorderFlag={upperBorderFlag} />
       <FlatList
         data={data}
         ref={ProfileFlatListRef}
+        onScroll={onScroll}
         renderItem={({item, index}) => (
           <PostItem data={item} key={item?.postId} index={index} />
         )}

@@ -523,7 +523,9 @@ const usePost = () => {
     );
     dispatch(setNewNotification({newNotification: false}));
 
-    return pureData;
+    const filteredData = pureData.filter(item => item.data.length > 0);
+
+    return filteredData;
   };
 
   const CheckNewActivityUpdate = async () => {

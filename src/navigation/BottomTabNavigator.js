@@ -11,6 +11,7 @@ import Community from '../screens/Community';
 import Profile from '../screens/Profile';
 import {COLORS, images} from '../utils/constants/theme';
 import CustomImage from '../components/common/CustomImage';
+import DeviceInfo from 'react-native-device-info';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -100,7 +101,12 @@ const BottomTabNavigator = () => {
                     }
                   }}>
                   <View
-                    style={[...props.style, {bottom: hp(0.5)}]}
+                    style={[
+                      ...props.style,
+                      DeviceInfo.hasNotch()
+                        ? {bottom: hp(0.5)}
+                        : {bottom: hp(3.5)},
+                    ]}
                     key={tab.id}>
                     <CustomImage
                       source={focused ? tab.imageFocused : tab.image}

@@ -24,7 +24,7 @@ import auth from '@react-native-firebase/auth';
 import {setUser} from '../../redux/reducers/userSlice';
 import useUser from '../../utils/hooks/useUser';
 
-const ProfileHeader = ({differentUserProfile}) => {
+const ProfileHeader = ({differentUserProfile, upperBorderFlag}) => {
   const {general} = useUser();
   const dispatch = useDispatch();
   const signOut = () => {
@@ -46,7 +46,8 @@ const ProfileHeader = ({differentUserProfile}) => {
   if (differentUserProfile) {
     return (
       <>
-        <View style={styles.container}>
+        <View
+          style={[styles.container, upperBorderFlag && styles.borderColors]}>
           <TextBig textStyle={styles.textStyle} bold>
             Profile
           </TextBig>
@@ -58,7 +59,7 @@ const ProfileHeader = ({differentUserProfile}) => {
   const navigation = useNavigation();
   return (
     <>
-      <View style={styles.container}>
+      <View style={[styles.container, upperBorderFlag && styles.borderColors]}>
         <TextBig textStyle={styles.textStyle} bold>
           Profile
         </TextBig>
@@ -84,6 +85,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'flex-end',
     paddingHorizontal: wp(4),
+    borderBottomColor: 'transparent',
+    borderBottomWidth: 0.4,
   },
   innerContainer: {
     flexDirection: 'row',
@@ -131,5 +134,9 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.red,
     borderRadius: wp(100),
     right: wp(2),
+  },
+  borderColors: {
+    borderBottomColor: '#DADADA',
+    borderBottomWidth: 0.4,
   },
 });

@@ -28,6 +28,7 @@ import {setPostId} from '../../redux/reducers/generalSlice';
 import {useDispatch} from 'react-redux';
 import {TextNormal} from '../../components/common/CustomText';
 import {app} from 'firebase-functions/v1';
+import DeviceInfo from 'react-native-device-info';
 
 const headerHeight = hp(20);
 let scrollValue = 0;
@@ -319,7 +320,9 @@ const Community = () => {
             )}
           </View>
         )}
-        style={{paddingTop: hp(11.5)}}
+        style={
+          DeviceInfo.hasNotch() ? {paddingTop: hp(12)} : {paddingTop: hp(14)}
+        }
         // make this JSX componenet
       />
       <TouchableOpacity
