@@ -34,69 +34,7 @@ const CommunityHeader = ({selected, setSelected, upperBorderFlag}) => {
           <TouchableOpacity onPress={() => navigation.navigate('Search')}>
             <SearchSvg />
           </TouchableOpacity>
-          <Menu>
-            <MenuTrigger
-              customStyles={{
-                triggerTouchable: {
-                  underlayColor: 'rgba(0, 0, 0, 0)',
-                },
-              }}>
-              <ThreeDotsVertical />
-            </MenuTrigger>
-            <MenuOptions optionsContainerStyle={styles.filterPopMenu}>
-              <MenuOption
-                onSelect={() => setSelected('Recent')}
-                customStyles={{
-                  optionTouchable: {
-                    underlayColor: 'rgba(0, 0, 0, 0)',
-                  },
-                }}
-                children={
-                  <TextNormal
-                    textStyle={[
-                      styles.filterPopMenuText,
-                      selected == 'Recent' && {color: COLORS.blue},
-                    ]}>
-                    Recent
-                  </TextNormal>
-                }
-              />
-              <MenuOption
-                onSelect={() => setSelected('Popular')}
-                customStyles={{
-                  optionTouchable: {
-                    underlayColor: 'rgba(0, 0, 0, 0)',
-                  },
-                }}
-                children={
-                  <TextNormal
-                    textStyle={[
-                      styles.filterPopMenuText,
-                      selected == 'Popular' && {color: COLORS.blue},
-                    ]}>
-                    Popular
-                  </TextNormal>
-                }
-              />
-              <MenuOption
-                onSelect={() => setSelected('My Posts')}
-                customStyles={{
-                  optionTouchable: {
-                    underlayColor: 'rgba(0, 0, 0, 0)',
-                  },
-                }}
-                children={
-                  <TextNormal
-                    textStyle={[
-                      styles.filterPopMenuText,
-                      selected == 'My Posts' && {color: COLORS.blue},
-                    ]}>
-                    My Posts
-                  </TextNormal>
-                }
-              />
-            </MenuOptions>
-          </Menu>
+          <ThreeDotsVertical />
         </View>
       </View>
       <View

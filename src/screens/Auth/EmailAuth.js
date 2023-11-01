@@ -37,6 +37,7 @@ const EmailAuth = () => {
 
   const regexSetup = async () => {
     const res = await getCollegeDomains();
+    console.log({res});
     setCollegeName(res);
     const domainPattern = res
       .map(domain => domain.domain.replace(/\./g, '\\.'))
@@ -76,11 +77,14 @@ const EmailAuth = () => {
       );
       navigation.navigate('OTPverification', {
         email: data?.email,
-        collegeName: selectedCollegeName[0]?.collegeName,
+        collegeName: selectedCollegeName[0]?.collegeId,
       });
+
+      console.log(selectedCollegeName[0]?.collegeId);
+
       const res = await emailSenderFunction({
         email: data?.email,
-        collegeName: selectedCollegeName[0]?.collegeName,
+        collegeName: selectedCollegeName[0]?.collegeId,
       });
       if (res?.data && !res?.data?.message == 'OTP sent successfully') {
         alert('Something went wrong. Please try again');

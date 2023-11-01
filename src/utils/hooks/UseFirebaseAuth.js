@@ -66,7 +66,14 @@ const UseFirebaseAuth = () => {
   const createAccount = async body => {
     const {email, firstName, lastName, major, classYear, image} = body;
     const fcmToken = await GetFCMToken();
-    const array = [major, classYear, user?.college];
+
+    const collegeData = await firestore()
+      .collection('Colleges')
+      .doc(user?.college)
+      .get();
+    const collegeDataItems = collegeData?.data();
+
+    const array = [major, classYear, collegeDataItems.collegeName];
     try {
       let url = await uploadImage(image);
       array.map(async item => {
@@ -113,7 +120,8 @@ const UseFirebaseAuth = () => {
           isVerified: true,
           fullName: firstName + ' ' + lastName,
           groupLastVisit: {
-            [user?.college]: firestore.FieldValue.serverTimestamp(),
+            [collegeDataItems.collegeName]:
+              firestore.FieldValue.serverTimestamp(),
             [classYear]: firestore.FieldValue.serverTimestamp(),
             [major]: firestore.FieldValue.serverTimestamp(),
           },
@@ -127,7 +135,7 @@ const UseFirebaseAuth = () => {
           lastName: lastName,
           major: major,
           photo: url,
-          spaces: [user?.college, classYear, major],
+          spaces: [collegeDataItems.collegeName, classYear, major],
           isVerified: true,
           firebaseUserId: user?.firebaseUserId,
           classYear: classYear,

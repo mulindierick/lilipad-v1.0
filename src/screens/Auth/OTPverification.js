@@ -8,7 +8,7 @@ import {
 import CustomOTPInput from '../../components/common/CustomOTPInput';
 import {TextBigger, TextNormal} from '../../components/common/CustomText';
 import CustomWrapper from '../../components/wrapper/CustomWrapper';
-import {COLORS} from '../../utils/constants/theme';
+import {COLORS, FONTS} from '../../utils/constants/theme';
 import {useNavigation} from '@react-navigation/native';
 import {useSendOTPemailMutation, useVerifyOTPMutation} from '../../redux/apis';
 import CustomLoader from '../../components/common/CustomLoader';
@@ -135,13 +135,12 @@ const OTPverification = ({route}) => {
           onPress={() => onSendCode({email: email})}>
           Resend Code
         </TextNormal>
-        {remainingTime > 0 && (
-          <TextNormal
-            textStyle={styles.bottomTextTimer}
-            color={remainingTime > 0 ? COLORS.blue : '#969696'}>
-            {remainingTime / 1000} Seconds
-          </TextNormal>
-        )}
+
+        <TextNormal
+          textStyle={styles.bottomTextTimer}
+          color={remainingTime > 0 ? COLORS.blue : '#969696'}>
+          {remainingTime / 1000} Seconds
+        </TextNormal>
       </View>
       {loader && <CustomLoader />}
     </CustomWrapper>
@@ -167,12 +166,12 @@ const styles = StyleSheet.create({
     color: '#151313',
   },
   bottomText: {
-    fontWeight: '400',
-    fontSize: hp(2.05),
+    fontWeight: '600',
+    fontSize: wp(4.5),
   },
   bottomTextTimer: {
     fontWeight: '400',
-    fontSize: hp(2.05),
+    fontSize: wp(4.1),
     marginTop: hp(1.5),
   },
 });

@@ -1,23 +1,21 @@
-import {NavigationContainer, useNavigation} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
-import AuthStack from './AuthStack';
-import SplashScreen from 'react-native-splash-screen';
-import {useApp} from '../utils/hooks/useApp';
 import auth from '@react-native-firebase/auth';
-import TakingUserInformationStep from './TakingUserInformationStep';
 import firestore from '@react-native-firebase/firestore';
+import {useNavigation} from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
+import SplashScreen from 'react-native-splash-screen';
 import {useDispatch} from 'react-redux';
-import {setUser} from '../redux/reducers/userSlice';
 import CustomLoader from '../components/common/CustomLoader';
+import {setUser} from '../redux/reducers/userSlice';
+import {useApp} from '../utils/hooks/useApp';
 import useUser from '../utils/hooks/useUser';
-import BottomTabNavigator from './BottomTabNavigator';
-import ScreenStack from './ScreenStack';
-import {setFirstTimeLogin} from '../redux/reducers/generalSlice';
 import {
   GetFCMToken,
   NotificationListener,
   requestUserPermission,
 } from '../utils/pushNotification_Helper';
+import AuthStack from './AuthStack';
+import ScreenStack from './ScreenStack';
+import TakingUserInformationStep from './TakingUserInformationStep';
 
 const RootStack = () => {
   const [loading, setLoading] = useState(true);
@@ -27,12 +25,13 @@ const RootStack = () => {
   useApp(navigation, dispatch);
 
   useEffect(() => {
+    SplashScreen.hide();
     requestUserPermission();
     GetFCMToken();
     NotificationListener(dispatch);
-    setTimeout(() => {
-      SplashScreen.hide();
-    }, 1500);
+    // setTimeout(() => {
+    //   SplashScreen.hide();
+    // }, 1500);
   }, []);
 
   const [isLogin, setIslogin] = useState(null);

@@ -7,6 +7,7 @@ import {
   RefreshControl,
   StyleSheet,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import {
@@ -51,6 +52,7 @@ const Community = () => {
   const [selectedSpaces, setSlectedSpaces] = useState(user?.spaces[0]);
   const [selectedFilter, setSelectedFilter] = useState('Recent');
   const [addPostModal, setAddPostModal] = useState(false);
+  const [dropDown, setDropDown] = useState(false);
   const [newPostCount, setNewPostCount] = useState(() => {
     let obj = {};
     user?.spaces.forEach(space => {
@@ -200,8 +202,8 @@ const Community = () => {
     }
     console.log({general});
   }, [general?.postId]);
-  // For Animation
 
+  // For Animation
   const animation = useRef(new Animated.Value(1)).current;
   const translateY = animation.interpolate({
     inputRange: [0, 1],

@@ -64,7 +64,7 @@ const useUser = () => {
       const res = await firestore().collection('Colleges').get();
       const data = res.docs.map(doc => ({
         domain: doc.data().collegeEmailDomainExtension,
-        collegeName: doc.data().collegeName,
+        collegeId: doc.data().collegeId,
       }));
       return data;
     } catch (e) {

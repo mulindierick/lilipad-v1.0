@@ -32,7 +32,7 @@ const FurtherInfoPart1 = () => {
     try {
       navigation.navigate('FurtherInfoPart2', {
         ...data,
-        image: localImageUriArray[0]?.image,
+        image: localImageUriArray[0]?.path,
       });
     } catch (err) {
       console.log({err});
@@ -100,7 +100,7 @@ const FurtherInfoPart1 = () => {
                   source={
                     localImageUriArray.length > 0
                       ? {
-                          uri: localImageUriArray[0]?.image,
+                          uri: localImageUriArray[0]?.path,
                         }
                       : images.dummyProfilePic
                   }

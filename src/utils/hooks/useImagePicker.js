@@ -175,7 +175,7 @@ const useImagePicker = () => {
         ...image,
         path: result,
       };
-
+      // return {};
       return data;
     } catch (error) {
       console.log('ERROR COMPRESSING', error);

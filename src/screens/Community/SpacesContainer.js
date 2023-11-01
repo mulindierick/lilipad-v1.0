@@ -1,25 +1,22 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useCallback} from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import {
-  Menu,
-  MenuOption,
-  MenuOptions,
-  MenuTrigger,
-} from 'react-native-popup-menu';
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
+import CustomDropDownPopupMenu from '../../components/common/CustomDropDownPopupMenu';
+import {FilterSvg} from '../../components/common/CustomSvgItems';
 import {TextNormal, TextSmall} from '../../components/common/CustomText';
-import {COLORS, images} from '../../utils/constants/theme';
+import {COLORS} from '../../utils/constants/theme';
 import SpacesRelatedActivity from '../../utils/hooks/SpacesRelatedActivity';
 import useUser from '../../utils/hooks/useUser';
-import PopUpMenuItem from './PopUpMenuItem';
-import {
-  FilterSvg,
-  ThreeDotsVertical,
-} from '../../components/common/CustomSvgItems';
 const SpacesContainer = ({
   data = [],
   selected,
@@ -29,10 +26,14 @@ const SpacesContainer = ({
   upperBorderFlag,
   selectedFilter,
   setSelectedFilter,
+  wholeScreenNotAccessibile = false,
 }) => {
   const navigation = useNavigation();
   const {user} = useUser();
   const {removeSpace, updateLastSpaceVisitTime} = SpacesRelatedActivity();
+  const [dropDown, setDropDown] = useState(false);
+
+  useEffect(() => {}, [dropDown]);
 
   const removeAndUpdateSpaces = async item => {
     try {
@@ -59,83 +60,31 @@ const SpacesContainer = ({
         <TextNormal bold textStyle={styles.normalText}>
           My Spaces
         </TextNormal>
-        <Menu>
-          <MenuTrigger
-            customStyles={{
-              triggerTouchable: {
-                underlayColor: 'rgba(0, 0, 0, 0)',
-              },
-            }}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <TextNormal
-                bold
-                textStyle={[
-                  styles.normalText,
-                  {marginRight: wp(2), fontWeight: '500'},
-                ]}
-                color={COLORS.blue}>
-                {selectedFilter}
-              </TextNormal>
-              <FilterSvg />
-            </View>
-          </MenuTrigger>
-          <MenuOptions optionsContainerStyle={styles.filterPopMenu}>
-            <MenuOption
-              onSelect={() => setSelectedFilter('Recent')}
-              cust
-              omStyles={{
-                optionTouchable: {
-                  underlayColor: 'rgba(0, 0, 0, 0)',
-                },
-              }}
-              children={
-                <TextNormal
-                  textStyle={[
-                    styles.filterPopMenuText,
-                    selectedFilter == 'Recent' && {color: COLORS.blue},
-                  ]}>
-                  Recent
-                </TextNormal>
-              }
-            />
-            <MenuOption
-              onSelect={() => setSelectedFilter('Popular')}
-              customStyles={{
-                optionTouchable: {
-                  underlayColor: 'rgba(0, 0, 0, 0)',
-                },
-              }}
-              children={
-                <TextNormal
-                  textStyle={[
-                    styles.filterPopMenuText,
-                    selectedFilter == 'Popular' && {color: COLORS.blue},
-                  ]}>
-                  Popular
-                </TextNormal>
-              }
-            />
-            <MenuOption
-              onSelect={() => setSelectedFilter('My Posts')}
-              customStyles={{
-                optionTouchable: {
-                  underlayColor: 'rgba(0, 0, 0, 0)',
-                },
-              }}
-              children={
-                <TextNormal
-                  textStyle={[
-                    styles.filterPopMenuText,
-                    selectedFilter == 'My Posts' && {color: COLORS.blue},
-                  ]}>
-                  My Posts
-                </TextNormal>
-              }
-            />
-          </MenuOptions>
-        </Menu>
+
+        <View>
+          <TouchableOpacity
+            style={{flexDirection: 'row', alignItems: 'center'}}
+            onPress={() => setDropDown(!dropDown)}>
+            <TextNormal
+              bold
+              textStyle={[
+                styles.normalText,
+                {marginRight: wp(2), fontWeight: '500'},
+              ]}
+              color={COLORS.blue}>
+              {selectedFilter}
+            </TextNormal>
+            <FilterSvg />
+          </TouchableOpacity>
+        </View>
       </View>
       <View style={{width: wp(100)}}>
+        <CustomDropDownPopupMenu
+          focus={dropDown}
+          selectedFilter={selectedFilter}
+          setSelectedFilter={setSelectedFilter}
+          setFocus={setDropDown}
+        />
         <ScrollView
           horizontal={true}
           showsHorizontalScrollIndicator={false}
@@ -147,79 +96,34 @@ const SpacesContainer = ({
           }}>
           {data.map((item, index) => {
             return (
-              <Menu key={index} style={{activeOpacity: 1}}>
-                <MenuTrigger
-                  customStyles={{
-                    triggerTouchable: {
-                      underlayColor: 'rgba(0, 0, 0, 0)',
-                    },
-                  }}
-                  triggerOnLongPress={true}
-                  onAlternativeAction={
-                    upperBorderFlag
-                      ? null
-                      : () => handleSpacesClick(item, index)
-                  }
-                  style={[
-                    selected == item ? styles.selected : styles.container,
-                    index == data.length - 1 ? {marginRight: wp(10)} : {},
+              <TouchableOpacity
+                activeOpacity={1}
+                onPress={() => handleSpacesClick(item)}
+                style={[
+                  selected == item ? styles.selected : styles.container,
+                  index == data.length - 1 ? {marginRight: wp(10)} : {},
+                ]}
+                disabled={upperBorderFlag}>
+                <TextNormal
+                  textStyle={[
+                    styles.textStyle,
+                    selected == item && {fontWeight: '600'},
                   ]}
-                  disabled={upperBorderFlag}>
-                  <TextNormal
-                    textStyle={[
-                      styles.textStyle,
-                      selected == item && {fontWeight: '600'},
-                    ]}
-                    numberOfLines={item.split(' ').length > 1 ? 2 : 1}
-                    color={selected == item ? COLORS.white : COLORS.black}>
-                    {item}
-                  </TextNormal>
-                  {newPostCount[item] != 0 && (
-                    <View style={styles.totalPostNumbers}>
-                      <TextSmall
-                        bold
-                        color={COLORS.white}
-                        textStyle={{fontSize: hp(1.4)}}>
-                        {newPostCount[item] > 99 ? '99+' : newPostCount[item]}
-                      </TextSmall>
-                    </View>
-                  )}
-                </MenuTrigger>
-                <MenuOptions optionsContainerStyle={styles.filterPopMenu}>
-                  <MenuOption
-                    onSelect={() => console.log('HELLo')}
-                    customStyles={{
-                      optionTouchable: {
-                        underlayColor: 'rgba(0, 0, 0, 0)',
-                      },
-                    }}
-                    children={
-                      <PopUpMenuItem
-                        icon={images.viewMemberIcon}
-                        text={'View Members'}
-                        color={COLORS.blue}
-                      />
-                    }
-                  />
-                  {item != user?.major && item != 'Skidmore College' && (
-                    <MenuOption
-                      onSelect={() => removeAndUpdateSpaces(item)}
-                      customStyles={{
-                        optionTouchable: {
-                          underlayColor: 'rgba(0, 0, 0, 0)',
-                        },
-                      }}
-                      children={
-                        <PopUpMenuItem
-                          icon={images.leaveGroupIcon}
-                          text={'Leave Space'}
-                          color={COLORS.red}
-                        />
-                      }
-                    />
-                  )}
-                </MenuOptions>
-              </Menu>
+                  numberOfLines={item.split(' ').length > 1 ? 2 : 1}
+                  color={selected == item ? COLORS.white : COLORS.black}>
+                  {item}
+                </TextNormal>
+                {newPostCount[item] != 0 && (
+                  <View style={styles.totalPostNumbers}>
+                    <TextSmall
+                      bold
+                      color={COLORS.white}
+                      textStyle={{fontSize: hp(1.4)}}>
+                      {newPostCount[item] > 99 ? '99+' : newPostCount[item]}
+                    </TextSmall>
+                  </View>
+                )}
+              </TouchableOpacity>
             );
           })}
         </ScrollView>
@@ -280,22 +184,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   filterPopMenu: {
-    marginTop: hp(7),
+    // marginTop: hp(7),
     width: wp(40),
-    borderRadius: 5,
     backgroundColor: COLORS.white,
     alignItems: 'flex-start',
     paddingVertical: hp(1.5),
     borderRadius: 12,
-    shadowColor: '#000000',
-    borderWidth: 0.1,
-    borderColor: '#CCCCCC',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.12,
-    shadowRadius: 3,
   },
   secondContainer: {
     flexDirection: 'row',
