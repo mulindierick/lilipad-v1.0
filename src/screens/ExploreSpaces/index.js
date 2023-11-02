@@ -36,9 +36,9 @@ const ExploreSpaces = () => {
     setLoading(false);
   };
 
-  const AddSpaces = async spaceName => {
+  const AddSpaces = async (spaceName, spaceId) => {
     try {
-      const res = await joinSpaces(spaceName);
+      const res = await joinSpaces(spaceName, spaceId);
       if (res === 'Success') {
         const changeData = filterData.map(item =>
           item?._data?.spaceName === spaceName

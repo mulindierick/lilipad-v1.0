@@ -77,7 +77,7 @@ const Community = () => {
   const fetchPosts = async () => {
     setLoading(true);
     try {
-      const data = await fetchPostsOfAllSpaces(user?.spaces);
+      const data = await fetchPostsOfAllSpaces(user?.spaces, user?.spaceId);
       setSelectedSpaceData(data.data);
       setNewPostCount(data.newPostsCount);
     } catch (e) {
@@ -103,6 +103,7 @@ const Community = () => {
       const data = await fetchFilteredPostsOfSpecificSpace(
         selectedSpaces,
         filter,
+        user?.spaceId,
       );
       //There was some issue due to which the i had to empty the data before populating it again
       setSelectedSpaceData({
@@ -339,6 +340,7 @@ const Community = () => {
         onBackDropPress={() => setAddPostModal(false)}
         spaceName={selectedSpaces}
         afterAddingPost={fetchThePostAgainAfterTheOwnerHasPosted}
+        spaceId={user?.spaceId}
       />
       <WelcomeNoteModal
         isVisible={general?.firstTimeLogin}

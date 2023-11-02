@@ -40,6 +40,7 @@ const AddPostModal = ({
   onBackDropPress,
   spaceName,
   afterAddingPost,
+  spaceId,
 }) => {
   const [text, setText] = useState('');
   const [loader, setLoader] = useState(false);
@@ -92,7 +93,7 @@ const AddPostModal = ({
     }
 
     try {
-      const res = await sharePost(spaceName, data);
+      const res = await sharePost(spaceName, data, spaceId);
       afterAddingPost();
       setText('');
       setLocalImageUriArray([]);

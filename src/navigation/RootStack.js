@@ -62,6 +62,7 @@ const RootStack = () => {
                   classYear: userData?.classYear,
                   PushNotificationToken: userData?.fcmToken,
                   college: userData?.college,
+                  spaceId: userData?.spacesId,
                 }),
               );
               setIslogin(true);

@@ -12,6 +12,7 @@ const initialState = {
   classYear: null,
   PushNotificationToken: null,
   college: null,
+  spaceId: null,
 };
 
 export const userSlice = createSlice({
@@ -30,10 +31,12 @@ export const userSlice = createSlice({
       state.classYear = payload?.classYear || null;
       state.PushNotificationToken = payload?.PushNotificationToken || null;
       state.college = payload?.college || null;
+      state.spaceId = payload?.spaceId || null;
     },
     setSpaces: (state, {payload}) => {
       console.log('HELLOO ITS WORKING ===> ', payload?.spaces);
       state.spaces = payload?.spaces || null;
+      state.spaceId = payload?.spaceId || null;
     },
     setEmail: (state, {payload}) => {
       state.email = payload?.email || null;

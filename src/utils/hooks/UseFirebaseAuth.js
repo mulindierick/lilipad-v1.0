@@ -74,38 +74,57 @@ const UseFirebaseAuth = () => {
     const collegeDataItems = collegeData?.data();
 
     const array = [major, classYear, collegeDataItems.collegeName];
+    let spacesId = {};
     try {
       let url = await uploadImage(image);
-      array.map(async item => {
-        let res2 = await firestore()
-          .collection(`Colleges/${user?.college}/spaces`)
-          .doc(item)
-          .get();
-        if (res2?._data) {
-          res2 = await firestore()
+      await Promise.all(
+        array.map(async item => {
+          let res2 = await firestore()
             .collection(`Colleges/${user?.college}/spaces`)
-            .doc(item)
-            .set(
-              {
-                members: firestore.FieldValue.arrayUnion(user?.firebaseUserId),
-              },
-              {merge: true},
-            );
-        } else {
-          res2 = await firestore()
-            .collection(`Colleges/${user?.college}/spaces`)
-            .doc(item)
-            .set({
-              spaceName: item,
-              members: [user?.firebaseUserId],
-              isActive: true,
-              admins: [],
-              isPrivate: false,
-              joinRequests: [],
-              category: null,
-            });
-        }
-      });
+            .where('spaceName', '==', item)
+            .get();
+          console.log({res2});
+          if (res2?.docs?.length > 0) {
+            console.log('HELLO', res2?.docs[0]._data.spaceId);
+            spacesId = {
+              ...spacesId,
+              [item]: res2?.docs[0]._data.spaceId,
+            };
+            res2 = await firestore()
+              .collection(`Colleges/${user?.college}/spaces`)
+              .doc(res2?.docs[0]._data.spaceId)
+              .set(
+                {
+                  members: firestore.FieldValue.arrayUnion(
+                    user?.firebaseUserId,
+                  ),
+                },
+                {merge: true},
+              );
+          } else {
+            let uid = firestore().collection('spaces').doc();
+            res2 = await firestore()
+              .collection(`Colleges/${user?.college}/spaces`)
+              .doc(uid.id)
+              .set({
+                spaceName: item,
+                members: [user?.firebaseUserId],
+                isActive: true,
+                admins: [],
+                isPrivate: false,
+                joinRequests: [],
+                category: null,
+                spaceId: uid.id,
+              });
+            spacesId = {
+              ...spacesId,
+              [item]: uid.id,
+            };
+          }
+        }),
+      );
+
+      console.log({spacesId});
 
       let res = await firestore()
         .collection('accounts')
@@ -117,6 +136,7 @@ const UseFirebaseAuth = () => {
           classYear: classYear,
           photo: url,
           spaces: [user?.college, classYear, major],
+          spacesId: spacesId,
           isVerified: true,
           fullName: firstName + ' ' + lastName,
           groupLastVisit: {
@@ -141,6 +161,7 @@ const UseFirebaseAuth = () => {
           classYear: classYear,
           PushNotificationToken: fcmToken,
           college: user?.college,
+          spacesId: spacesId,
         }),
       );
       dispatch(setFirstTimeLogin({firstTimeLogin: true}));
@@ -152,11 +173,12 @@ const UseFirebaseAuth = () => {
     }
   };
 
-  const joinSpaces = async spaceName => {
+  const joinSpaces = async (spaceName, spaceId) => {
     try {
       dispatch(
         setSpaces({
           spaces: [...user?.spaces, spaceName],
+          spaceId: {...user?.spacesId, [spaceName]: spaceId},
         }),
       );
       await firestore()
@@ -165,6 +187,10 @@ const UseFirebaseAuth = () => {
         .set(
           {
             spaces: firestore.FieldValue.arrayUnion(spaceName),
+            spacesId: {
+              ...user?.spacesId,
+              [spaceName]: spaceId,
+            },
             groupLastVisit: {
               [spaceName]: firestore.FieldValue.serverTimestamp(),
             },
@@ -172,8 +198,8 @@ const UseFirebaseAuth = () => {
           {merge: true},
         );
       await firestore()
-        .collection('spaces')
-        .doc(spaceName)
+        .collection(`Colleges/${user?.college}/spaces`)
+        .doc(spaceId)
         .set(
           {
             members: firestore.FieldValue.arrayUnion(user?.firebaseUserId),
@@ -186,28 +212,10 @@ const UseFirebaseAuth = () => {
       dispatch(
         setSpaces({
           spaces: [...user?.spaces],
+          spaceId: {...user?.spacesId},
         }),
       );
     }
-    // if (res2?._data) {
-    //   res2 = await firestore()
-    //     .collection('spaces')
-    //     .doc(item)
-    //     .set(
-    //       {
-    //         members: firestore.FieldValue.arrayUnion(user?.firebaseUserId),
-    //       },
-    //       {merge: true},
-    //     );
-    // } else {
-    //   res2 = await firestore()
-    //     .collection('spaces')
-    //     .doc(item)
-    //     .set({
-    //       spaceName: item,
-    //       members: [user?.firebaseUserId],
-    //     });
-    // }
   };
 
   const DeleteUserAccountAndRelatedActivities = async () => {
@@ -228,6 +236,8 @@ const UseFirebaseAuth = () => {
           isVerified: false,
           firebaseUserId: null,
           classYear: null,
+          college: null,
+          spacesId: null,
         }),
       );
       console.log('FINALLY COMPLETED');

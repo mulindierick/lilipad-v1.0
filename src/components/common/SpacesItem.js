@@ -29,7 +29,9 @@ const SpacesItem = ({item, AddSpaces}) => {
             : images.joinGroupIcon
         }
         disabled={user.spaces.includes(item?._data?.spaceName)}
-        onPressImage={() => AddSpaces(item?._data?.spaceName)}
+        onPressImage={() =>
+          AddSpaces(item?._data?.spaceName, item?._data?.spaceId)
+        }
         height={hp(5)}
         width={wp(8)}
       />
