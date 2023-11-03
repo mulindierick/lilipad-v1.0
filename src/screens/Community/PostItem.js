@@ -54,6 +54,7 @@ const PostItem = ({data, disabledProfileClick = false, index}) => {
         data?.postId,
         userLike,
         data?.createdBy,
+        data?.spaceId,
       );
     } catch (err) {
       console.log({err});
@@ -87,6 +88,7 @@ const PostItem = ({data, disabledProfileClick = false, index}) => {
         navigation.navigate('PostDetails', {
           postId: data?.postId,
           spaceName: data?.spaceName,
+          spaceId: data?.spaceId,
         })
       }
       activeOpacity={1}>

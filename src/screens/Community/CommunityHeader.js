@@ -22,7 +22,12 @@ import {
 } from '../../components/common/CustomSvgItems';
 import {useNavigation} from '@react-navigation/native';
 
-const CommunityHeader = ({selected, setSelected, upperBorderFlag}) => {
+const CommunityHeader = ({
+  selected,
+  setSelected,
+  upperBorderFlag,
+  RBSheetRef,
+}) => {
   const navigation = useNavigation();
   return (
     <>
@@ -34,7 +39,11 @@ const CommunityHeader = ({selected, setSelected, upperBorderFlag}) => {
           <TouchableOpacity onPress={() => navigation.navigate('Search')}>
             <SearchSvg />
           </TouchableOpacity>
-          <ThreeDotsVertical />
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={() => RBSheetRef.current.open()}>
+            <ThreeDotsVertical />
+          </TouchableOpacity>
         </View>
       </View>
       <View

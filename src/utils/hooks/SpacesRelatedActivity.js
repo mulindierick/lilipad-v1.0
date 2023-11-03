@@ -8,14 +8,18 @@ const SpacesRelatedActivity = () => {
   const dispatch = useDispatch();
   const {user} = useSelector(state => ({user: state.userSlice}));
   const removeSpace = async spaceName => {
-    const array = [spaceName, user?.firebaseUserId];
+    let spaceIds = user?.spaceId;
+    const array = [spaceIds[spaceName], user?.firebaseUserId];
+    let updated = delete spaceIds[spaceName];
+    console.log({updated});
+    return;
     const filterData = user?.spaces.filter(item => item != spaceName);
     dispatch(setSpaces({spaces: filterData}));
     try {
       array.map(async item => {
         if (item == spaceName) {
           let res = await firestore()
-            .collection('spaces')
+            .collection(`Colleges/${user?.college}/spaces`)
             .doc(item)
             .set(
               {

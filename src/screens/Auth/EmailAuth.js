@@ -77,14 +77,11 @@ const EmailAuth = () => {
       );
       navigation.navigate('OTPverification', {
         email: data?.email,
-        collegeName: selectedCollegeName[0]?.collegeId,
+        collegeId: selectedCollegeName[0]?.collegeId,
       });
-
-      console.log(selectedCollegeName[0]?.collegeId);
-
       const res = await emailSenderFunction({
         email: data?.email,
-        collegeName: selectedCollegeName[0]?.collegeId,
+        collegeId: selectedCollegeName[0]?.collegeId,
       });
       if (res?.data && !res?.data?.message == 'OTP sent successfully') {
         alert('Something went wrong. Please try again');

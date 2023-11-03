@@ -7,29 +7,27 @@ import {
   RefreshControl,
   StyleSheet,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
+import {useDispatch} from 'react-redux';
 import {PlusSVG} from '../../components/common/CustomSvgItems';
+import {TextNormal} from '../../components/common/CustomText';
 import CustomWrapper from '../../components/wrapper/CustomWrapper';
 import {MyContext} from '../../context/Context';
 import {COLORS, FONTS} from '../../utils/constants/theme';
 import usePost from '../../utils/hooks/usePost';
 import useUser from '../../utils/hooks/useUser';
 import AddPostModal from './AddPostModal';
+import BottomSheet from './BottomSheet';
 import CommunityHeader from './CommunityHeader';
 import PostItem from './PostItem';
 import SpacesContainer from './SpacesContainer';
 import WelcomeNoteModal from './WelcomeNoteModal';
-import {setPostId} from '../../redux/reducers/generalSlice';
-import {useDispatch} from 'react-redux';
-import {TextNormal} from '../../components/common/CustomText';
-import {app} from 'firebase-functions/v1';
-import DeviceInfo from 'react-native-device-info';
 
 const headerHeight = hp(20);
 let scrollValue = 0;
@@ -45,6 +43,9 @@ const Community = () => {
     fetchFilteredPostsOfSpecificSpace,
   } = usePost();
   const {PostFlatListRef} = useContext(MyContext);
+
+  const RBSheetRef = useRef();
+
   // useReducer
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -257,6 +258,7 @@ const Community = () => {
         selected={selectedSpaceData[selectedSpaces]?.filter || 'Recent'}
         setSelected={fetchParticularSpaceOnFilter}
         upperBorderFlag={upperBorderFlag}
+        RBSheetRef={RBSheetRef}
       />
       <Animated.View
         style={[styles.spaceContainer, {transform: [{translateY}]}]}>
@@ -334,6 +336,7 @@ const Community = () => {
         activeOpacity={0.8}>
         <PlusSVG />
       </TouchableOpacity>
+      <BottomSheet RBSheetRef={RBSheetRef} />
       <AddPostModal
         isVisible={addPostModal}
         onBackButtonPress={() => setAddPostModal(false)}

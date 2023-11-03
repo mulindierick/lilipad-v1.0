@@ -85,7 +85,6 @@ const UseFirebaseAuth = () => {
             .get();
           console.log({res2});
           if (res2?.docs?.length > 0) {
-            console.log('HELLO', res2?.docs[0]._data.spaceId);
             spacesId = {
               ...spacesId,
               [item]: res2?.docs[0]._data.spaceId,
@@ -124,8 +123,6 @@ const UseFirebaseAuth = () => {
         }),
       );
 
-      console.log({spacesId});
-
       let res = await firestore()
         .collection('accounts')
         .doc(user?.firebaseUserId)
@@ -135,7 +132,7 @@ const UseFirebaseAuth = () => {
           major: major,
           classYear: classYear,
           photo: url,
-          spaces: [user?.college, classYear, major],
+          spaces: [collegeDataItems.collegeName, classYear, major],
           spacesId: spacesId,
           isVerified: true,
           fullName: firstName + ' ' + lastName,
@@ -161,11 +158,10 @@ const UseFirebaseAuth = () => {
           classYear: classYear,
           PushNotificationToken: fcmToken,
           college: user?.college,
-          spacesId: spacesId,
+          spaceId: spacesId,
         }),
       );
       dispatch(setFirstTimeLogin({firstTimeLogin: true}));
-
       return 'Success';
     } catch (err) {
       console.log({err});
@@ -224,6 +220,7 @@ const UseFirebaseAuth = () => {
       deleteUserAccount({
         userId: user?.firebaseUserId,
         spaces: user?.spaces,
+        spacesId: user?.spaceId,
       });
       dispatch(
         setUser({

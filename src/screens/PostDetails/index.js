@@ -44,6 +44,7 @@ const PostDetails = ({route}) => {
 
   const postId = route?.params?.postId;
   const spaceName = route?.params?.spaceName;
+  const spaceId = route?.params?.spaceId;
   const [loader, setLoader] = useState(true);
   const [postData, setPostData] = useState({});
   const [postComments, setPostComments] = useState([]);
@@ -87,7 +88,7 @@ const PostDetails = ({route}) => {
 
   const onCommentDocumentUpdate = async () => {
     try {
-      const res = await fetchUpdatedComments(spaceName, postId);
+      const res = await fetchUpdatedComments(spaceId, postId);
       if (res.length > 0) {
         setCommentCount(res.length);
         setPostComments(res);
@@ -100,7 +101,7 @@ const PostDetails = ({route}) => {
   useEffect(() => {
     const liveUpdates = firestore()
       .collection(
-        `Colleges/${user.college}/spaces/${spaceName}/posts/${postId}/comments`,
+        `Colleges/${user.college}/spaces/${spaceId}/posts/${postId}/comments`,
       )
       .onSnapshot(querySnapshot => {
         onCommentDocumentUpdate();
@@ -128,6 +129,7 @@ const PostDetails = ({route}) => {
         postId,
         like,
         postData?.user?._data?.firebaseUserId,
+        spaceId,
       );
     } catch (err) {
       console.log({err});
@@ -147,6 +149,7 @@ const PostDetails = ({route}) => {
         postId,
         comment,
         postData?.user?._data?.firebaseUserId,
+        spaceId,
       );
       sentNotification({
         userId: user?.firebaseUserId,

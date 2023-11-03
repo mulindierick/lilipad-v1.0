@@ -18,6 +18,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const OTPverification = ({route}) => {
   const email = route?.params?.email;
+  const collegeId = route?.params?.collegeId;
   const navigation = useNavigation();
   const [emailSenderFunction] = useSendOTPemailMutation();
   const [loader, setLoader] = useState(false);
@@ -36,7 +37,10 @@ const OTPverification = ({route}) => {
     setRemainingTime(initialTime);
     setIsRunning(true);
     try {
-      const res = await emailSenderFunction({email: data?.email});
+      const res = await emailSenderFunction({
+        email: data?.email,
+        collegeId: collegeId,
+      });
     } catch (err) {
       console.log({err});
     }

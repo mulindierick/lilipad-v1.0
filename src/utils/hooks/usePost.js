@@ -254,7 +254,13 @@ const usePost = () => {
     }
   };
 
-  const handlePostLike = async (spaceName, postId, like, postCreatorId) => {
+  const handlePostLike = async (
+    spaceName,
+    postId,
+    like,
+    postCreatorId,
+    spaceId,
+  ) => {
     try {
       if (like) {
         const likeIdTask = await firestore()
@@ -273,7 +279,7 @@ const usePost = () => {
           });
         activityRecorder({
           postId: postId,
-          spaceName: spaceName,
+          spaceId: user?.spaceId[spaceName],
           type: 'unlike',
           userId: postCreatorId,
           userIdWhoPerforemedActivity: user?.firebaseUserId,
@@ -288,7 +294,7 @@ const usePost = () => {
             userId: user?.firebaseUserId,
             postId: postId,
             likedAt: firestore.FieldValue.serverTimestamp(),
-            spaceName: spaceName,
+            spaceId: user?.spaceId[spaceName],
           });
         const countIncrementTask = await firestore()
           .collection(
@@ -306,7 +312,7 @@ const usePost = () => {
         });
         activityRecorder({
           postId: postId,
-          spaceName: user?.spaceId[spaceName],
+          spaceId: user?.spaceId[spaceName],
           type: 'like',
           userId: postCreatorId,
           userIdWhoPerforemedActivity: user?.firebaseUserId,
@@ -356,7 +362,6 @@ const usePost = () => {
         );
       }
 
-      console.log({comments});
       return {
         data: data?._data,
         user: await data?._data?.createdByReference.get(),
@@ -368,16 +373,22 @@ const usePost = () => {
     }
   };
 
-  const AddComment = async (spaceName, postId, text, postCreatorId) => {
+  const AddComment = async (
+    spaceName,
+    postId,
+    text,
+    postCreatorId,
+    spaceId,
+  ) => {
     try {
       const commentId = firestore()
         .collection(
-          `Colleges/${user?.college}/spaces/${user?.spaceId[spaceName]}/posts/${postId}/comments`,
+          `Colleges/${user?.college}/spaces/${spaceId}/posts/${postId}/comments`,
         )
         .doc();
       const res = await firestore()
         .collection(
-          `Colleges/${user?.college}/spaces/${user?.spaceId[spaceName]}/posts/${postId}/comments`,
+          `Colleges/${user?.college}/spaces/${spaceId}/posts/${postId}/comments`,
         )
         .doc(commentId.id)
         .set({
@@ -390,19 +401,17 @@ const usePost = () => {
           commentId: commentId.id,
           spaceName: spaceName,
           postId: postId,
-          spaceId: user?.spaceId[spaceName],
+          spaceId: spaceId,
         });
       const countIncrementTask = await firestore()
-        .collection(
-          `Colleges/${user?.college}/spaces/${user?.spaceId[spaceName]}/posts`,
-        )
+        .collection(`Colleges/${user?.college}/spaces/${spaceId}/posts`)
         .doc(postId)
         .update({
           commentsCount: firestore.FieldValue.increment(1),
         });
       activityRecorder({
         postId: postId,
-        spaceName: user?.spaceId[spaceName],
+        spaceId: spaceId,
         type: 'comment',
         userId: postCreatorId,
         userIdWhoPerforemedActivity: user?.firebaseUserId,
@@ -412,11 +421,11 @@ const usePost = () => {
     }
   };
 
-  const fetchUpdatedComments = async (spaceName, postId) => {
+  const fetchUpdatedComments = async (spaceId, postId) => {
     try {
       const comments = await firestore()
         .collection(
-          `Colleges/${user?.college}/spaces/${user?.spaceId[spaceName]}/posts/${postId}/comments`,
+          `Colleges/${user?.college}/spaces/${spaceId}/posts/${postId}/comments`,
         )
         .orderBy('createdAt', 'asc')
         .get();
