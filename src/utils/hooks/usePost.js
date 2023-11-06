@@ -19,7 +19,6 @@ const usePost = () => {
   const dispatch = useDispatch();
 
   const fetchPostsOfAllSpaces = async (arrayOfSpaces, spacesKeys) => {
-    console.log({spacesKeys});
     // Here is the array of spaces, and you want to get all posts of these spaces from Promise.all through Firebase
     const promiseToGetPostOfAllSpaces = arrayOfSpaces.map(space => {
       // return firestore().collection(`spaces/${space}/posts`).get();
@@ -102,6 +101,7 @@ const usePost = () => {
       newPostsCountData[space] = newPostsCount[index];
     });
     CheckNewActivityUpdate();
+    console.log({data});
     return {data: SpaceDataObject, newPostsCount: newPostsCountData};
   };
 
@@ -201,14 +201,13 @@ const usePost = () => {
     return post;
   };
 
-  const sharePost = async (spaceName, object) => {
+  const sharePost = async (spaceName, object, spaceId) => {
     console.log({user});
+    console.log({spaceId});
     const {text, image, video} = object;
     try {
       const postId = firestore()
-        .collection(
-          `Colleges/${user?.college}/spaces/${user?.spaceId[spaceName]}/posts`,
-        )
+        .collection(`Colleges/${user?.college}/spaces/${spaceId}/posts`)
         .doc();
       let mediaUrl = null;
       if (image) {
@@ -219,9 +218,7 @@ const usePost = () => {
       }
 
       const res = await firestore()
-        .collection(
-          `Colleges/${user?.college}/spaces/${user?.spaceId[spaceName]}/posts`,
-        )
+        .collection(`Colleges/${user?.college}/spaces/${spaceId}/posts`)
         .doc(postId.id)
         .set({
           text: text,

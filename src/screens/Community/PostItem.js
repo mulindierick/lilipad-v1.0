@@ -23,6 +23,7 @@ const PostItem = ({data, disabledProfileClick = false, index}) => {
   const [like, setLike] = useState(data?.userLiked);
   const [likeCount, setLikeCount] = useState(data?.likesCount);
   const [commentCount, setCommentCount] = useState(data?.commentsCount);
+  const [showFullText, setShowFullText] = useState(false);
   const [loader, setLoader] = useState(false);
   const {handlePostLike} = usePost();
   const navigation = useNavigation();
@@ -98,12 +99,26 @@ const PostItem = ({data, disabledProfileClick = false, index}) => {
         time={data?.createdAt}
         uid={user?.firebaseUserId}
         disabledProfileClick={disabledProfileClick}
+        userFirstName={user?.firstName}
       />
-      {data?.text ? (
+      {data?.text && (
         <View style={styles.postText}>
-          <TextNormal textStyle={styles.postTextStyle}>{data?.text}</TextNormal>
+          <TextNormal textStyle={styles.postTextStyle}>
+            {showFullText
+              ? data?.text
+              : data?.text.length > 300
+              ? data?.text.slice(0, 300) + '...'
+              : data?.text}
+          </TextNormal>
+          {data?.text.length > 300 && (
+            <TouchableOpacity onPress={() => setShowFullText(!showFullText)}>
+              <TextNormal textStyle={{color: COLORS.blue}}>
+                {showFullText ? 'See Less' : 'See More'}
+              </TextNormal>
+            </TouchableOpacity>
+          )}
         </View>
-      ) : null}
+      )}
       {data?.postPhoto && (
         <CustomImage
           source={{uri: data?.postPhoto}}

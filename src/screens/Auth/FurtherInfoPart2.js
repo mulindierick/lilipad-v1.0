@@ -57,6 +57,8 @@ const FurtherInfoPart2 = ({route}) => {
     setLoader(false);
   };
 
+  console.log({user});
+
   const getData = async () => {
     try {
       console.log({user});

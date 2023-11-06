@@ -22,26 +22,21 @@ const PostFooter = ({
 }) => {
   return (
     <View style={styles.postFooter}>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        {userLiked ? (
-          <TouchableOpacity onPress={loader ? null : onPressLike}>
-            <LikeSvg />
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity onPress={loader ? null : onPressLike}>
-            <UnlikeSvg />
-          </TouchableOpacity>
-        )}
+      <TouchableOpacity
+        style={{flexDirection: 'row', alignItems: 'center'}}
+        onPress={loader ? null : onPressLike}
+        activeOpacity={1}>
+        {userLiked ? <LikeSvg /> : <UnlikeSvg />}
         <TextNormal
           textStyle={{
             fontSize: wp(3.9),
             marginLeft: 5,
             fontWeight: '400',
-            color: 'rgba(87, 87, 87, 0.83)',
+            color: '#747474',
           }}>
           {likeCount} likes
         </TextNormal>
-      </View>
+      </TouchableOpacity>
       <View
         style={{
           flexDirection: 'row',
@@ -54,7 +49,7 @@ const PostFooter = ({
             fontSize: wp(3.9),
             marginLeft: 5,
             fontWeight: '400',
-            color: 'rgba(87, 87, 87, 0.83)',
+            color: '#747474',
           }}>
           {commentCount} replies
         </TextNormal>

@@ -6,18 +6,20 @@ import {merge} from 'lodash';
 
 const SpacesRelatedActivity = () => {
   const dispatch = useDispatch();
+
   const {user} = useSelector(state => ({user: state.userSlice}));
+
   const removeSpace = async spaceName => {
     let spaceIds = user?.spaceId;
     const array = [spaceIds[spaceName], user?.firebaseUserId];
-    let updated = delete spaceIds[spaceName];
-    console.log({updated});
-    return;
+    let {[spaceName]: removedSpace, ...removeAndUpdatedSpaceIds} = spaceIds;
     const filterData = user?.spaces.filter(item => item != spaceName);
-    dispatch(setSpaces({spaces: filterData}));
+    dispatch(
+      setSpaces({spaces: filterData, spaceId: removeAndUpdatedSpaceIds}),
+    );
     try {
       array.map(async item => {
-        if (item == spaceName) {
+        if (item == spaceIds[spaceName]) {
           let res = await firestore()
             .collection(`Colleges/${user?.college}/spaces`)
             .doc(item)
@@ -35,6 +37,9 @@ const SpacesRelatedActivity = () => {
               {
                 spaces: firestore.FieldValue.arrayRemove(spaceName),
                 groupLastVisit: {
+                  [spaceName]: firestore.FieldValue.delete(),
+                },
+                spacesId: {
                   [spaceName]: firestore.FieldValue.delete(),
                 },
               },
@@ -65,9 +70,30 @@ const SpacesRelatedActivity = () => {
     }
   };
 
+  const fetchMembers = async spaceId => {
+    try {
+      let res = await firestore()
+        .collection(`Colleges/${user?.college}/spaces`)
+        .doc(spaceId)
+        .get();
+
+      const membersData = await Promise.all(
+        res?.data()?.members.map(async item => {
+          console.log({item});
+          let res = await firestore().collection('accounts').doc(item).get();
+          return res?.data();
+        }),
+      );
+      return membersData;
+    } catch (err) {
+      console.log({err});
+    }
+  };
+
   return {
     removeSpace,
     updateLastSpaceVisitTime,
+    fetchMembers,
   };
 };
 

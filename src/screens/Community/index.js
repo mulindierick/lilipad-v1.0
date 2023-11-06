@@ -336,14 +336,18 @@ const Community = () => {
         activeOpacity={0.8}>
         <PlusSVG />
       </TouchableOpacity>
-      <BottomSheet RBSheetRef={RBSheetRef} />
+      <BottomSheet
+        RBSheetRef={RBSheetRef}
+        setSelected={handleSelectingSpaces}
+        selected={selectedSpaces}
+      />
       <AddPostModal
         isVisible={addPostModal}
         onBackButtonPress={() => setAddPostModal(false)}
         onBackDropPress={() => setAddPostModal(false)}
         spaceName={selectedSpaces}
         afterAddingPost={fetchThePostAgainAfterTheOwnerHasPosted}
-        spaceId={user?.spaceId}
+        spaceId={user?.spaceId[selectedSpaces]}
       />
       <WelcomeNoteModal
         isVisible={general?.firstTimeLogin}

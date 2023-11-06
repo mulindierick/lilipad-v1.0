@@ -12,7 +12,7 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {COLORS} from '../../utils/constants/theme';
+import {COLORS, FONTS} from '../../utils/constants/theme';
 import {TextNormal} from './CustomText';
 
 const CustomDropDownPopupMenu = ({
@@ -61,7 +61,10 @@ const CustomDropDownPopupMenu = ({
             <TextNormal
               textStyle={[
                 styles.filterPopMenuText,
-                selectedFilter == item && {color: COLORS.blue},
+                selectedFilter == item && {
+                  color: COLORS.blue,
+                  fontWeight: '600',
+                },
               ]}
               onPress={() => {
                 setSelectedFilter(item);
@@ -108,9 +111,10 @@ const styles = StyleSheet.create({
     paddingVertical: hp(1),
   },
   filterPopMenuText: {
+    fontFamily: FONTS.Medium,
     fontSize: wp(4.3),
-    fontWeight: '500',
     paddingHorizontal: wp(3),
     marginVertical: hp(1),
+    fontWeight: '500',
   },
 });

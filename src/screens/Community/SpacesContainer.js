@@ -30,21 +30,10 @@ const SpacesContainer = ({
 }) => {
   const navigation = useNavigation();
   const {user} = useUser();
-  const {removeSpace, updateLastSpaceVisitTime} = SpacesRelatedActivity();
+  const {updateLastSpaceVisitTime} = SpacesRelatedActivity();
   const [dropDown, setDropDown] = useState(false);
 
   useEffect(() => {}, [dropDown]);
-
-  const removeAndUpdateSpaces = async item => {
-    try {
-      if (selected == item) {
-        setSelected('Skidmore College');
-      }
-      let res = await removeSpace(item, user?.spaces);
-    } catch (err) {
-      console.log({err});
-    }
-  };
 
   const handleSpacesClick = (item, index) => {
     setSelected(item);
@@ -97,6 +86,7 @@ const SpacesContainer = ({
           {data.map((item, index) => {
             return (
               <TouchableOpacity
+                key={item}
                 activeOpacity={1}
                 onPress={() => handleSpacesClick(item)}
                 style={[

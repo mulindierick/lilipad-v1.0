@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {
   heightPercentageToDP as hp,
@@ -11,8 +11,17 @@ import {FONTS, images} from '../../utils/constants/theme';
 import useUser from '../../utils/hooks/useUser';
 import {useNavigation} from '@react-navigation/native';
 import {ThreeDotsHorizontal} from '../../components/common/CustomSvgItems';
+import BottomSheet from './BottomSheet';
 
-const PostHeader = ({photo, name, time, uid, disabledProfileClick}) => {
+const PostHeader = ({
+  photo,
+  name,
+  time,
+  uid,
+  disabledProfileClick,
+  userFirstName,
+}) => {
+  const RBSheetRef = useRef();
   const {user} = useUser();
   const navigation = useNavigation();
   const handleNavigation = () => {
@@ -49,9 +58,18 @@ const PostHeader = ({photo, name, time, uid, disabledProfileClick}) => {
             {getAgoTimeFullString(time._seconds)}
           </TextNormal>
         </View>
-        <TouchableOpacity activeOpacity={1}>
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={() => RBSheetRef.current.open()}>
           <ThreeDotsHorizontal />
         </TouchableOpacity>
+        <BottomSheet
+          RBSheetRef={RBSheetRef}
+          triggerFromPost={true}
+          isThisUserOwnerOfPost={uid == user?.firebaseUserId ? true : false}
+          uid={uid == user?.firebaseUserId ? user?.firebaseUserId : uid}
+          userFirstName={userFirstName}
+        />
       </TouchableOpacity>
     </View>
   );

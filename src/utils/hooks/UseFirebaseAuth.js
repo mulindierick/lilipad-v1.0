@@ -131,6 +131,7 @@ const UseFirebaseAuth = () => {
           lastName: lastName,
           major: major,
           classYear: classYear,
+          collegeName: collegeDataItems.collegeName,
           photo: url,
           spaces: [collegeDataItems.collegeName, classYear, major],
           spacesId: spacesId,
@@ -159,6 +160,7 @@ const UseFirebaseAuth = () => {
           PushNotificationToken: fcmToken,
           college: user?.college,
           spaceId: spacesId,
+          collegeName: collegeDataItems.collegeName,
         }),
       );
       dispatch(setFirstTimeLogin({firstTimeLogin: true}));
@@ -174,7 +176,7 @@ const UseFirebaseAuth = () => {
       dispatch(
         setSpaces({
           spaces: [...user?.spaces, spaceName],
-          spaceId: {...user?.spacesId, [spaceName]: spaceId},
+          spaceId: {...user?.spaceId, [spaceName]: spaceId},
         }),
       );
       await firestore()

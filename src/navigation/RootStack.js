@@ -63,6 +63,7 @@ const RootStack = () => {
                   PushNotificationToken: userData?.fcmToken,
                   college: userData?.college,
                   spaceId: userData?.spacesId,
+                  collegeName: userData?.collegeName,
                 }),
               );
               setIslogin(true);
