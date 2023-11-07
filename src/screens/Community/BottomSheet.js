@@ -1,7 +1,11 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import React from 'react';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import {TextNormal} from '../../components/common/CustomText';
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from 'react-native-responsive-screen';
 import {
   BrowseAllSpaceIcon,
   DeletePostSvg,
@@ -12,14 +16,10 @@ import {
   ViewMemberSvg,
   ViewMembersIcon,
 } from '../../components/common/CustomSvgItems';
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from 'react-native-responsive-screen';
+import {TextNormal} from '../../components/common/CustomText';
 import {COLORS} from '../../utils/constants/theme';
-import useUser from '../../utils/hooks/useUser';
 import SpacesRelatedActivity from '../../utils/hooks/SpacesRelatedActivity';
-import {useNavigation} from '@react-navigation/native';
+import useUser from '../../utils/hooks/useUser';
 
 const BottomSheet = ({
   RBSheetRef,
@@ -29,6 +29,10 @@ const BottomSheet = ({
   isThisUserOwnerOfPost = false,
   uid,
   userFirstName,
+  postId,
+  spaceId,
+  DeletePost,
+  setEditPostModal,
 }) => {
   const {user} = useUser();
   const {removeSpace} = SpacesRelatedActivity();
@@ -43,6 +47,22 @@ const BottomSheet = ({
     } catch (err) {
       console.log({err});
     }
+  };
+
+  const EditModalScreen = () => {
+    RBSheetRef.current.close();
+    setTimeout(() => {
+      setEditPostModal(true);
+    }, 250);
+  };
+
+  const ReportPost = () => {
+    RBSheetRef.current.close();
+  };
+
+  const viewProfile = () => {
+    RBSheetRef.current.close();
+    navigation.navigate('DifferentUserProfile', {uid: uid});
   };
 
   if (triggerFromPost && !isThisUserOwnerOfPost) {
@@ -69,13 +89,17 @@ const BottomSheet = ({
           },
         }}>
         <View style={{paddingHorizontal: wp(7), marginTop: wp(3.5)}}>
-          <TouchableOpacity style={styles.innerContainer}>
+          <TouchableOpacity
+            style={styles.innerContainer}
+            onPress={() => viewProfile()}>
             <ViewMemberSvg />
             <TextNormal textStyle={styles.text} color={'#585858'}>
               View {`${userFirstName}'s`} Profile
             </TextNormal>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.innerContainer}>
+          <TouchableOpacity
+            style={styles.innerContainer}
+            onPress={() => ReportPost()}>
             <ReportPostSvg />
             <TextNormal textStyle={styles.text} color={COLORS.red}>
               Report Post
@@ -110,13 +134,15 @@ const BottomSheet = ({
           },
         }}>
         <View style={{paddingHorizontal: wp(7), marginTop: wp(3.5)}}>
-          <TouchableOpacity style={styles.innerContainer}>
+          <TouchableOpacity
+            style={styles.innerContainer}
+            onPress={() => EditModalScreen()}>
             <EditPostSvg />
             <TextNormal textStyle={styles.text} color={'#585858'}>
               Edit Post
             </TextNormal>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.innerContainer}>
+          <TouchableOpacity style={styles.innerContainer} onPress={DeletePost}>
             <DeletePostSvg />
             <TextNormal textStyle={styles.text} color={COLORS.red}>
               Delete Post
@@ -151,13 +177,17 @@ const BottomSheet = ({
           },
         }}>
         <View style={{paddingHorizontal: wp(7), marginTop: wp(3.5)}}>
-          <TouchableOpacity style={styles.innerContainer}>
+          <TouchableOpacity
+            style={styles.innerContainer}
+            onPress={() => ReportPost()}>
             <MuteOnNotificationsIcon />
             <TextNormal textStyle={styles.text} color={'#585858'}>
               Unmute Notifications
             </TextNormal>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.innerContainer}>
+          <TouchableOpacity
+            style={styles.innerContainer}
+            onPress={() => ReportPost()}>
             <BrowseAllSpaceIcon />
             <TextNormal textStyle={styles.text} color={COLORS.blue}>
               Browse All Spaces
@@ -192,19 +222,28 @@ const BottomSheet = ({
           },
         }}>
         <View style={{paddingHorizontal: wp(7), marginTop: wp(3.5)}}>
-          <TouchableOpacity style={styles.innerContainer}>
+          <TouchableOpacity
+            style={styles.innerContainer}
+            onPress={() => {
+              navigation.navigate('ViewMembers', {id: user?.spaceId[selected]});
+              RBSheetRef.current.close();
+            }}>
             <ViewMembersIcon />
             <TextNormal textStyle={styles.text} color={'#585858'}>
               View Members
             </TextNormal>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.innerContainer}>
+          <TouchableOpacity
+            style={styles.innerContainer}
+            onPress={() => ReportPost()}>
             <MuteOnNotificationsIcon />
             <TextNormal textStyle={styles.text} color={'#585858'}>
               Unmute Notifications
             </TextNormal>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.innerContainer}>
+          <TouchableOpacity
+            style={styles.innerContainer}
+            onPress={() => ReportPost()}>
             <BrowseAllSpaceIcon />
             <TextNormal textStyle={styles.text} color={COLORS.blue}>
               Browse All Spaces
@@ -254,7 +293,9 @@ const BottomSheet = ({
             View Members
           </TextNormal>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.innerContainer}>
+        <TouchableOpacity
+          style={styles.innerContainer}
+          onPress={() => ReportPost()}>
           <MuteOnNotificationsIcon />
           <TextNormal textStyle={styles.text} color={'#585858'}>
             Unmute Notifications
@@ -268,7 +309,9 @@ const BottomSheet = ({
             Leave this Space
           </TextNormal>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.innerContainer}>
+        <TouchableOpacity
+          style={styles.innerContainer}
+          onPress={() => ReportPost()}>
           <BrowseAllSpaceIcon />
           <TextNormal textStyle={styles.text} color={COLORS.blue}>
             Browse All Spaces

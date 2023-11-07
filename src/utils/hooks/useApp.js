@@ -25,6 +25,7 @@ export const useApp = (navigation, dispatch) => {
         );
         navigation.navigate('PostDetails', {
           postId: notification?.data?.postId,
+          spaceId: notification?.data?.spaceId,
           spaceName: notification?.data?.spaceName,
         });
       }

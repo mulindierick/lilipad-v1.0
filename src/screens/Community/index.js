@@ -301,7 +301,14 @@ const Community = () => {
           />
         }
         renderItem={({item, index}) => {
-          return <PostItem data={item} key={item?.postId} index={index} />;
+          return (
+            <PostItem
+              data={item}
+              key={item?.postId}
+              index={index}
+              afterEditingPost={fetchThePostAgainAfterTheOwnerHasPosted}
+            />
+          );
         }}
         ListFooterComponent={() => (
           <View style={{paddingBottom: hp(30)}}></View>

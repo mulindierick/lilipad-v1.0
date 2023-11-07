@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {
   heightPercentageToDP as hp,
@@ -12,6 +12,8 @@ import useUser from '../../utils/hooks/useUser';
 import {useNavigation} from '@react-navigation/native';
 import {ThreeDotsHorizontal} from '../../components/common/CustomSvgItems';
 import BottomSheet from './BottomSheet';
+import EditPostModal from '../EditPostModal';
+import usePost from '../../utils/hooks/usePost';
 
 const PostHeader = ({
   photo,
@@ -20,16 +22,39 @@ const PostHeader = ({
   uid,
   disabledProfileClick,
   userFirstName,
+  data,
+  afterEditingPost,
 }) => {
+  const [modal, setEditPostModal] = useState(false);
   const RBSheetRef = useRef();
   const {user} = useUser();
   const navigation = useNavigation();
+  const {deleteUserPost} = usePost();
+
+  const deletePost = async () => {
+    RBSheetRef.current.close();
+    try {
+      const res = await deleteUserPost(data?.postId, data?.spaceId);
+      afterEditingPost();
+    } catch (err) {
+      console.log({err});
+    }
+  };
+
   const handleNavigation = () => {
     console.log({uid, userId: user?.firebaseUserId});
     if (uid == user?.firebaseUserId) {
       navigation.navigate('Profile');
     } else {
       navigation.navigate('DifferentUserProfile', {uid});
+    }
+  };
+
+  const DeletePost = () => {
+    RBSheetRef.current.close();
+    try {
+    } catch (err) {
+      console.log({err});
     }
   };
 
@@ -69,6 +94,15 @@ const PostHeader = ({
           isThisUserOwnerOfPost={uid == user?.firebaseUserId ? true : false}
           uid={uid == user?.firebaseUserId ? user?.firebaseUserId : uid}
           userFirstName={userFirstName}
+          setEditPostModal={setEditPostModal}
+          DeletePost={() => deletePost()}
+        />
+        <EditPostModal
+          data={data}
+          isVisible={modal}
+          onBackDropPress={() => setEditPostModal(false)}
+          onBackButtonPress={() => setEditPostModal(false)}
+          afterEditingPost={afterEditingPost}
         />
       </TouchableOpacity>
     </View>

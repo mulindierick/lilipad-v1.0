@@ -12,6 +12,8 @@ import {TextNormal} from '../../components/common/CustomText';
 import {useNavigation} from '@react-navigation/native';
 import CustomSettingsButton from './CustomSettingsButton';
 import UseFirebaseAuth from '../../utils/hooks/UseFirebaseAuth';
+import {TouchableOpacity} from 'react-native';
+import {BackButton} from '../../components/common/CustomSvgItems';
 
 const Setting = () => {
   const {DeleteUserAccountAndRelatedActivities} = UseFirebaseAuth();
@@ -41,13 +43,16 @@ const Setting = () => {
   return (
     <CustomWrapper>
       <View style={styles.container}>
-        <CustomImage
-          source={images.backButton}
-          height={hp(5)}
-          width={wp(8)}
-          onPressImage={() => navigation.goBack()}
-        />
-        <TextNormal textStyle={styles.textStyle}>Settings</TextNormal>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          activeOpacity={1}
+          style={{flex: 1}}>
+          <BackButton />
+        </TouchableOpacity>
+        <View style={{flex: 5, alignItems: 'center'}}>
+          <TextNormal textStyle={styles.textStyle}>Settings</TextNormal>
+        </View>
+        <View style={{flex: 1}}></View>
       </View>
       <CustomSettingsButton
         text={'Push Notifications'}
@@ -73,11 +78,11 @@ const styles = StyleSheet.create({
     // justifyContent: 'space-between',
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     marginTop: wp(2),
   },
   textStyle: {
     fontWeight: '600',
     fontSize: wp(8),
-    marginLeft: wp(23),
   },
 });

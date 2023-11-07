@@ -26,12 +26,11 @@ const CustomHeader = ({forInfoFurtherScreen = false, Activty = false}) => {
     return (
       <View style={styles.ActivityContainer}>
         <View style={{flex: 1}}>
-          <CustomImage
-            source={images.backButton}
-            height={hp(5)}
-            width={wp(7)}
-            onPressImage={() => navigation.goBack()}
-          />
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            activeOpacity={1}>
+            <BackButton />
+          </TouchableOpacity>
         </View>
         <TextNormal textStyle={styles.textStyle}>Activity</TextNormal>
         <View style={{flex: 1}} />

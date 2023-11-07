@@ -10,6 +10,7 @@ import {TextNormal} from '../../components/common/CustomText';
 import {getAgoTimeFullString} from '../../utils/constants/helper';
 import {images} from '../../utils/constants/theme';
 import useUser from '../../utils/hooks/useUser';
+import {BackButton} from '../../components/common/CustomSvgItems';
 
 const PostDetailHeader = ({
   FullName,
@@ -30,12 +31,12 @@ const PostDetailHeader = ({
 
   return (
     <View style={styles.container}>
-      <CustomImage
-        source={images.backButton}
-        height={hp(5.5)}
-        width={wp(8)}
-        onPressImage={onBackPress}
-      />
+      <TouchableOpacity
+        style={{alignItems: 'center'}}
+        onPress={() => navigation.goBack()}
+        activeOpacity={1}>
+        <BackButton />
+      </TouchableOpacity>
       <TouchableOpacity
         style={styles.middleContainer}
         activeOpacity={1}

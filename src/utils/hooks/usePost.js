@@ -244,6 +244,7 @@ const usePost = () => {
     try {
       const data = await firestore()
         .collection(`Colleges/${user?.college}/spaces`)
+        .where('isActive', '==', true)
         .get();
       return data.docs;
     } catch (err) {
@@ -258,45 +259,43 @@ const usePost = () => {
     postCreatorId,
     spaceId,
   ) => {
+    console.log({spaceName});
     try {
       if (like) {
         const likeIdTask = await firestore()
           .collection(
-            `Colleges/${user?.college}/spaces/${user?.spaceId[spaceName]}/posts/${postId}/likes`,
+            `Colleges/${user?.college}/spaces/${spaceId}/posts/${postId}/likes`,
           )
           .doc(user?.firebaseUserId)
           .delete();
         const countIncrementTask = await firestore()
-          .collection(
-            `Colleges/${user?.college}/spaces/${user?.spaceId[spaceName]}/posts`,
-          )
+          .collection(`Colleges/${user?.college}/spaces/${spaceId}/posts`)
           .doc(postId)
           .update({
             likesCount: firestore.FieldValue.increment(-1),
           });
         activityRecorder({
           postId: postId,
-          spaceId: user?.spaceId[spaceName],
+          spaceId: spaceId,
           type: 'unlike',
           userId: postCreatorId,
           userIdWhoPerforemedActivity: user?.firebaseUserId,
+          spaceName: spaceName,
         });
       } else {
         const likeIdTask = await firestore()
           .collection(
-            `Colleges/${user?.college}/spaces/${user?.spaceId[spaceName]}/posts/${postId}/likes`,
+            `Colleges/${user?.college}/spaces/${spaceId}/posts/${postId}/likes`,
           )
           .doc(user?.firebaseUserId)
           .set({
             userId: user?.firebaseUserId,
             postId: postId,
             likedAt: firestore.FieldValue.serverTimestamp(),
-            spaceId: user?.spaceId[spaceName],
+            spaceId: spaceId,
           });
         const countIncrementTask = await firestore()
-          .collection(
-            `Colleges/${user?.college}/spaces/${user?.spaceId[spaceName]}/posts`,
-          )
+          .collection(`Colleges/${user?.college}/spaces/${spaceId}/posts`)
           .doc(postId)
           .update({
             likesCount: firestore.FieldValue.increment(1),
@@ -304,15 +303,17 @@ const usePost = () => {
         sentNotification({
           userId: user?.firebaseUserId,
           postId: postId,
-          spaceName: user?.spaceId[spaceName],
+          spaceId: spaceId,
           type: 'like',
+          spaceName: spaceName,
         });
         activityRecorder({
           postId: postId,
-          spaceId: user?.spaceId[spaceName],
+          spaceId: spaceId,
           type: 'like',
           userId: postCreatorId,
           userIdWhoPerforemedActivity: user?.firebaseUserId,
+          spaceName: spaceName,
         });
       }
     } catch (err) {
@@ -412,6 +413,7 @@ const usePost = () => {
         type: 'comment',
         userId: postCreatorId,
         userIdWhoPerforemedActivity: user?.firebaseUserId,
+        spaceName: spaceName,
       });
     } catch (error) {
       console.log(error);
@@ -596,6 +598,130 @@ const usePost = () => {
     }
   };
 
+  const EditPost = async (spaceId, data, postId, postPhoto, postVideo) => {
+    try {
+      const {text, image = null, video = null} = data;
+      let mediaUrl = null;
+      if (image) {
+        mediaUrl = await uploadImage(image, postId);
+      }
+      if (video) {
+        mediaUrl = await uploadImage(video, postId);
+      }
+
+      if (mediaUrl && image) {
+        const res = await firestore()
+          .collection(`Colleges/${user?.college}/spaces/${spaceId}/posts`)
+          .doc(postId)
+          .set(
+            {
+              text: text,
+              postPhoto: mediaUrl,
+            },
+            {merge: true},
+          );
+      } else if (mediaUrl && video) {
+        const res = await firestore()
+          .collection(`Colleges/${user?.college}/spaces/${spaceId}/posts`)
+          .doc(postId)
+          .set(
+            {
+              text: text,
+              postVideo: mediaUrl,
+            },
+            {merge: true},
+          );
+      } else {
+        const res = await firestore()
+          .collection(`Colleges/${user?.college}/spaces/${spaceId}/posts`)
+          .doc(postId)
+          .set(
+            {
+              text: text,
+              postPhoto: postPhoto,
+              postVideo: postVideo,
+            },
+            {merge: true},
+          );
+      }
+
+      console.log('HELLOO SUCCESSFULLLL');
+    } catch (err) {
+      console.log({err});
+    }
+  };
+
+  const deleteUserPost = async (postId, spaceId) => {
+    try {
+      const postData = await firestore()
+        .collection(`Colleges/${user?.college}/spaces/${spaceId}/posts`)
+        .doc(postId)
+        .get();
+
+      // also delete all the references of likes and comments if exists
+      if (postData.data().likesCount > 0) {
+        const likes = await firestore()
+          .collection(
+            `Colleges/${user?.college}/spaces/${spaceId}/posts/${postId}/likes`,
+          )
+          .get();
+        likes.docs.forEach(async item => {
+          await firestore()
+            .collection(
+              `Colleges/${user?.college}/spaces/${spaceId}/posts/${postId}/likes`,
+            )
+            .doc(item.id)
+            .delete();
+        });
+      }
+
+      if (postData.data().commentsCount > 0) {
+        const comments = await firestore()
+          .collection(
+            `Colleges/${user?.college}/spaces/${spaceId}/posts/${postId}/comments`,
+          )
+          .get();
+        comments.docs.forEach(async item => {
+          await firestore()
+            .collection(
+              `Colleges/${user?.college}/spaces/${spaceId}/posts/${postId}/comments`,
+            )
+            .doc(item.id)
+            .delete();
+        });
+      }
+
+      // delete the activities from the user who created the post
+      //like Activities
+      const document = await firestore()
+        .collectionGroup('activities')
+        .where('id', '==', `${postData.data()?.postId}_like`)
+        .get();
+
+      document.forEach(async item => {
+        item.ref.delete();
+      });
+
+      //comment Activities
+      const document2 = await firestore()
+        .collectionGroup('activities')
+        .where('id', '==', `${postData.data()?.postId}_comment`)
+        .get();
+
+      document2.forEach(async item => {
+        item.ref.delete();
+      });
+
+      //Delete Post
+      const res = await firestore()
+        .collection(`Colleges/${user?.college}/spaces/${spaceId}/posts`)
+        .doc(postId)
+        .delete();
+    } catch (err) {
+      console.log({err});
+    }
+  };
+
   return {
     fetchPostsOfAllSpaces,
     sharePost,
@@ -609,6 +735,8 @@ const usePost = () => {
     fetchMyPost,
     fetchActivities,
     CheckNewActivityUpdate,
+    EditPost,
+    deleteUserPost,
   };
 };
 

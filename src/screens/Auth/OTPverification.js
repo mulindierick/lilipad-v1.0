@@ -133,7 +133,10 @@ const OTPverification = ({route}) => {
       />
       <View style={styles.bottomTextContainer}>
         <TextNormal
-          textStyle={styles.bottomText}
+          textStyle={[
+            styles.bottomText,
+            !remainingTime > 0 && {fontWeight: '600'},
+          ]}
           color={remainingTime > 0 ? '#969696' : COLORS.blue}
           disabled={remainingTime > 0 ? true : false}
           onPress={() => onSendCode({email: email})}>
@@ -170,7 +173,7 @@ const styles = StyleSheet.create({
     color: '#151313',
   },
   bottomText: {
-    fontWeight: '600',
+    fontWeight: '500',
     fontSize: wp(4.5),
   },
   bottomTextTimer: {

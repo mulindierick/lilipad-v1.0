@@ -61,7 +61,10 @@ const useUser = () => {
 
   const getCollegeDomains = async () => {
     try {
-      const res = await firestore().collection('Colleges').get();
+      const res = await firestore()
+        .collection('Colleges')
+        .where('isActive', '==', true)
+        .get();
       const data = res.docs.map(doc => ({
         domain: doc.data().collegeEmailDomainExtension,
         collegeId: doc.data().collegeId,

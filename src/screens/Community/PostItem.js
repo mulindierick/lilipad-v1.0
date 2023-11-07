@@ -17,7 +17,12 @@ import {setPostDetails, setPostId} from '../../redux/reducers/generalSlice';
 import Video from 'react-native-video';
 import CustomVideo from '../../components/common/CustomVideo';
 
-const PostItem = ({data, disabledProfileClick = false, index}) => {
+const PostItem = ({
+  data,
+  disabledProfileClick = false,
+  index,
+  afterEditingPost,
+}) => {
   const {general} = useUser();
   const user = data?.user?._data;
   const [like, setLike] = useState(data?.userLiked);
@@ -88,8 +93,8 @@ const PostItem = ({data, disabledProfileClick = false, index}) => {
       onPress={() =>
         navigation.navigate('PostDetails', {
           postId: data?.postId,
-          spaceName: data?.spaceName,
           spaceId: data?.spaceId,
+          spaceName: data?.spaceName,
         })
       }
       activeOpacity={1}>
@@ -100,6 +105,8 @@ const PostItem = ({data, disabledProfileClick = false, index}) => {
         uid={user?.firebaseUserId}
         disabledProfileClick={disabledProfileClick}
         userFirstName={user?.firstName}
+        data={data}
+        afterEditingPost={afterEditingPost}
       />
       {data?.text && (
         <View style={styles.postText}>

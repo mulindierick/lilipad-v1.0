@@ -15,6 +15,7 @@ const CustomModal = ({
   backdropOpacity = null,
   animationIn = 'slideInUp',
   animationOut = 'slideOutDown',
+  onModalShow = () => {},
 }) => {
   return (
     <ReactNativeModal
@@ -24,7 +25,8 @@ const CustomModal = ({
       isVisible={isVisible}
       backdropOpacity={backdropOpacity != null ? backdropOpacity : 0.5}
       animationIn={animationIn}
-      animationOut={animationOut}>
+      animationOut={animationOut}
+      onModalShow={onModalShow}>
       {children}
     </ReactNativeModal>
   );

@@ -32,7 +32,10 @@ const WelcomeNoteModal = ({
             Dear {user?.firstName},{'\n'}
           </TextNormal>
           <TextNormal textStyle={styles.semiBold}>
-            Welcome to LiliPad.{' '}
+            Welcome to{' '}
+            <TextNormal textStyle={[styles.semiBold, {fontWeight: '700'}]}>
+              LiliPad.
+            </TextNormal>{' '}
           </TextNormal>
           <TextNormal textStyle={styles.semiBold}>
             LiliPad is a community network.
@@ -66,15 +69,17 @@ const WelcomeNoteModal = ({
           <TextNormal textStyle={[styles.semiBold, {marginTop: hp(2)}]}>
             Welcome.
           </TextNormal>
-          <TextNormal textStyle={[styles.semiBold, {marginVertical: hp(2)}]}>
+          <TextNormal
+            textStyle={[
+              styles.semiBold,
+              {marginVertical: hp(2), fontWeight: '700', marginBottom: hp(3.1)},
+            ]}>
             - The LiliPad Team
           </TextNormal>
-          <CustomButton
-            title="Close"
-            onPress={onBackButtonPress}
-            textStyle={{fontWeight: 'bold', fontSize: wp(4.2)}}
-            containerStyle={{height: hp(5.5)}}
-          />
+
+          <TextNormal textStyle={styles.close} onPress={onBackButtonPress}>
+            Close
+          </TextNormal>
         </View>
       </BlurView>
     </CustomModal>
@@ -112,17 +117,23 @@ const styles = StyleSheet.create({
   },
   boldText: {
     fontFamily: FONTS.Bold,
-    fontSize: wp(4.2),
+    fontSize: wp(4.8),
     fontWeight: 'bold',
   },
   semiBold: {
-    fontSize: wp(4.2),
-    fontWeight: '600',
+    fontSize: wp(4),
+    fontWeight: '500',
   },
   parentView: {
     height: hp(102),
     width: wp(100),
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  close: {
+    fontWeight: '700',
+    fontSize: wp(4.8),
+    fontFamily: FONTS.BoldItalic,
+    color: COLORS.blue,
   },
 });

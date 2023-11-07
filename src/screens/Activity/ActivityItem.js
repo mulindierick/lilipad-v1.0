@@ -12,12 +12,14 @@ import {useNavigation} from '@react-navigation/native';
 
 const ActivityItem = ({item}) => {
   const navigation = useNavigation();
+  console.log({item});
   return (
     <TouchableOpacity
       style={styles.container}
       onPress={() =>
         navigation.navigate('PostDetails', {
           postId: item?.postId,
+          spaceId: item?.spaceId,
           spaceName: item?.spaceName,
         })
       }>

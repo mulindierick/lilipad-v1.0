@@ -11,25 +11,59 @@ import CustomTextInput from '../../components/common/CustomTextInput';
 import {COLORS, FONTS, images} from '../../utils/constants/theme';
 import CustomImage from '../../components/common/CustomImage';
 import {TextBig, TextNormal} from '../../components/common/CustomText';
+import useUser from '../../utils/hooks/useUser';
+import {useNavigation} from '@react-navigation/native';
+import CustomLoader from '../../components/common/CustomLoader';
 
 const ViewMembers = ({route}) => {
   const key = route.params.id;
+  const {user} = useUser();
   const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [text, setText] = useState('');
+  const [loader, setLoader] = useState(true);
   const {fetchMembers} = SpacesRelatedActivity();
+  const navigation = useNavigation();
+
+  const handleNavigation = data => {
+    if (data?.firebaseUserId == user?.firebaseUserId) {
+      navigation.navigate('Profile');
+    } else {
+      navigation.navigate('DifferentUserProfile', {uid: data?.firebaseUserId});
+    }
+  };
 
   const fetchMembersData = async () => {
+    setLoader(true);
     try {
       let res = await fetchMembers(key);
       console.log('HEREE=>>', {res});
       setData(res);
+      setFilteredData(res);
     } catch (err) {
       console.log({err});
     }
+    setLoader(false);
+  };
+
+  const filteredDataFunction = () => {
+    let filtered = data.filter(item =>
+      item.fullName.toLowerCase().includes(text.toLowerCase()),
+    );
+    setFilteredData(filtered);
   };
 
   useEffect(() => {
     fetchMembersData();
   }, []);
+
+  useEffect(() => {
+    if (text == '') {
+      setFilteredData(data);
+    } else {
+      filteredDataFunction();
+    }
+  }, [text]);
 
   return (
     <CustomWrapper containerStyle={{paddingHorizontal: 0}}>
@@ -43,7 +77,7 @@ const ViewMembers = ({route}) => {
         />
       </View>
       <FlatList
-        data={data}
+        data={filteredData}
         renderItem={({item, index}) => {
           return (
             <TouchableOpacity
@@ -55,7 +89,7 @@ const ViewMembers = ({route}) => {
                 },
               ]}
               activeOpacity={1}
-              onPress={() => handleNavigation()}>
+              onPress={() => handleNavigation(item)}>
               <View style={[styles.imageContainer]}>
                 <CustomImage
                   resizeMode="cover"
@@ -78,6 +112,8 @@ const ViewMembers = ({route}) => {
             </TouchableOpacity>
           );
         }}
+        refreshing={loader}
+        onRefresh={() => fetchMembersData()}
       />
     </CustomWrapper>
   );

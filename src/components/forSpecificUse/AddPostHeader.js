@@ -9,7 +9,13 @@ import CustomIcon from '../common/CustomIcon';
 import CustomImage from '../common/CustomImage';
 import {TextNormal} from '../common/CustomText';
 
-const AddPostHeader = ({onIconPress, onPressShare, loader, disabled}) => {
+const AddPostHeader = ({
+  onIconPress,
+  onPressShare,
+  loader,
+  disabled,
+  title = 'Share',
+}) => {
   return (
     <View style={styles.container}>
       <CustomIcon
@@ -46,7 +52,7 @@ const AddPostHeader = ({onIconPress, onPressShare, loader, disabled}) => {
           onPress={onPressShare}
           disabled={disabled}
           color={disabled ? COLORS.grey : COLORS.blue}>
-          Share
+          {title}
         </TextNormal>
       </View>
     </View>

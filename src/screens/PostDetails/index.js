@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
+  Alert,
   FlatList,
   Keyboard,
   StyleSheet,
@@ -61,6 +62,10 @@ const PostDetails = ({route}) => {
     setLoader(true);
     try {
       const res = await fetchPostById(postId, spaceName);
+      if (!res) {
+        Alert.alert('Post deleted by owner.');
+        navigation.goBack();
+      }
       setPostData(res);
       setPostComments(res?.comments);
       setLike(res?.userLiked);
@@ -69,8 +74,8 @@ const PostDetails = ({route}) => {
       dispatch(
         setPostDetails({
           postId: postId,
-          likeCount: res?.data?.likesCount,
-          commentCount: res?.data?.commentsCount,
+          likeCount: res?.data?.likesCount || 0,
+          commentCount: res?.data?.commentsCount || 0,
           userLiked: res?.userLiked,
           spaceName: spaceName,
         }),
@@ -157,6 +162,7 @@ const PostDetails = ({route}) => {
         spaceName: spaceName,
         type: 'comment',
         comment: comment,
+        spaceId: spaceId,
       });
       dispatch(
         setPostDetails({
