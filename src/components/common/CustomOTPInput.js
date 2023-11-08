@@ -24,6 +24,7 @@ const CustomOTPInput = props => {
         keyboardType="numeric"
         handleChange={num => onCodeFilled(num)}
         filledInputContainerStyles={[styles.Focus, showError && styles.Error]}
+        inputContainerStyles={{borderWidth: 2, borderColor: 'transparent'}}
       />
     </View>
   );
