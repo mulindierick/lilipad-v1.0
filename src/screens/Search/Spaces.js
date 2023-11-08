@@ -25,6 +25,7 @@ const Spaces = ({searchText}) => {
 
   const [text, setText] = useState('');
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [spaceData, setSpaceData] = useState([]);
   const [filterData, setFilterData] = useState([]);
 
@@ -38,6 +39,18 @@ const Spaces = ({searchText}) => {
       console.log({err});
     }
     setLoading(false);
+  };
+
+  const fetchSpacesAgain = async () => {
+    setRefreshing(true);
+    try {
+      const res = await fetchAllSpaces();
+      setSpaceData(res);
+      setFilterData(res);
+    } catch (err) {
+      console.log({err});
+    }
+    setRefreshing(false);
   };
 
   const AddSpaces = async (spaceName, spaceId) => {
@@ -100,6 +113,8 @@ const Spaces = ({searchText}) => {
           </View>
         )}
         ListFooterComponent={() => <View style={{paddingBottom: hp(15)}} />}
+        onRefresh={() => fetchSpacesAgain()}
+        refreshing={refreshing}
       />
     </>
   );

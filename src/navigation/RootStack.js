@@ -25,13 +25,12 @@ const RootStack = () => {
   useApp(navigation, dispatch);
 
   useEffect(() => {
-    SplashScreen.hide();
     requestUserPermission();
     GetFCMToken();
     NotificationListener(dispatch);
-    // setTimeout(() => {
-    //   SplashScreen.hide();
-    // }, 1500);
+    setTimeout(() => {
+      SplashScreen.hide();
+    }, 1500);
   }, []);
 
   const [isLogin, setIslogin] = useState(null);

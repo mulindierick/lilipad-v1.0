@@ -8,17 +8,16 @@ import {
 import CustomImage from '../../components/common/CustomImage';
 import {TextBigger} from '../../components/common/CustomText';
 import {images} from '../../utils/constants/theme';
+import {TouchableOpacity} from 'react-native';
+import {BackButton} from '../../components/common/CustomSvgItems';
 
 const Header = () => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
-      <CustomImage
-        source={images.backButton}
-        height={hp(5.5)}
-        width={wp(8)}
-        onPressImage={() => navigation.goBack()}
-      />
+      <TouchableOpacity onPress={() => navigation.goBack()} activeOpacity={1}>
+        <BackButton />
+      </TouchableOpacity>
       <TextBigger textStyle={styles.text}>Explore Spaces</TextBigger>
       <CustomImage
         source={images.exploreSpaceIcon}

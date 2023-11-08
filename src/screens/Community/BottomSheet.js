@@ -65,6 +65,11 @@ const BottomSheet = ({
     navigation.navigate('DifferentUserProfile', {uid: uid});
   };
 
+  const BrowseAllSpaces = () => {
+    RBSheetRef.current.close();
+    navigation.navigate('ExploreSpaces');
+  };
+
   if (triggerFromPost && !isThisUserOwnerOfPost) {
     return (
       <RBSheet
@@ -187,7 +192,7 @@ const BottomSheet = ({
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.innerContainer}
-            onPress={() => ReportPost()}>
+            onPress={() => BrowseAllSpaces()}>
             <BrowseAllSpaceIcon />
             <TextNormal textStyle={styles.text} color={COLORS.blue}>
               Browse All Spaces
@@ -243,7 +248,7 @@ const BottomSheet = ({
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.innerContainer}
-            onPress={() => ReportPost()}>
+            onPress={() => BrowseAllSpaces()}>
             <BrowseAllSpaceIcon />
             <TextNormal textStyle={styles.text} color={COLORS.blue}>
               Browse All Spaces
@@ -311,7 +316,7 @@ const BottomSheet = ({
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.innerContainer}
-          onPress={() => ReportPost()}>
+          onPress={() => BrowseAllSpaces()}>
           <BrowseAllSpaceIcon />
           <TextNormal textStyle={styles.text} color={COLORS.blue}>
             Browse All Spaces

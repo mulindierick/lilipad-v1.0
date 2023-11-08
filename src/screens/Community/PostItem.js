@@ -108,7 +108,7 @@ const PostItem = ({
         data={data}
         afterEditingPost={afterEditingPost}
       />
-      {data?.text && (
+      {data?.text ? (
         <View style={styles.postText}>
           <TextNormal textStyle={styles.postTextStyle}>
             {showFullText
@@ -118,14 +118,21 @@ const PostItem = ({
               : data?.text}
           </TextNormal>
           {data?.text.length > 300 && (
-            <TouchableOpacity onPress={() => setShowFullText(!showFullText)}>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('PostDetails', {
+                  postId: data?.postId,
+                  spaceId: data?.spaceId,
+                  spaceName: data?.spaceName,
+                })
+              }>
               <TextNormal textStyle={{color: COLORS.blue}}>
-                {showFullText ? 'See Less' : 'See More'}
+                {showFullText ? 'See Less' : 'Read More'}
               </TextNormal>
             </TouchableOpacity>
           )}
         </View>
-      )}
+      ) : null}
       {data?.postPhoto && (
         <CustomImage
           source={{uri: data?.postPhoto}}

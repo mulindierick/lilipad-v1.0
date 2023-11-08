@@ -66,6 +66,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'space-between',
+    paddingHorizontal: wp(4),
   },
   innerImageContainer: {
     height: hp(10),

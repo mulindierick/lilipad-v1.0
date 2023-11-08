@@ -7,6 +7,7 @@ import {
 } from '../../redux/reducers/generalSlice';
 import {
   useActivityRecorderMutation,
+  useSendNewPostNotificationMutation,
   useSentNotificationMutation,
 } from '../../redux/apis';
 
@@ -14,6 +15,7 @@ const usePost = () => {
   const {user} = useUser();
   const [sentNotification] = useSentNotificationMutation();
   const [activityRecorder] = useActivityRecorderMutation();
+  const [sendNewPostNotification] = useSendNewPostNotificationMutation();
 
   const {uploadImage} = useUser();
   const dispatch = useDispatch();
@@ -233,8 +235,14 @@ const usePost = () => {
           commentsCount: 0,
           postId: postId.id,
           spaceName: spaceName,
-          spaceId: user?.spaceId[spaceName],
+          spaceId: spaceId,
         });
+      sendNewPostNotification({
+        userId: user?.firebaseUserId,
+        postId: postId.id,
+        spaceId: spaceId,
+        spaceName: spaceName,
+      });
     } catch (error) {
       console.log(error);
     }
@@ -617,6 +625,7 @@ const usePost = () => {
             {
               text: text,
               postPhoto: mediaUrl,
+              postVideo: null,
             },
             {merge: true},
           );
@@ -628,6 +637,7 @@ const usePost = () => {
             {
               text: text,
               postVideo: mediaUrl,
+              postPhoto: null,
             },
             {merge: true},
           );

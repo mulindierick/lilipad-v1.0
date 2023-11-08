@@ -211,7 +211,11 @@ const PostDetails = ({route}) => {
   return loader ? (
     <CustomLoader />
   ) : (
-    <CustomWrapper containerStyle={{backgroundColor: COLORS.white}}>
+    <CustomWrapper
+      containerStyle={{
+        backgroundColor: COLORS.white,
+        paddingHorizontal: wp(0),
+      }}>
       <PostDetailHeader
         photo={postData?.user?._data?.photo}
         FullName={`${postData?.user?._data?.firstName} ${postData?.user?._data?.lastName}`}
@@ -223,16 +227,18 @@ const PostDetails = ({route}) => {
         data={postComments}
         showsVerticalScrollIndicator={false}
         renderItem={({item}) => (
-          <CommentItem
-            photo={item?.user?._data?.photo}
-            fullName={`${item?.user?._data?.firstName} ${item?.user?._data?.lastName}`}
-            timeInSeconds={item.createdAt?._seconds}
-            text={item?.text}
-            userOwnComment={
-              item?.user?._data?.firebaseUserId === user?.firebaseUserId
-            }
-            uid={item?.user?._data?.firebaseUserId}
-          />
+          <View style={{paddingHorizontal: wp(4)}} key={item?.commentId}>
+            <CommentItem
+              photo={item?.user?._data?.photo}
+              fullName={`${item?.user?._data?.firstName} ${item?.user?._data?.lastName}`}
+              timeInSeconds={item.createdAt?._seconds}
+              text={item?.text}
+              userOwnComment={
+                item?.user?._data?.firebaseUserId === user?.firebaseUserId
+              }
+              uid={item?.user?._data?.firebaseUserId}
+            />
+          </View>
         )}
         ListFooterComponent={() => (
           <View
@@ -261,7 +267,7 @@ const PostDetails = ({route}) => {
         )}
         ListHeaderComponent={() => (
           <View style={styles.borderLine}>
-            <View style={{paddingHorizontal: wp(5)}}>
+            <View style={{paddingHorizontal: wp(0)}}>
               <View style={styles.postText}>
                 <TextNormal textStyle={styles.postTextStyle}>
                   {postData?.data?.text}
@@ -275,7 +281,6 @@ const PostDetails = ({route}) => {
                     containerStyle={{
                       height: hp(30),
                       width: '100%',
-                      borderRadius: 6,
                       marginTop: hp(1.5),
                     }}
                   />
@@ -285,19 +290,21 @@ const PostDetails = ({route}) => {
               {postData?.data?.postPhoto && (
                 <CustomImage
                   source={{uri: postData?.data?.postPhoto}}
-                  height={hp(25)}
+                  height={hp(30)}
                   width={'100%'}
                   resizeMode="cover"
-                  containerStyle={{borderRadius: 10, marginTop: hp(1.5)}}
+                  containerStyle={{marginTop: hp(1.5)}}
                 />
               )}
-              <PostFooter
-                likeCount={likeCount}
-                commentCount={commentCount}
-                userLiked={like}
-                onPressLike={() => handleLike()}
-                loader={likeLoader}
-              />
+              <View style={{paddingHorizontal: wp(5)}}>
+                <PostFooter
+                  likeCount={likeCount}
+                  commentCount={commentCount}
+                  userLiked={like}
+                  onPressLike={() => handleLike()}
+                  loader={likeLoader}
+                />
+              </View>
             </View>
           </View>
         )}
@@ -341,7 +348,7 @@ export default PostDetails;
 const styles = StyleSheet.create({
   postText: {
     marginTop: hp(2),
-    marginRight: wp(12),
+    paddingHorizontal: wp(5),
   },
   postTextStyle: {
     fontSize: wp(4.3),

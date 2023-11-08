@@ -78,6 +78,7 @@ const ViewMembers = ({route}) => {
       </View>
       <FlatList
         data={filteredData}
+        ListFooterComponent={() => <View style={{paddingBottom: hp(15)}} />}
         renderItem={({item, index}) => {
           return (
             <TouchableOpacity
@@ -89,6 +90,7 @@ const ViewMembers = ({route}) => {
                 },
               ]}
               activeOpacity={1}
+              key={item?.firebaseUserId}
               onPress={() => handleNavigation(item)}>
               <View style={[styles.imageContainer]}>
                 <CustomImage

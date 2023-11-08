@@ -50,6 +50,15 @@ export const lilipadCloudFunction = createApi({
         };
       },
     }),
+    sendNewPostNotification: build.mutation({
+      query(body) {
+        return {
+          method: 'POST',
+          url: 'sendNewPostNotification',
+          body,
+        };
+      },
+    }),
   }),
 });
 
@@ -59,4 +68,5 @@ export const {
   useSentNotificationMutation,
   useDeleteUserAccountMutation,
   useActivityRecorderMutation,
+  useSendNewPostNotificationMutation,
 } = lilipadCloudFunction;
