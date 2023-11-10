@@ -84,7 +84,7 @@ const ExploreSpaces = () => {
   }, [text]);
 
   return (
-    <CustomWrapper>
+    <CustomWrapper containerStyle={{paddingHorizontal: 0}}>
       <Header />
       <View style={styles.marginTop}>
         <CustomTextInput
@@ -139,5 +139,6 @@ const styles = StyleSheet.create({
   },
   marginTop: {
     marginTop: hp(2),
+    marginHorizontal: wp(4),
   },
 });

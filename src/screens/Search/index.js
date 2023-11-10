@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useCallback, useRef, useState} from 'react';
 import CustomTabBar from '../../components/customTabBar';
 import CustomWrapper from '../../components/wrapper/CustomWrapper';
@@ -13,6 +13,8 @@ import Students from './Students';
 import Spaces from './Spaces';
 import {set} from 'react-hook-form';
 import {debounce} from 'lodash';
+import {BackButton} from '../../components/common/CustomSvgItems';
+import {useNavigation} from '@react-navigation/native';
 
 const Search = () => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -21,6 +23,8 @@ const Search = () => {
   const [SpaceText, setSpaceText] = useState('');
   const [searchStudent, setSearchStudent] = useState('');
   const [searchSpace, setSearchSpace] = useState('');
+
+  const navigation = useNavigation();
 
   const setSearchText = async txt => {
     try {
@@ -51,35 +55,30 @@ const Search = () => {
   );
 
   return (
-    <CustomWrapper>
-      <View style={styles.searchContainer}>
-        <CustomTextInput
-          placeholder="Search"
-          onChange={txt => setSearchText(txt)}
-          containerStyle={styles.customTextInput}
-          placeholderTextColor="#B0B0B0"
-          value={activeIndex === 0 ? StudentText : SpaceText}
-        />
-        <CustomIcon
-          type="ionicons"
-          icon="close"
-          size={wp(7)}
-          color={COLORS.placeholder}
-          style={{
-            flex: 0.1,
-            alignItems: 'flex-end',
-            paddingRight: wp(4),
-          }}
-          onPress={() => {
-            if (activeIndex === 0) {
-              setStudentText('');
-              setSearchStudent('');
-            } else {
-              setSpaceText('');
-              setSearchSpace('');
-            }
-          }}
-        />
+    <CustomWrapper containerStyle={{paddingHorizontal: 0}}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingLeft: wp(6),
+          paddingRight: wp(2),
+          marginTop: hp(1.5),
+        }}>
+        <TouchableOpacity
+          style={{}}
+          activeOpacity={1}
+          onPress={() => navigation.goBack()}>
+          <BackButton />
+        </TouchableOpacity>
+        <View style={styles.searchContainer}>
+          <CustomTextInput
+            placeholder="Search"
+            onChange={txt => setSearchText(txt)}
+            containerStyle={styles.customTextInput}
+            placeholderTextColor="#B0B0B0"
+            value={activeIndex === 0 ? StudentText : SpaceText}
+          />
+        </View>
       </View>
       <CustomTabBar
         tabs={['Student', 'Spaces']}
@@ -102,7 +101,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     borderRadius: 10,
-    marginTop: hp(3),
+    marginLeft: wp(6),
   },
   marginTop: {
     marginTop: hp(2),

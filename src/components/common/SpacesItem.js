@@ -22,19 +22,17 @@ const SpacesItem = ({item, AddSpaces}) => {
           {item?._data?.members.length || 0} People
         </TextNormal>
       </View>
-      <CustomImage
-        source={
+      <TextNormal
+        textStyle={{fontSize: wp(4.5), fontWeight: '500'}}
+        color={
           user.spaces.includes(item?._data?.spaceName)
-            ? images.alreadyInGroupIcon
-            : images.joinGroupIcon
+            ? COLORS.blue
+            : COLORS.textColorGrey
         }
         disabled={user.spaces.includes(item?._data?.spaceName)}
-        onPressImage={() =>
-          AddSpaces(item?._data?.spaceName, item?._data?.spaceId)
-        }
-        height={hp(5)}
-        width={wp(8)}
-      />
+        onPress={() => AddSpaces(item?._data?.spaceName, item?._data?.spaceId)}>
+        {user.spaces.includes(item?._data?.spaceName) ? 'Joined' : 'Join'}
+      </TextNormal>
     </View>
   );
 };
@@ -43,16 +41,15 @@ export default SpacesItem;
 
 const styles = StyleSheet.create({
   spaceContainer: {
-    marginHorizontal: wp(1),
-    borderRadius: 15,
-    marginBottom: hp(2),
-    paddingHorizontal: wp(4),
-    paddingVertical: hp(1.5),
-    backgroundColor: COLORS.backgroundColor,
+    borderRadius: 10,
+    paddingLeft: wp(6),
+    paddingRight: wp(9),
+    paddingVertical: hp(1.2),
+    backgroundColor: '#FFFFFF',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderWidth: 0.2,
+    borderWidth: 0.15,
     borderColor: '#CCCCCC',
     shadowColor: '#000000',
     shadowOffset: {
@@ -65,10 +62,9 @@ const styles = StyleSheet.create({
   },
   spaceContainerHeader: {
     width: wp(70),
-    fontSize: wp(5.5),
+    fontSize: wp(5.8),
   },
   peopleLengthText: {
-    marginTop: hp(0.2),
     fontFamily: FONTS.Regular,
     fontWeight: '400',
   },

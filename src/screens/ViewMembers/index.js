@@ -70,10 +70,11 @@ const ViewMembers = ({route}) => {
       <ViewMembersHeader />
       <View style={styles.marginTop}>
         <CustomTextInput
-          placeholder="Search"
+          placeholder="search"
           onChange={txt => setText(txt)}
           containerStyle={styles.searchContainer}
           placeholderTextColor="#B0B0B0"
+          textInputStyle={{fontWeight: '500', fontSize: wp(4)}}
         />
       </View>
       <FlatList
@@ -82,13 +83,7 @@ const ViewMembers = ({route}) => {
         renderItem={({item, index}) => {
           return (
             <TouchableOpacity
-              style={[
-                styles.spaceContainer,
-                index != 0 && {
-                  borderTopWidth: 0.2,
-                  borderTopColor: '#CCCCCC',
-                },
-              ]}
+              style={[styles.spaceContainer]}
               activeOpacity={1}
               key={item?.firebaseUserId}
               onPress={() => handleNavigation(item)}>
@@ -107,7 +102,7 @@ const ViewMembers = ({route}) => {
               </View>
               <View style={{alignItems: 'flex-start', marginLeft: wp(4)}}>
                 <TextBig textStyle={styles.Text}>{item?.fullName}</TextBig>
-                <TextNormal color={'#595959'}>
+                <TextNormal color={'#595959'} textStyle={{fontSize: wp(3.6)}}>
                   {item?.classYear + ' | ' + item?.major}
                 </TextNormal>
               </View>
@@ -127,6 +122,7 @@ const styles = StyleSheet.create({
   searchContainer: {
     backgroundColor: '#E4E4E4',
     borderRadius: wp(4),
+    height: wp(14),
   },
   marginTop: {
     marginVertical: hp(3),
@@ -141,6 +137,9 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
     flexDirection: 'row',
     alignItems: 'center',
+    borderRadius: wp(2.5),
+    borderColor: '#cccccc',
+    borderWidth: 0.16,
   },
   spaceContainerHeader: {
     width: wp(70),
@@ -157,7 +156,7 @@ const styles = StyleSheet.create({
     borderRadius: hp(10),
   },
   imageContainer: {
-    height: hp(7),
+    height: wp(14.5),
     aspectRatio: 1,
     borderRadius: wp(7),
   },

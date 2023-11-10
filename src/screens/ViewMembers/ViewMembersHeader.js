@@ -13,7 +13,10 @@ const ViewMembersHeader = () => {
   return (
     <View style={styles.container}>
       <View style={{flex: 1}}>
-        <TouchableOpacity onPress={() => navigation.goBack()} activeOpacity={1}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          activeOpacity={1}
+          style={{paddingTop: wp(1)}}>
           <BackButton />
         </TouchableOpacity>
       </View>
@@ -33,10 +36,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: wp(4),
     justifyContent: 'space-between',
-    marginTop: hp(1),
+    marginTop: hp(1.5),
   },
   textStyle: {
-    fontSize: wp(6),
+    fontSize: wp(7),
     fontWeight: '600',
   },
 });

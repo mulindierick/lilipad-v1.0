@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 10,
     height: hp(5),
+    marginLeft: wp(6),
   },
   selectedTab: {
     backgroundColor: COLORS.primary,

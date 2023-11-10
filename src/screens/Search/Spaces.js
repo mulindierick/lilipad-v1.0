@@ -92,7 +92,6 @@ const Spaces = ({searchText}) => {
     <>
       <FlatList
         data={filterData}
-        style={{paddingTop: hp(2)}}
         renderItem={({item, index}) => (
           <SpacesItem item={item} AddSpaces={AddSpaces} key={index} />
         )}

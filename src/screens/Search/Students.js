@@ -27,11 +27,12 @@ const Students = ({searchText}) => {
     setIsLoading(true);
     try {
       // Example: 'status:active'
-      const whereCondition = `college: "${user?.college}"`;
+      // const whereCondition = `college:${user?.college}`;
       // Use the filters parameter to apply the where condition
       const {hits} = await searchIndex.search(searchText, {
         // filters: whereCondition,
       });
+      console.log({hits});
       setResults(hits);
     } catch (error) {
       console.error('Error searching:', error);
@@ -53,7 +54,6 @@ const Students = ({searchText}) => {
     <>
       <FlatList
         data={results}
-        style={{paddingTop: hp(2)}}
         refreshing={isLoading}
         renderItem={({item}) => {
           return <StudentsItem item={item} key={item.objectID} />;

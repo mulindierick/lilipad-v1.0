@@ -6,7 +6,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import {COLORS, FONTS, images} from '../../utils/constants/theme';
-import {TextBig} from '../../components/common/CustomText';
+import {TextBig, TextNormal} from '../../components/common/CustomText';
 import useUser from '../../utils/hooks/useUser';
 import {useNavigation} from '@react-navigation/native';
 
@@ -25,10 +25,11 @@ const StudentsItem = ({item}) => {
 
   return (
     <TouchableOpacity
-      style={styles.spaceContainer}
+      style={[styles.spaceContainer]}
       activeOpacity={1}
-      onPress={() => handleNavigation()}>
-      <View style={styles.imageContainer}>
+      key={item?.firebaseUserId}
+      onPress={() => handleNavigation(item)}>
+      <View style={[styles.imageContainer]}>
         <CustomImage
           resizeMode="cover"
           source={
@@ -41,7 +42,12 @@ const StudentsItem = ({item}) => {
           containerStyle={styles.image}
         />
       </View>
-      <TextBig textStyle={styles.Text}>{item?.fullName}</TextBig>
+      <View style={{alignItems: 'flex-start', marginLeft: wp(4)}}>
+        <TextBig textStyle={styles.Text}>{item?.fullName}</TextBig>
+        <TextNormal color={'#595959'} textStyle={{fontSize: wp(3.6)}}>
+          {item?.classYear + ' | ' + item?.major}
+        </TextNormal>
+      </View>
     </TouchableOpacity>
   );
 };
@@ -50,15 +56,14 @@ export default StudentsItem;
 
 const styles = StyleSheet.create({
   spaceContainer: {
-    marginHorizontal: wp(1),
-    borderRadius: 15,
-    marginBottom: hp(2),
-    paddingHorizontal: wp(4),
-    paddingVertical: hp(1.5),
-    backgroundColor: COLORS.backgroundColor,
+    borderRadius: 10,
+    paddingLeft: wp(6),
+    paddingRight: wp(9),
+    paddingVertical: hp(0.99),
+    backgroundColor: '#FFFFFF',
     flexDirection: 'row',
     alignItems: 'center',
-    borderWidth: 0.2,
+    borderWidth: 0.15,
     borderColor: '#CCCCCC',
     shadowColor: '#000000',
     shadowOffset: {
@@ -83,9 +88,12 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
     borderRadius: hp(10),
   },
-  imageContainer: {height: hp(7), aspectRatio: 1, borderRadius: wp(7)},
+  imageContainer: {
+    height: wp(13.8),
+    aspectRatio: 1,
+    borderRadius: wp(7),
+  },
   Text: {
-    marginLeft: wp(4),
-    fontSize: wp(7),
+    fontSize: wp(5.8),
   },
 });
