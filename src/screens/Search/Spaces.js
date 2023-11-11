@@ -105,9 +105,11 @@ const Spaces = ({searchText}) => {
               height: hp(50),
             }}>
             {loading ? (
-              <ActivityIndicator color={COLORS.blue} size="large" />
+              <ActivityIndicator color={COLORS.grey} size="large" />
             ) : (
-              <TextBig color={COLORS.blue}>No Data Found</TextBig>
+              <TextNormal textStyle={styles.noDataFound}>
+                space not found.
+              </TextNormal>
             )}
           </View>
         )}
@@ -160,5 +162,10 @@ const styles = StyleSheet.create({
   },
   marginTop: {
     marginTop: hp(2),
+  },
+  noDataFound: {
+    color: '#747474',
+    fontFamily: FONTS.LightItalic,
+    fontWeight: '400',
   },
 });

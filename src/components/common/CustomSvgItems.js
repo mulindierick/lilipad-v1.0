@@ -255,9 +255,9 @@ export const AboutLiliPad = () => {
   );
 };
 
-export const BackButton = () => {
+export const BackButton = ({containerStyle}) => {
   return (
-    <View style={{width: wp(5), height: wp(5)}}>
+    <View style={[{width: wp(5), height: wp(5)}, containerStyle]}>
       <Svg
         width="100%"
         height="100%"

@@ -28,15 +28,9 @@ const PostDetailHeader = ({
       navigation.navigate('DifferentUserProfile', {uid});
     }
   };
-
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={{alignItems: 'center'}}
-        onPress={() => navigation.goBack()}
-        activeOpacity={1}>
-        <BackButton />
-      </TouchableOpacity>
+      <View style={{height: wp(15), aspectRatio: 1}} />
       <TouchableOpacity
         style={styles.middleContainer}
         activeOpacity={1}
@@ -54,7 +48,8 @@ const PostDetailHeader = ({
           {getAgoTimeFullString(timeInSeconds)}
         </TextNormal>
       </TouchableOpacity>
-      <CustomImage source={images.postOptions} height={hp(5.5)} width={wp(9)} />
+      <View style={{height: wp(15), aspectRatio: 1}} />
+      {/* <CustomImage source={images.postOptions} height={hp(5.5)} width={wp(9)} /> */}
     </View>
   );
 };
@@ -74,7 +69,7 @@ const styles = StyleSheet.create({
     borderRadius: hp(10),
   },
   imageContainer: {
-    height: hp(6.5),
+    height: wp(15),
     aspectRatio: 1,
     borderRadius: hp(10),
     alignItems: 'center',

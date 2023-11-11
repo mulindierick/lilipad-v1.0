@@ -1,9 +1,12 @@
-import React, {useEffect, useState} from 'react';
+import firestore from '@react-native-firebase/firestore';
+import {useNavigation} from '@react-navigation/native';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   ActivityIndicator,
   Alert,
   FlatList,
   Keyboard,
+  KeyboardAvoidingView,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -12,41 +15,37 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useDispatch} from 'react-redux';
 import CustomImage from '../../components/common/CustomImage';
+import CustomLoader from '../../components/common/CustomLoader';
+import {BackButton, SendSvg} from '../../components/common/CustomSvgItems';
 import {TextNormal} from '../../components/common/CustomText';
 import CustomTextInput from '../../components/common/CustomTextInput';
+import CustomVideo from '../../components/common/CustomVideo';
 import CustomWrapper from '../../components/wrapper/CustomWrapper';
+import {useSentNotificationMutation} from '../../redux/apis';
+import {setPostDetails} from '../../redux/reducers/generalSlice';
 import {COLORS, FONTS, images} from '../../utils/constants/theme';
 import usePost from '../../utils/hooks/usePost';
+import useUser from '../../utils/hooks/useUser';
 import PostFooter from '../Community/PostFooter';
 import CommentItem from './CommentItem';
 import PostDetailHeader from './PostDetailHeader';
-import {KeyboardAvoidingView} from 'react-native';
-import useUser from '../../utils/hooks/useUser';
-import {SendSvg} from '../../components/common/CustomSvgItems';
-import firestore from '@react-native-firebase/firestore';
-import {set} from 'react-hook-form';
-import CustomLoader from '../../components/common/CustomLoader';
-import {useDispatch} from 'react-redux';
-import {
-  setLikeCountAnduserLiked,
-  setPostCommentCount,
-  setPostDetails,
-} from '../../redux/reducers/generalSlice';
-import {useNavigation} from '@react-navigation/native';
-import {useSentNotificationMutation} from '../../redux/apis';
-import CustomVideo from '../../components/common/CustomVideo';
+import PostHeaderComponent from './PostHeaderComponent';
 
 const PostDetails = ({route}) => {
   const {user} = useUser();
   const {general} = useUser();
   const dispatch = useDispatch();
   const navigation = useNavigation();
+  const flatListRef = useRef(null);
 
   const postId = route?.params?.postId;
   const spaceName = route?.params?.spaceName;
   const spaceId = route?.params?.spaceId;
   const [loader, setLoader] = useState(true);
+  const [myOwnComment, setMyOwnComment] = useState(false);
   const [postData, setPostData] = useState({});
   const [postComments, setPostComments] = useState([]);
   const [like, setLike] = useState(null);
@@ -97,6 +96,15 @@ const PostDetails = ({route}) => {
       if (res.length > 0) {
         setCommentCount(res.length);
         setPostComments(res);
+        if (
+          res[res.length - 1]?.user?._data?.firebaseUserId ===
+          user?.firebaseUserId
+        ) {
+          flatListRef.current.scrollToIndex({
+            animated: true,
+            index: res.length - 1,
+          });
+        }
       }
     } catch (err) {
       console.log({err});
@@ -146,6 +154,7 @@ const PostDetails = ({route}) => {
   const OnSendComment = async () => {
     try {
       if (text === '') return;
+      Keyboard.dismiss();
       const comment = text;
       setText('');
       setCommentLoader(true);
@@ -173,7 +182,6 @@ const PostDetails = ({route}) => {
           spaceName: spaceName,
         }),
       );
-      console.log('HELLO');
     } catch (err) {
       console.log({err});
     }
@@ -204,9 +212,19 @@ const PostDetails = ({route}) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (isKeyboardVisible) {
+      setTimeout(() => {
+        flatListRef.current.scrollToEnd({animated: true});
+      }, 100);
+    }
+  }, [isKeyboardVisible]);
+
   const handleBackPress = () => {
     navigation.goBack();
   };
+
+  const {top} = useSafeAreaInsets();
 
   return loader ? (
     <CustomLoader />
@@ -216,35 +234,48 @@ const PostDetails = ({route}) => {
         backgroundColor: COLORS.white,
         paddingHorizontal: wp(0),
       }}>
-      <PostDetailHeader
-        photo={postData?.user?._data?.photo}
-        FullName={`${postData?.user?._data?.firstName} ${postData?.user?._data?.lastName}`}
-        timeInSeconds={postData?.data?.createdAt?._seconds}
-        onBackPress={() => handleBackPress()}
-        uid={postData?.user?._data?.firebaseUserId}
-      />
+      <TouchableOpacity
+        style={[styles.backButton, {top: top}]}
+        onPress={() => navigation.goBack()}
+        activeOpacity={1}>
+        <BackButton containerStyle={{marginLeft: wp(-0.8)}} />
+      </TouchableOpacity>
       <FlatList
-        data={postComments}
+        ref={flatListRef}
+        data={[{commentId: 'borderLine'}, ...postComments]}
         showsVerticalScrollIndicator={false}
         renderItem={({item}) => (
-          <View style={{paddingHorizontal: wp(4)}} key={item?.commentId}>
-            <CommentItem
-              photo={item?.user?._data?.photo}
-              fullName={`${item?.user?._data?.firstName} ${item?.user?._data?.lastName}`}
-              timeInSeconds={item.createdAt?._seconds}
-              text={item?.text}
-              userOwnComment={
-                item?.user?._data?.firebaseUserId === user?.firebaseUserId
-              }
-              uid={item?.user?._data?.firebaseUserId}
-            />
+          <View
+            style={
+              item?.commentId === 'borderLine'
+                ? {
+                    backgroundColor: COLORS.white,
+                    marginBottom: hp(2),
+                  }
+                : {paddingHorizontal: wp(4)}
+            }
+            key={item?.commentId}>
+            {item?.commentId === 'borderLine' ? (
+              <View style={styles.borderLine} />
+            ) : (
+              <CommentItem
+                photo={item?.user?._data?.photo}
+                fullName={`${item?.user?._data?.firstName} ${item?.user?._data?.lastName}`}
+                timeInSeconds={item.createdAt?._seconds}
+                text={item?.text}
+                userOwnComment={
+                  item?.user?._data?.firebaseUserId === user?.firebaseUserId
+                }
+                uid={item?.user?._data?.firebaseUserId}
+              />
+            )}
           </View>
         )}
         ListFooterComponent={() => (
           <View
             style={[
               isKeyboardVisible
-                ? {marginBottom: hp(50)}
+                ? {marginBottom: hp(47)}
                 : {marginBottom: hp(10)},
             ]}></View>
         )}
@@ -266,48 +297,16 @@ const PostDetails = ({route}) => {
           </View>
         )}
         ListHeaderComponent={() => (
-          <View style={styles.borderLine}>
-            <View style={{paddingHorizontal: wp(0)}}>
-              <View style={styles.postText}>
-                <TextNormal textStyle={styles.postTextStyle}>
-                  {postData?.data?.text}
-                </TextNormal>
-              </View>
-
-              {postData?.data?.postVideo && (
-                <TouchableOpacity activeOpacity={1}>
-                  <CustomVideo
-                    uri={postData?.data?.postVideo}
-                    containerStyle={{
-                      height: hp(30),
-                      width: '100%',
-                      marginTop: hp(1.5),
-                    }}
-                  />
-                </TouchableOpacity>
-              )}
-
-              {postData?.data?.postPhoto && (
-                <CustomImage
-                  source={{uri: postData?.data?.postPhoto}}
-                  height={hp(30)}
-                  width={'100%'}
-                  resizeMode="cover"
-                  containerStyle={{marginTop: hp(1.5)}}
-                />
-              )}
-              <View style={{paddingHorizontal: wp(5)}}>
-                <PostFooter
-                  likeCount={likeCount}
-                  commentCount={commentCount}
-                  userLiked={like}
-                  onPressLike={() => handleLike()}
-                  loader={likeLoader}
-                />
-              </View>
-            </View>
-          </View>
+          <PostHeaderComponent
+            postData={postData}
+            handleLike={handleLike}
+            like={like}
+            likeCount={likeCount}
+            commentCount={commentCount}
+            likeLoader={likeLoader}
+          />
         )}
+        stickyHeaderIndices={[1]}
       />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -346,19 +345,13 @@ const PostDetails = ({route}) => {
 export default PostDetails;
 
 const styles = StyleSheet.create({
-  postText: {
-    marginTop: hp(2),
-    paddingHorizontal: wp(5),
-  },
-  postTextStyle: {
-    fontSize: wp(4.3),
-    color: '#151313',
-  },
   borderLine: {
     paddingBottom: hp(2),
     borderBottomWidth: 1,
     borderBottomColor: '#DADADA',
-    marginBottom: hp(2),
+    // marginBottom: hp(2),
+    marginTop: hp(1),
+    marginHorizontal: wp(4),
   },
 
   footerTextInputContainer: {
@@ -399,5 +392,18 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
     height: hp(5),
     width: wp(100),
+  },
+  backButton: {
+    alignItems: 'center',
+    borderColor: '#C9C9C9',
+    borderWidth: 1,
+    height: wp(14),
+    aspectRatio: 1,
+    borderRadius: hp(10),
+    justifyContent: 'center',
+    position: 'absolute',
+    left: wp(4),
+    backgroundColor: COLORS.white,
+    zIndex: 111111,
   },
 });

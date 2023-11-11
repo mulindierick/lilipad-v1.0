@@ -50,7 +50,7 @@ const Search = () => {
         setSearchSpace(txt);
         console.log('searchSpace');
       }
-    }, 500),
+    }, 0),
     [activeIndex],
   );
 

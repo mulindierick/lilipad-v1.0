@@ -16,10 +16,10 @@ const StudentsItem = ({item}) => {
 
   const handleNavigation = () => {
     console.log({user, item});
-    if (user?.firebaseUserId == item?.objectID) {
+    if (user?.firebaseUserId == item?.firebaseUserId) {
       navigation.navigate('Profile');
     } else {
-      navigation.navigate('DifferentUserProfile', {uid: item?.objectID});
+      navigation.navigate('DifferentUserProfile', {uid: item?.firebaseUserId});
     }
   };
 

@@ -732,6 +732,20 @@ const usePost = () => {
     }
   };
 
+  const fetchAllStudents = async () => {
+    try {
+      const data = await firestore()
+        .collection(`accounts`)
+        .where('college', '==', user?.college)
+        .where('isVerified', '==', true)
+        .get();
+
+      return data.docs;
+    } catch (err) {
+      console.log({err});
+    }
+  };
+
   return {
     fetchPostsOfAllSpaces,
     sharePost,
@@ -747,6 +761,7 @@ const usePost = () => {
     CheckNewActivityUpdate,
     EditPost,
     deleteUserPost,
+    fetchAllStudents,
   };
 };
 
