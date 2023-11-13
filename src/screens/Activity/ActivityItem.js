@@ -59,6 +59,37 @@ const ActivityItem = ({item}) => {
             liked your post.
           </TextNormal>
         )
+      ) : item?.type == 'commentLike' ? (
+        item?.users?.length == 2 ? (
+          <TextNormal textStyle={[styles.text]}>
+            <TextNormal bold textStyle={styles.text}>
+              {item?.lastUserDetail?._data?.firstName +
+                ' ' +
+                item?.lastUserDetail?._data?.lastName}
+            </TextNormal>{' '}
+            and {item?.users?.length - 1} other liked your comment:{' '}
+            {`"${item.commentText}"`}.
+          </TextNormal>
+        ) : item?.users?.length > 2 ? (
+          <TextNormal textStyle={styles.text}>
+            <TextNormal bold textStyle={styles.text}>
+              {item?.lastUserDetail?._data?.firstName +
+                ' ' +
+                item?.lastUserDetail?._data?.lastName}
+            </TextNormal>{' '}
+            and {item.users.length - 1} others liked your comment:{' '}
+            {`"${item.commentText}"`}.
+          </TextNormal>
+        ) : (
+          <TextNormal textStyle={styles.text}>
+            <TextNormal bold textStyle={styles.text}>
+              {item?.lastUserDetail?._data?.firstName +
+                ' ' +
+                item?.lastUserDetail?._data?.lastName}
+            </TextNormal>{' '}
+            liked your comment: {`"${item.commentText}"`}.
+          </TextNormal>
+        )
       ) : item?.users?.length == 2 ? (
         <TextNormal textStyle={styles.text}>
           <TextNormal bold textStyle={styles.text}>

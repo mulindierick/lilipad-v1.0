@@ -1,5 +1,5 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import React, {memo} from 'react';
 import PostDetailHeader from './PostDetailHeader';
 import {TextNormal} from '../../components/common/CustomText';
 import CustomVideo from '../../components/common/CustomVideo';
@@ -71,7 +71,7 @@ const PostHeaderComponent = ({
   );
 };
 
-export default PostHeaderComponent;
+export default memo(PostHeaderComponent);
 
 const styles = StyleSheet.create({
   postText: {

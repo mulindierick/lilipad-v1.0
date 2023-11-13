@@ -7,6 +7,7 @@ import {
 } from '../../redux/reducers/generalSlice';
 import {
   useActivityRecorderMutation,
+  useCommentLikeActivityRecorderAndNotificationHandlerMutation,
   useSendNewPostNotificationMutation,
   useSentNotificationMutation,
 } from '../../redux/apis';
@@ -16,6 +17,8 @@ const usePost = () => {
   const [sentNotification] = useSentNotificationMutation();
   const [activityRecorder] = useActivityRecorderMutation();
   const [sendNewPostNotification] = useSendNewPostNotificationMutation();
+  const [sendNotificationAndRecordActivityForCommentLike] =
+    useCommentLikeActivityRecorderAndNotificationHandlerMutation();
 
   const {uploadImage} = useUser();
   const dispatch = useDispatch();
@@ -329,19 +332,18 @@ const usePost = () => {
     }
   };
 
-  const fetchPostById = async (postId, spaceName) => {
+  const fetchPostById = async (postId, spaceName, spaceId) => {
+    console.log({spaceId});
     try {
       const data = await firestore()
-        .collection(
-          `Colleges/${user?.college}/spaces/${user?.spaceId[spaceName]}/posts`,
-        )
+        .collection(`Colleges/${user?.college}/spaces/${spaceId}/posts`)
         .doc(postId)
         .get();
       let userLiked = false;
       if (data?._data.likesCount > 0) {
         const likes = await firestore()
           .collection(
-            `Colleges/${user?.college}/spaces/${user?.spaceId[spaceName]}/posts/${data?._data.postId}/likes`,
+            `Colleges/${user?.college}/spaces/${spaceId}/posts/${data?._data.postId}/likes`,
           )
           .doc(user?.firebaseUserId)
           .get();
@@ -351,7 +353,7 @@ const usePost = () => {
       }
       const comments = await firestore()
         .collection(
-          `Colleges/${user?.college}/spaces/${user?.spaceId[spaceName]}/posts/${postId}/comments`,
+          `Colleges/${user?.college}/spaces/${spaceId}/posts/${postId}/comments`,
         )
         .orderBy('createdAt', 'asc')
         .get();
@@ -363,6 +365,29 @@ const usePost = () => {
             return {
               ...item.data(),
               user: await item.data().createdByReference.get(),
+            };
+          }),
+        );
+      }
+
+      if (commentData.length > 0) {
+        commentData = await Promise.all(
+          commentData.map(async item => {
+            let userLiked = false;
+            if (item?.likesCount > 0) {
+              const likes = await firestore()
+                .collection(
+                  `Colleges/${user?.college}/spaces/${spaceId}/posts/${postId}/comments/${item.commentId}/commentLikes`,
+                )
+                .doc(user?.firebaseUserId)
+                .get();
+              if (likes?._data?.userId === user?.firebaseUserId) {
+                userLiked = true;
+              }
+            }
+            return {
+              ...item,
+              userLiked: userLiked,
             };
           }),
         );
@@ -448,6 +473,31 @@ const usePost = () => {
           }),
         );
       }
+
+      if (commentData.length > 0) {
+        console.log({hello: 'HELLO'});
+        commentData = await Promise.all(
+          commentData.map(async item => {
+            let userLiked = false;
+            if (item?.likesCount > 0) {
+              const likes = await firestore()
+                .collection(
+                  `Colleges/${user?.college}/spaces/${spaceId}/posts/${postId}/comments/${item.commentId}/commentLikes`,
+                )
+                .doc(user?.firebaseUserId)
+                .get();
+              if (likes?._data?.userId === user?.firebaseUserId) {
+                userLiked = true;
+              }
+            }
+            return {
+              ...item,
+              userLiked: userLiked,
+            };
+          }),
+        );
+      }
+
       dispatch(
         setPostCommentCount({
           commentCount: commentData.length,
@@ -746,6 +796,89 @@ const usePost = () => {
     }
   };
 
+  const commentLikes = async (data, like) => {
+    try {
+      if (like) {
+        await firestore()
+          .collection(
+            `Colleges/${user?.college}/spaces/${data?.spaceId}/posts/${data?.postId}/comments`,
+          )
+          .doc(data?.commentId)
+          .update({
+            likesCount: firestore.FieldValue.increment(-1),
+          });
+
+        await firestore()
+          .collection(
+            `Colleges/${user?.college}/spaces/${data?.spaceId}/posts/${data?.postId}/comments/${data?.commentId}/commentLikes`,
+          )
+          .doc(user?.firebaseUserId)
+          .delete();
+        sendNotificationAndRecordActivityForCommentLike({
+          postId: data?.postId,
+          spaceId: data?.spaceId,
+          type: 'unlike',
+          userWhoLikedComment: user,
+          commentId: data?.commentId,
+          spaceName: data?.spaceName,
+        });
+      } else {
+        const currentCommentData = await firestore()
+          .collection(
+            `Colleges/${user?.college}/spaces/${data?.spaceId}/posts/${data?.postId}/comments`,
+          )
+          .doc(data?.commentId)
+          .get();
+        if (currentCommentData?.data()?.likesCount >= 0) {
+          console.log('YAHA Modify HAI');
+
+          // increment the likesCount
+          await firestore()
+            .collection(
+              `Colleges/${user?.college}/spaces/${data?.spaceId}/posts/${data?.postId}/comments`,
+            )
+            .doc(data?.commentId)
+            .update({
+              likesCount: firestore.FieldValue.increment(1),
+            });
+        } else {
+          await firestore()
+            .collection(
+              `Colleges/${user?.college}/spaces/${data?.spaceId}/posts/${data?.postId}/comments`,
+            )
+            .doc(data?.commentId)
+            .update({
+              likesCount: 1,
+            });
+        }
+        await firestore()
+          .collection(
+            `Colleges/${user?.college}/spaces/${data?.spaceId}/posts/${data?.postId}/comments/${data?.commentId}/commentLikes`,
+          )
+          .doc(user?.firebaseUserId)
+          .set({
+            userId: user?.firebaseUserId,
+            commentId: data?.commentId,
+            createdAt: firestore.FieldValue.serverTimestamp(),
+            spaceId: data?.spaceId,
+            postId: data?.postId,
+            userReference: firestore().doc(`accounts/${user?.firebaseUserId}`),
+          });
+        sendNotificationAndRecordActivityForCommentLike({
+          postId: data?.postId,
+          spaceId: data?.spaceId,
+          type: 'like',
+          userWhoLikedComment: user,
+          commentId: data?.commentId,
+          spaceName: data?.spaceName,
+        });
+      }
+      return null;
+    } catch (err) {
+      console.log({err});
+    }
+  };
+
   return {
     fetchPostsOfAllSpaces,
     sharePost,
@@ -762,6 +895,7 @@ const usePost = () => {
     EditPost,
     deleteUserPost,
     fetchAllStudents,
+    commentLikes,
   };
 };
 

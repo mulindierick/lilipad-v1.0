@@ -58,7 +58,7 @@ const DifferentUserProfile = ({route}) => {
 
   useEffect(() => {
     fetchPosts();
-  }, []);
+  }, [uid]);
 
   console.log({userDetails});
 

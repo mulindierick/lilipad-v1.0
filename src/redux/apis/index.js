@@ -59,6 +59,15 @@ export const lilipadCloudFunction = createApi({
         };
       },
     }),
+    commentLikeActivityRecorderAndNotificationHandler: build.mutation({
+      query(body) {
+        return {
+          method: 'POST',
+          url: 'commentLikeActivityRecorderAndNotificationHandler',
+          body,
+        };
+      },
+    }),
   }),
 });
 
@@ -69,4 +78,5 @@ export const {
   useDeleteUserAccountMutation,
   useActivityRecorderMutation,
   useSendNewPostNotificationMutation,
+  useCommentLikeActivityRecorderAndNotificationHandlerMutation,
 } = lilipadCloudFunction;

@@ -318,9 +318,9 @@ export const DeleteAccount = () => {
   );
 };
 
-export const LikeSvg = () => {
+export const LikeSvg = ({containerStyle}) => {
   return (
-    <View style={{width: wp(5.5), height: wp(5.5)}}>
+    <View style={[{width: wp(5.5), height: wp(5.5)}, containerStyle]}>
       <Svg
         width="100%"
         height="100%"
@@ -336,9 +336,9 @@ export const LikeSvg = () => {
   );
 };
 
-export const UnlikeSvg = () => {
+export const UnlikeSvg = ({containerStyle}) => {
   return (
-    <View style={{width: wp(5.5), height: wp(5.5)}}>
+    <View style={[{width: wp(5.5), height: wp(5.5)}, containerStyle]}>
       <Svg
         width="100%"
         height="100%"
@@ -376,23 +376,30 @@ export const SendSvg = () => {
   return (
     <View style={{width: wp(7), height: wp(7)}}>
       <Svg
-        width="100%"
-        height="100%"
-        viewBox="0 0 26 26"
+        width="26"
+        height="24"
+        viewBox="0 0 26 24"
         fill="none"
         xmlns="http://www.w3.org/2000/svg">
         <Path
-          fillRule="evenodd"
-          clipRule="evenodd"
-          d="M12.451 13.4747C12.451 13.4747 -0.523692 10.7906 3.98509 8.18784C7.78992 5.9916 20.9025 2.21559 22.7344 3.19124C23.7101 5.02316 19.9341 18.1358 17.7378 21.9406C15.1351 26.4494 12.451 13.4747 12.451 13.4747Z"
-          stroke={COLORS.blue}
+          fill-rule="evenodd"
+          clip-rule="evenodd"
+          d="M11.3875 12.1272C11.3875 12.1272 5.23042 2.75822 9.4854 3.89863C13.076 4.86109 23.1808 10.4474 23.6931 12.1272C23.1808 13.807 13.076 19.3933 9.4854 20.3558C5.23042 21.4962 11.3875 12.1272 11.3875 12.1272Z"
+          fill="#42ACF9"
+          stroke="#42ACF9"
           strokeWidth="3"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
         <Path
-          d="M12.451 13.4747L22.7344 3.19128"
-          stroke={COLORS.blue}
+          fillRule="evenodd"
+          clipRule="evenodd"
+          d="M11.3875 12.1274H23.6931Z"
+          fill="#42ACF9"
+        />
+        <Path
+          d="M11.3875 12.1274H23.6931"
+          stroke="#42ACF9"
           strokeWidth="3"
           strokeLinecap="round"
           strokeLinejoin="round"

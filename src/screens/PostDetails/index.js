@@ -44,6 +44,7 @@ const PostDetails = ({route}) => {
   const postId = route?.params?.postId;
   const spaceName = route?.params?.spaceName;
   const spaceId = route?.params?.spaceId;
+  console.log({postId, spaceName, spaceId});
   const [loader, setLoader] = useState(true);
   const [myOwnComment, setMyOwnComment] = useState(false);
   const [postData, setPostData] = useState({});
@@ -60,7 +61,7 @@ const PostDetails = ({route}) => {
   const fetchPost = async () => {
     setLoader(true);
     try {
-      const res = await fetchPostById(postId, spaceName);
+      const res = await fetchPostById(postId, spaceName, spaceId);
       if (!res) {
         Alert.alert('Post deleted by owner.');
         navigation.goBack();
@@ -88,7 +89,7 @@ const PostDetails = ({route}) => {
 
   useEffect(() => {
     fetchPost();
-  }, []);
+  }, [postId]);
 
   const onCommentDocumentUpdate = async () => {
     try {
@@ -267,6 +268,8 @@ const PostDetails = ({route}) => {
                   item?.user?._data?.firebaseUserId === user?.firebaseUserId
                 }
                 uid={item?.user?._data?.firebaseUserId}
+                data={item}
+                userLiked={item?.userLiked}
               />
             )}
           </View>
@@ -298,6 +301,7 @@ const PostDetails = ({route}) => {
         )}
         ListHeaderComponent={() => (
           <PostHeaderComponent
+            key={postData?.data?.postId}
             postData={postData}
             handleLike={handleLike}
             like={like}
@@ -314,12 +318,6 @@ const PostDetails = ({route}) => {
           ios: () => hp(1.5),
         })()}
         style={styles.footer}>
-        <CustomImage
-          source={images.plus}
-          width={wp(8)}
-          height={hp(4)}
-          resizeMode="contain"
-        />
         <View style={styles.footerTextInputContainer}>
           <CustomTextInput
             containerStyle={styles.textInput}
@@ -357,10 +355,9 @@ const styles = StyleSheet.create({
   footerTextInputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginLeft: wp(3),
     backgroundColor: COLORS.backgroundColor,
     height: hp(5),
-    width: wp(78),
+    width: wp(90),
     borderRadius: 100,
     justifyContent: 'space-between',
     paddingHorizontal: wp(4),
@@ -370,6 +367,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderColor: COLORS.grey,
     marginHorizontal: wp(-4),
+    width: wp(100),
     alignItems: 'center',
     paddingHorizontal: wp(4),
     flexDirection: 'row',
