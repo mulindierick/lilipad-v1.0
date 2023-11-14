@@ -26,6 +26,7 @@ const DifferentUserProfile = ({route}) => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [data, setData] = useState([]);
+
   const [userDetails, setUserDetails] = useState({});
   const {ProfileFlatListRef} = useContext(MyContext);
 
@@ -60,17 +61,27 @@ const DifferentUserProfile = ({route}) => {
     fetchPosts();
   }, [uid]);
 
-  console.log({userDetails});
+  const [upperBorderFlag, setUpperBorderFlag] = useState(false);
+  const onScroll = e => {
+    const y = e.nativeEvent.contentOffset.y;
+    if (y <= 0) {
+      // At the top of the FlatList
+      setUpperBorderFlag(false);
+    } else {
+      setUpperBorderFlag(true);
+    }
+  };
 
   return loading ? (
     <CustomLoader />
   ) : (
     <CustomWrapper
       containerStyle={{paddingHorizontal: widthPercentageToDP(-4)}}>
-      <ProfileHeader differentUserProfile />
+      <ProfileHeader differentUserProfile upperBorderFlag={upperBorderFlag} />
       <FlatList
         data={data}
         ref={ProfileFlatListRef}
+        onScroll={onScroll}
         renderItem={({item, index}) => (
           <PostItem
             data={item}

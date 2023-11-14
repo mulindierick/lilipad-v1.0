@@ -106,7 +106,6 @@ const usePost = () => {
       newPostsCountData[space] = newPostsCount[index];
     });
     CheckNewActivityUpdate();
-    console.log({data});
     return {data: SpaceDataObject, newPostsCount: newPostsCountData};
   };
 
@@ -255,7 +254,7 @@ const usePost = () => {
     try {
       const data = await firestore()
         .collection(`Colleges/${user?.college}/spaces`)
-        .where('isActive', '==', true)
+        .where('isActive', '==', 'active')
         .get();
       return data.docs;
     } catch (err) {
@@ -453,8 +452,9 @@ const usePost = () => {
     }
   };
 
-  const fetchUpdatedComments = async (spaceId, postId) => {
+  const fetchUpdatedComments = async (spaceId, postId, commentCount) => {
     try {
+      console.log({commentCount});
       const comments = await firestore()
         .collection(
           `Colleges/${user?.college}/spaces/${spaceId}/posts/${postId}/comments`,
@@ -475,7 +475,6 @@ const usePost = () => {
       }
 
       if (commentData.length > 0) {
-        console.log({hello: 'HELLO'});
         commentData = await Promise.all(
           commentData.map(async item => {
             let userLiked = false;
@@ -503,7 +502,14 @@ const usePost = () => {
           commentCount: commentData.length,
         }),
       );
-      return commentData;
+
+      let refreshValue = false;
+
+      if (commentData.length > commentCount) {
+        refreshValue = true;
+      }
+
+      return {data: commentData, refreshValue: refreshValue};
     } catch (err) {
       console.log({err});
     }

@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   SectionList,
   StyleSheet,
   Text,
@@ -51,18 +52,33 @@ const Activity = () => {
     );
   };
 
-  return screenLoader ? (
-    <CustomLoader />
-  ) : (
-    <CustomWrapper>
-      <CustomHeader Activty={true} />
+  const [upperBorderFlag, setUpperBorderFlag] = useState(false);
+  const onScroll = e => {
+    const y = e.nativeEvent.contentOffset.y;
+    if (y <= 0) {
+      // At the top of the FlatList
+      setUpperBorderFlag(false);
+    } else {
+      setUpperBorderFlag(true);
+    }
+  };
+
+  return (
+    <CustomWrapper containerStyle={{paddingHorizontal: 0}}>
+      <CustomHeader Activty={true} upperBorderFlag={upperBorderFlag} />
       <SectionList
         sections={data}
         keyExtractor={(item, index) => index.toString()}
+        onScroll={onScroll}
         renderItem={({item, index}) => <ActivityItem item={item} />}
         renderSectionHeader={({section: {title}}) => {
           return (
-            <TextBig bold textStyle={{marginVertical: hp(1)}}>
+            <TextBig
+              bold
+              textStyle={{
+                marginVertical: hp(1),
+                paddingHorizontal: wp(4),
+              }}>
               {formatDate(title)}
             </TextBig>
           );
@@ -77,16 +93,18 @@ const Activity = () => {
               alignItems: 'center',
               height: hp(80),
             }}>
-            {!loader && (
+            {!loader && !screenLoader ? (
               <TextNormal textStyle={styles.noDataFound}>
                 Nothing, Yet.
               </TextNormal>
+            ) : (
+              <ActivityIndicator color={COLORS.grey} size="large" />
             )}
           </View>
         )}
         showsVerticalScrollIndicator={false}
-        refreshing={loader}
-        onRefresh={() => fetchAllActivities()}
+        refreshing={screenLoader ? false : loader}
+        onRefresh={screenLoader ? false : () => fetchAllActivities()}
       />
     </CustomWrapper>
   );

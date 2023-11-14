@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {memo, useState} from 'react';
 import {
   ActivityIndicator,
   Pressable,
@@ -27,7 +27,7 @@ const CustomImage = props => {
     imageProcessing = false,
     ...rest
   } = props;
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <View>
@@ -84,7 +84,7 @@ const CustomImage = props => {
   );
 };
 
-export default CustomImage;
+export default memo(CustomImage);
 
 const styles = StyleSheet.create({
   container: {

@@ -12,6 +12,7 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import {
+  BackButton,
   FilterSvg,
   NotificationSvg,
   SearchSvg,
@@ -42,21 +43,36 @@ const ProfileHeader = ({differentUserProfile, upperBorderFlag}) => {
     );
     auth().signOut();
   };
+  const navigation = useNavigation();
 
   if (differentUserProfile) {
     return (
       <>
         <View
-          style={[styles.container, upperBorderFlag && styles.borderColors]}>
-          <TextBig textStyle={styles.textStyle} bold>
-            Profile
-          </TextBig>
+          style={[
+            styles.container,
+            {paddingVertical: hp(1)},
+            upperBorderFlag && styles.borderColors,
+          ]}>
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={() => navigation.goBack()}
+            style={{
+              paddingVertical: wp(2),
+              borderWidth: 1,
+              borderColor: '#C9C9C9',
+              paddingHorizontal: wp(2),
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: wp(100),
+            }}>
+            <BackButton containerStyle={{marginLeft: wp(-0.5)}} />
+          </TouchableOpacity>
         </View>
       </>
     );
   }
 
-  const navigation = useNavigation();
   return (
     <>
       <View style={[styles.container, upperBorderFlag && styles.borderColors]}>
@@ -64,12 +80,17 @@ const ProfileHeader = ({differentUserProfile, upperBorderFlag}) => {
           Profile
         </TextBig>
         <View style={styles.innerContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
-            <SettingSvg />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('Activity')}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Activity')}
+            activeOpacity={1}
+            style={{marginRight: wp(8)}}>
             <NotificationSvg />
             {general?.newNotification && <View style={styles.redDot} />}
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Settings')}
+            activeOpacity={1}>
+            <SettingSvg />
           </TouchableOpacity>
         </View>
       </View>

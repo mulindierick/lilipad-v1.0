@@ -2,6 +2,7 @@ import {StyleSheet, Switch, Text, TouchableOpacity, View} from 'react-native';
 import React, {useState} from 'react';
 import {
   AboutLiliPad,
+  BlueLiliPadIcon,
   DeleteAccount,
   NotificationSvg,
   NotificationSvgForSettings,
@@ -37,15 +38,23 @@ const CustomSettingsButton = ({text, containerStyle, onPress}) => {
   };
 
   const SvgIcon = {
-    'Privacy & Security': <PrivacyAndSecurity />,
-    'About LiliPad': <AboutLiliPad />,
-    'Delete Account': <DeleteAccount />,
+    'Community Guidelines': <AboutLiliPad />,
+    'About LiliPad': (
+      <BlueLiliPadIcon containerStyle={{height: wp(7), width: wp(7)}} />
+    ),
+    'Delete Account': (
+      <DeleteAccount containerStyle={{height: wp(6), width: wp(6)}} />
+    ),
   };
 
   if (text === 'Push Notifications') {
     return (
-      <TouchableOpacity style={[styles.container, containerStyle]}>
-        <NotificationSvgForSettings />
+      <View style={[styles.container, containerStyle]}>
+        <View style={{flex: 1}}>
+          <NotificationSvgForSettings
+            containerStyle={{height: wp(6.2), width: wp(6.2)}}
+          />
+        </View>
         <TextNormal textStyle={styles.text}>Push Notifications</TextNormal>
         <View
           style={{
@@ -57,20 +66,28 @@ const CustomSettingsButton = ({text, containerStyle, onPress}) => {
           <Switch
             value={popUp}
             thumbColor={popUp ? 'white' : 'white'}
-            trackColor={{true: '#4CCF0F'}}
+            trackColor={{true: COLORS.blue}}
             onValueChange={() => updatePushNotificationToken()}
             //   style={{transform: [{scaleX: wp(0.25)}, {scaleY: wp(0.25)}]}}
           />
         </View>
-      </TouchableOpacity>
+      </View>
     );
   }
   return (
     <TouchableOpacity
       style={[styles.container, containerStyle]}
-      onPress={onPress}>
-      {SvgIcon[text]}
-      <TextNormal textStyle={styles.text}>{text}</TextNormal>
+      onPress={onPress}
+      activeOpacity={1}>
+      <View style={{flex: 1}}>{SvgIcon[text]}</View>
+      <TextNormal
+        textStyle={[
+          styles.text,
+          'Delete Account' == text ? {fontWeight: 'bold'} : {},
+        ]}>
+        {text}
+      </TextNormal>
+      <View style={{flex: 1}}></View>
     </TouchableOpacity>
   );
 };
@@ -84,13 +101,13 @@ const styles = StyleSheet.create({
     marginTop: wp(2),
     paddingVertical: hp(2),
     paddingHorizontal: wp(4),
-    borderRadius: 15,
+    borderRadius: 14,
     borderWidth: 0.1,
     borderColor: '#CACACA',
     shadowColor: '#000000',
     shadowOffset: {width: 0, height: 1},
-    shadowOpacity: 0.16,
-    shadowRadius: 1,
+    shadowOpacity: 0.02,
+    shadowRadius: 0.5,
     backgroundColor: COLORS.white,
     borderWidth: 0,
   },
@@ -98,5 +115,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginLeft: wp(5),
     fontSize: wp(4.5),
+    flex: 15,
   },
 });

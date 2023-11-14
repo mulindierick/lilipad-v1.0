@@ -8,7 +8,7 @@ import {COLORS, FONTS} from '../../utils/constants/theme';
 import CustomTextInput from '../common/CustomTextInput';
 import {useFocusEffect} from '@react-navigation/native';
 
-const AddPostTextInput = ({text, setText}) => {
+const AddPostTextInput = ({text, setText, placeholderIncludes}) => {
   return (
     <View style={styles.parentContainer}>
       <CustomTextInput
@@ -17,7 +17,7 @@ const AddPostTextInput = ({text, setText}) => {
         multiline={true}
         containerStyle={styles.container}
         textInputStyle={[text ? styles.textInput : styles.placeholderStyle]}
-        placeholder={'Share With Your Community...'}
+        placeholder={`Share With ${placeholderIncludes}...`}
         autoCapitalize="sentences"
         autoCorrect={true}
         autoFocus={true}
@@ -30,12 +30,12 @@ export default AddPostTextInput;
 
 const styles = StyleSheet.create({
   parentContainer: {
-    maxHeight: hp(40),
+    maxHeight: hp(35),
     minHeight: hp(7),
     overflow: 'hidden',
   },
   container: {
-    height: hp(35),
+    height: hp(30),
     // minHeight: hp(7),
     width: '100%',
     backgroundColor: 'transparent',
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     marginTop: hp(2.3),
   },
   textInput: {
-    height: hp(35),
+    height: hp(30),
     flex: 1,
     fontFamily: 'IBMPlexSans-Regular',
     //for overriding customTextInput values

@@ -11,6 +11,7 @@ import {
   DeletePostSvg,
   EditPostSvg,
   LeaveThisSpaceIcon,
+  MuteOffNotificationsIcon,
   MuteOnNotificationsIcon,
   ReportPostSvg,
   ViewMemberSvg,
@@ -35,7 +36,8 @@ const BottomSheet = ({
   setEditPostModal,
 }) => {
   const {user} = useUser();
-  const {removeSpace} = SpacesRelatedActivity();
+  const {removeSpace, handleEachSpaceNotifcationStatus} =
+    SpacesRelatedActivity();
 
   const navigation = useNavigation();
 
@@ -43,6 +45,15 @@ const BottomSheet = ({
     try {
       setSelected(user?.collegeName);
       let res = await removeSpace(selected);
+      RBSheetRef.current.close();
+    } catch (err) {
+      console.log({err});
+    }
+  };
+
+  const handleSpaceNotification = async () => {
+    try {
+      handleEachSpaceNotifcationStatus(selected);
       RBSheetRef.current.close();
     } catch (err) {
       console.log({err});
@@ -184,10 +195,16 @@ const BottomSheet = ({
         <View style={{paddingHorizontal: wp(7), marginTop: wp(3.5)}}>
           <TouchableOpacity
             style={styles.innerContainer}
-            onPress={() => ReportPost()}>
-            <MuteOnNotificationsIcon />
+            onPress={() => handleSpaceNotification()}>
+            {user?.notificationStatus[selected] ? (
+              <MuteOnNotificationsIcon />
+            ) : (
+              <MuteOffNotificationsIcon />
+            )}
             <TextNormal textStyle={styles.text} color={'#585858'}>
-              Unmute Notifications
+              {user?.notificationStatus[selected]
+                ? 'Mute Notifications'
+                : 'Unmute Notifications'}
             </TextNormal>
           </TouchableOpacity>
           <TouchableOpacity
@@ -240,10 +257,16 @@ const BottomSheet = ({
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.innerContainer}
-            onPress={() => ReportPost()}>
-            <MuteOnNotificationsIcon />
+            onPress={() => handleSpaceNotification()}>
+            {user?.notificationStatus[selected] ? (
+              <MuteOnNotificationsIcon />
+            ) : (
+              <MuteOffNotificationsIcon />
+            )}
             <TextNormal textStyle={styles.text} color={'#585858'}>
-              Unmute Notifications
+              {user?.notificationStatus[selected]
+                ? 'Mute Notifications'
+                : 'Unmute Notifications'}
             </TextNormal>
           </TouchableOpacity>
           <TouchableOpacity
@@ -300,10 +323,16 @@ const BottomSheet = ({
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.innerContainer}
-          onPress={() => ReportPost()}>
-          <MuteOnNotificationsIcon />
+          onPress={() => handleSpaceNotification()}>
+          {user?.notificationStatus[selected] ? (
+            <MuteOnNotificationsIcon />
+          ) : (
+            <MuteOffNotificationsIcon />
+          )}
           <TextNormal textStyle={styles.text} color={'#585858'}>
-            Unmute Notifications
+            {user?.notificationStatus[selected]
+              ? 'Mute Notifications'
+              : 'Unmute Notifications'}
           </TextNormal>
         </TouchableOpacity>
         <TouchableOpacity

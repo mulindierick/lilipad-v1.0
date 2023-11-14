@@ -102,7 +102,10 @@ const ViewMembers = ({route}) => {
               </View>
               <View style={{alignItems: 'flex-start', marginLeft: wp(4)}}>
                 <TextBig textStyle={styles.Text}>{item?.fullName}</TextBig>
-                <TextNormal color={'#595959'} textStyle={{fontSize: wp(3.6)}}>
+                <TextNormal
+                  color={'#595959'}
+                  textStyle={{fontSize: wp(3.6), paddingRight: wp(10)}}
+                  numberOfLines={1}>
                   {item?.classYear + ' | ' + item?.major}
                 </TextNormal>
               </View>
@@ -122,7 +125,9 @@ const styles = StyleSheet.create({
   searchContainer: {
     backgroundColor: '#E4E4E4',
     borderRadius: wp(4),
-    height: wp(14),
+    height: 0,
+    paddingVertical: wp(7),
+    // height: wp(14),
   },
   marginTop: {
     marginVertical: hp(3),
@@ -132,14 +137,23 @@ const styles = StyleSheet.create({
   //hERE
 
   spaceContainer: {
-    paddingHorizontal: wp(4),
-    paddingVertical: hp(1.5),
-    backgroundColor: COLORS.white,
+    borderRadius: 10,
+    paddingLeft: wp(6),
+    paddingRight: wp(9),
+    paddingVertical: hp(0.99),
+    backgroundColor: '#FFFFFF',
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: wp(2.5),
-    borderColor: '#cccccc',
-    borderWidth: 0.16,
+    borderWidth: 0.15,
+    borderColor: '#CCCCCC',
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 1,
+    elevation: 12,
   },
   spaceContainerHeader: {
     width: wp(70),
@@ -156,11 +170,11 @@ const styles = StyleSheet.create({
     borderRadius: hp(10),
   },
   imageContainer: {
-    height: wp(14.5),
+    height: wp(13.8),
     aspectRatio: 1,
     borderRadius: wp(7),
   },
   Text: {
-    fontSize: wp(7),
+    fontSize: wp(5.8),
   },
 });

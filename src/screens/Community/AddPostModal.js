@@ -128,7 +128,11 @@ const AddPostModal = ({
               onPressShare={loader ? null : () => addPostOnFirebase(spaceName)}
               disabled={!localImageUriArray.length > 0 && !text.trim()}
             />
-            <AddPostTextInput setText={setText} text={text} />
+            <AddPostTextInput
+              setText={setText}
+              text={text}
+              placeholderIncludes={spaceName}
+            />
             {videoLoader && (
               <View>
                 <TouchableOpacity

@@ -10,7 +10,11 @@ import CustomImage from './CustomImage';
 import {TextBig, TextBigger, TextNormal} from './CustomText';
 import {BackButton} from './CustomSvgItems';
 
-const CustomHeader = ({forInfoFurtherScreen = false, Activty = false}) => {
+const CustomHeader = ({
+  forInfoFurtherScreen = false,
+  Activty = false,
+  upperBorderFlag,
+}) => {
   const navigation = useNavigation();
 
   if (forInfoFurtherScreen) {
@@ -24,7 +28,13 @@ const CustomHeader = ({forInfoFurtherScreen = false, Activty = false}) => {
 
   if (Activty) {
     return (
-      <View style={styles.ActivityContainer}>
+      <View
+        style={[
+          styles.ActivityContainer,
+          upperBorderFlag
+            ? {borderBottomWidth: 1, borderBottomColor: '#DADADA'}
+            : {},
+        ]}>
         <View style={{flex: 1}}>
           <TouchableOpacity
             onPress={() => navigation.goBack()}
@@ -61,6 +71,8 @@ const styles = StyleSheet.create({
   ActivityContainer: {
     alignItems: 'center',
     flexDirection: 'row',
+    paddingHorizontal: wp(5),
+    paddingVertical: hp(1),
   },
   forInfoFurtherScreen: {
     alignItems: 'center',
@@ -73,7 +85,7 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     fontWeight: '600',
-    fontSize: wp(7),
+    fontSize: wp(9),
     flex: 5,
     textAlign: 'center',
   },

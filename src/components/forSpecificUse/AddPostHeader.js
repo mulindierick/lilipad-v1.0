@@ -1,5 +1,10 @@
 import React from 'react';
-import {ActivityIndicator, StyleSheet, View} from 'react-native';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -8,6 +13,7 @@ import {COLORS, images} from '../../utils/constants/theme';
 import CustomIcon from '../common/CustomIcon';
 import CustomImage from '../common/CustomImage';
 import {TextNormal} from '../common/CustomText';
+import {CloseAddPostModalSvg} from '../common/CustomSvgItems';
 
 const AddPostHeader = ({
   onIconPress,
@@ -18,43 +24,26 @@ const AddPostHeader = ({
 }) => {
   return (
     <View style={styles.container}>
-      <CustomIcon
-        type="ionicons"
-        icon="close"
-        size={wp(9)}
-        color={'rgba(140,140,140, 0.6)'}
-        onPress={onIconPress}
+      <TouchableOpacity onPress={onIconPress} activeOpacity={1}>
+        <CloseAddPostModalSvg />
+      </TouchableOpacity>
+
+      <TouchableOpacity
         style={{
-          flex: 1,
-          marginTop: wp(1.8),
-          marginLeft: wp(-2),
-        }}
-      />
-      <View
-        style={{
-          flex: 3,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
-        <CustomImage
-          source={images.headerIcon}
-          height={hp(11)}
-          width={wp(11)}
-        />
-      </View>
-      <View
-        style={{
-          flex: 1,
           alignItems: 'flex-end',
-        }}>
-        <TextNormal
-          textStyle={styles.textStyle}
-          onPress={onPressShare}
-          disabled={disabled}
-          color={disabled ? COLORS.grey : COLORS.blue}>
+          backgroundColor: disabled ? COLORS.grey : COLORS.blue,
+          alignSelf: 'center',
+          justifyContent: 'center',
+          paddingHorizontal: wp(2.5),
+          paddingVertical: wp(1),
+          borderRadius: wp(100),
+        }}
+        onPress={onPressShare}
+        disabled={disabled}>
+        <TextNormal textStyle={styles.textStyle} color={COLORS.white}>
           {title}
         </TextNormal>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -63,14 +52,14 @@ export default AddPostHeader;
 
 const styles = StyleSheet.create({
   container: {
-    // justifyContent: 'space-between',
+    justifyContent: 'space-between',
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: wp(2),
+    marginVertical: hp(3),
+    paddingHorizontal: wp(1),
   },
   textStyle: {
     fontWeight: '700',
-    fontSize: wp(6.5),
-    marginTop: wp(2),
+    fontSize: wp(5),
   },
 });

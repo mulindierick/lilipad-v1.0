@@ -41,7 +41,7 @@ const Setting = () => {
   };
   const navigation = useNavigation();
   return (
-    <CustomWrapper>
+    <CustomWrapper containerStyle={{paddingHorizontal: 0}}>
       <View style={styles.container}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
@@ -60,7 +60,7 @@ const Setting = () => {
           marginTop: hp(4),
         }}
       />
-      <CustomSettingsButton text={'Privacy & Security'} onPress={() => {}} />
+      <CustomSettingsButton text={'Community Guidelines'} onPress={() => {}} />
       <CustomSettingsButton text={'About LiliPad'} onPress={() => {}} />
       <CustomSettingsButton
         text={'Delete Account'}
@@ -80,9 +80,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginTop: wp(2),
+    paddingHorizontal: wp(5),
   },
   textStyle: {
     fontWeight: '600',
-    fontSize: wp(8),
+    fontSize: wp(9),
   },
 });

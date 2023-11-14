@@ -44,7 +44,10 @@ const StudentsItem = ({item}) => {
       </View>
       <View style={{alignItems: 'flex-start', marginLeft: wp(4)}}>
         <TextBig textStyle={styles.Text}>{item?.fullName}</TextBig>
-        <TextNormal color={'#595959'} textStyle={{fontSize: wp(3.6)}}>
+        <TextNormal
+          color={'#595959'}
+          textStyle={{fontSize: wp(3.6), paddingRight: wp(10)}}
+          numberOfLines={1}>
           {item?.classYear + ' | ' + item?.major}
         </TextNormal>
       </View>

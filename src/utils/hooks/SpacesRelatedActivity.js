@@ -13,9 +13,15 @@ const SpacesRelatedActivity = () => {
     let spaceIds = user?.spaceId;
     const array = [spaceIds[spaceName], user?.firebaseUserId];
     let {[spaceName]: removedSpace, ...removeAndUpdatedSpaceIds} = spaceIds;
+    let {[spaceName]: removedSpace1, ...removeAndUpdatedNotificationStaus} =
+      user?.notificationStatus;
     const filterData = user?.spaces.filter(item => item != spaceName);
     dispatch(
-      setSpaces({spaces: filterData, spaceId: removeAndUpdatedSpaceIds}),
+      setSpaces({
+        spaces: filterData,
+        spaceId: removeAndUpdatedSpaceIds,
+        notificationStatus: removeAndUpdatedNotificationStaus,
+      }),
     );
     try {
       array.map(async item => {
@@ -40,6 +46,9 @@ const SpacesRelatedActivity = () => {
                   [spaceName]: firestore.FieldValue.delete(),
                 },
                 spacesId: {
+                  [spaceName]: firestore.FieldValue.delete(),
+                },
+                notificationStatus: {
                   [spaceName]: firestore.FieldValue.delete(),
                 },
               },
@@ -90,10 +99,43 @@ const SpacesRelatedActivity = () => {
     }
   };
 
+  const handleEachSpaceNotifcationStatus = async spaceName => {
+    try {
+      console.log({spaceName});
+      console.log({user});
+      const newData = {
+        ...user?.notificationStatus,
+        [spaceName]: !user?.notificationStatus[spaceName],
+      };
+
+      let res = await firestore()
+        .collection('accounts')
+        .doc(user?.firebaseUserId)
+        .set(
+          {
+            notificationStatus: newData,
+          },
+          {merge: true},
+        );
+      dispatch(
+        setSpaces({
+          spaces: [...user?.spaces],
+          spaceId: {...user?.spaceId},
+          notificationStatus: {
+            ...newData,
+          },
+        }),
+      );
+    } catch (e) {
+      console.log({e});
+    }
+  };
+
   return {
     removeSpace,
     updateLastSpaceVisitTime,
     fetchMembers,
+    handleEachSpaceNotifcationStatus,
   };
 };
 

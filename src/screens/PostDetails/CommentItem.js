@@ -31,8 +31,6 @@ const CommentItem = ({
     data?.likesCount || 0,
   );
 
-  console.log({data});
-
   const handleNavigation = () => {
     if (user?.firebaseUserId == uid) {
       navigation.navigate('Profile');
@@ -57,7 +55,6 @@ const CommentItem = ({
         setLike(!like);
 
         commentLikes(data, tempUserLike);
-        console.log('Double press detected!');
       }
 
       lastPress = currentTime;
@@ -128,7 +125,7 @@ const CommentItem = ({
       </TouchableOpacity>
       {commentLikesCount > 0 ? (
         <TouchableOpacity
-          activeOpacity={0}
+          activeOpacity={1}
           style={[
             userOwnComment ? styles.userOwnCommentLikes : styles.commentLikes,
           ]}

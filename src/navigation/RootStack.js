@@ -32,8 +32,8 @@ const RootStack = () => {
       SplashScreen.hide();
     }, 1500);
   }, []);
-
   const [isLogin, setIslogin] = useState(null);
+
   useEffect(() => {
     setLoading(true);
     const subscriber = auth().onAuthStateChanged(async user => {
@@ -63,6 +63,7 @@ const RootStack = () => {
                   college: userData?.college,
                   spaceId: userData?.spacesId,
                   collegeName: userData?.collegeName,
+                  notificationStatus: userData?.notificationStatus,
                 }),
               );
               setIslogin(true);

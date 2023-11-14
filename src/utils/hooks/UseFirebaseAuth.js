@@ -108,12 +108,18 @@ const UseFirebaseAuth = () => {
               .set({
                 spaceName: item,
                 members: [user?.firebaseUserId],
-                isActive: true,
+                isActive: 'active',
                 admins: [],
                 isPrivate: false,
                 joinRequests: [],
-                category: null,
+                category:
+                  collegeDataItems.collegeName == item
+                    ? 'college'
+                    : classYear == item
+                    ? 'classYear'
+                    : 'academic',
                 spaceId: uid.id,
+                collegeId: user?.college,
               });
             spacesId = {
               ...spacesId,
@@ -145,6 +151,11 @@ const UseFirebaseAuth = () => {
           },
           fcmToken: fcmToken,
           lastActivitiesChecked: firestore.FieldValue.serverTimestamp(),
+          notificationStatus: {
+            [collegeDataItems.collegeName]: false,
+            [classYear]: false,
+            [major]: false,
+          },
         });
       dispatch(
         setUser({
@@ -161,6 +172,11 @@ const UseFirebaseAuth = () => {
           college: user?.college,
           spaceId: spacesId,
           collegeName: collegeDataItems.collegeName,
+          notificationStatus: {
+            [collegeDataItems.collegeName]: false,
+            [classYear]: false,
+            [major]: false,
+          },
         }),
       );
       dispatch(setFirstTimeLogin({firstTimeLogin: true}));
@@ -177,6 +193,10 @@ const UseFirebaseAuth = () => {
         setSpaces({
           spaces: [...user?.spaces, spaceName],
           spaceId: {...user?.spaceId, [spaceName]: spaceId},
+          notificationStatus: {
+            ...user?.notificationStatus,
+            [spaceName]: false,
+          },
         }),
       );
       await firestore()
@@ -191,6 +211,10 @@ const UseFirebaseAuth = () => {
             },
             groupLastVisit: {
               [spaceName]: firestore.FieldValue.serverTimestamp(),
+            },
+            notificationStatus: {
+              ...user?.notificationStatus,
+              [spaceName]: false,
             },
           },
           {merge: true},
@@ -211,6 +235,9 @@ const UseFirebaseAuth = () => {
         setSpaces({
           spaces: [...user?.spaces],
           spaceId: {...user?.spacesId},
+          notificationStatus: {
+            ...user?.notificationStatus,
+          },
         }),
       );
     }

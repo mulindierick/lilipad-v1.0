@@ -91,19 +91,20 @@ const PostDetails = ({route}) => {
     fetchPost();
   }, [postId]);
 
-  const onCommentDocumentUpdate = async () => {
+  const onCommentDocumentUpdate = async commentCount => {
     try {
-      const res = await fetchUpdatedComments(spaceId, postId);
-      if (res.length > 0) {
-        setCommentCount(res.length);
-        setPostComments(res);
+      const res = await fetchUpdatedComments(spaceId, postId, commentCount);
+      if (res.data.length > 0) {
+        setCommentCount(res.data.length);
+        setPostComments(res.data);
         if (
-          res[res.length - 1]?.user?._data?.firebaseUserId ===
-          user?.firebaseUserId
+          res.data[res.data.length - 1]?.user?._data?.firebaseUserId ===
+            user?.firebaseUserId &&
+          res.refreshValue
         ) {
           flatListRef.current.scrollToIndex({
             animated: true,
-            index: res.length - 1,
+            index: res.data.length - 1,
           });
         }
       }
@@ -118,9 +119,11 @@ const PostDetails = ({route}) => {
         `Colleges/${user.college}/spaces/${spaceId}/posts/${postId}/comments`,
       )
       .onSnapshot(querySnapshot => {
-        onCommentDocumentUpdate();
+        onCommentDocumentUpdate(commentCount);
       });
-  }, []);
+
+    return () => liveUpdates();
+  }, [commentCount]);
 
   const [likeLoader, setLikeLoader] = useState(false);
   const handleLike = async () => {
@@ -151,7 +154,7 @@ const PostDetails = ({route}) => {
   };
 
   const [commentLoader, setCommentLoader] = useState(false);
-  console.log({commentLoader});
+
   const OnSendComment = async () => {
     try {
       if (text === '') return;
@@ -321,10 +324,10 @@ const PostDetails = ({route}) => {
         <View style={styles.footerTextInputContainer}>
           <CustomTextInput
             containerStyle={styles.textInput}
+            textInputStyle={{paddingHorizontal: wp(2)}}
             onChange={txt => setText(txt)}
             value={text}
             autoCapitalize="sentences"
-            textInputStyle={{paddingHorizontal: wp(2)}}
             autoCorrect={true}
             spellCheck={true}
           />
@@ -362,7 +365,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: wp(4),
   },
-  textInput: {width: wp(60), backgroundColor: 'transparent'},
+  textInput: {width: wp(74), backgroundColor: 'transparent'},
   footer: {
     borderTopWidth: 1,
     borderColor: COLORS.grey,

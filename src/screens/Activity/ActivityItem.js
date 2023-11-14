@@ -12,7 +12,6 @@ import {useNavigation} from '@react-navigation/native';
 
 const ActivityItem = ({item}) => {
   const navigation = useNavigation();
-  console.log({item});
   return (
     <TouchableOpacity
       style={styles.container}
@@ -67,7 +66,7 @@ const ActivityItem = ({item}) => {
                 ' ' +
                 item?.lastUserDetail?._data?.lastName}
             </TextNormal>{' '}
-            and {item?.users?.length - 1} other liked your comment:{' '}
+            and {item?.users?.length - 1} other liked your reply:{' '}
             {`"${item.commentText}"`}.
           </TextNormal>
         ) : item?.users?.length > 2 ? (
@@ -77,7 +76,7 @@ const ActivityItem = ({item}) => {
                 ' ' +
                 item?.lastUserDetail?._data?.lastName}
             </TextNormal>{' '}
-            and {item.users.length - 1} others liked your comment:{' '}
+            and {item.users.length - 1} others liked your reply:{' '}
             {`"${item.commentText}"`}.
           </TextNormal>
         ) : (
@@ -87,7 +86,7 @@ const ActivityItem = ({item}) => {
                 ' ' +
                 item?.lastUserDetail?._data?.lastName}
             </TextNormal>{' '}
-            liked your comment: {`"${item.commentText}"`}.
+            liked your reply: {`"${item.commentText}"`}.
           </TextNormal>
         )
       ) : item?.users?.length == 2 ? (
@@ -134,20 +133,19 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: 'flex-start',
     flexDirection: 'row',
     backgroundColor: 'white',
     paddingHorizontal: wp(3),
     paddingVertical: hp(1.5),
-    borderRadius: 15,
+    borderRadius: 7,
+    borderColor: '#CACACA',
     shadowColor: '#000000',
-    shadowOffset: {width: 0, height: 1},
-    shadowOpacity: 0.1,
-    shadowRadius: 1,
+    shadowOffset: {width: 0, height: 0.5},
+    shadowOpacity: 0.05,
+    shadowRadius: 0.05,
     backgroundColor: COLORS.white,
-    borderWidth: 0,
-    marginHorizontal: wp(0.5),
-    marginVertical: hp(0.5),
+    borderWidth: 0.15,
   },
   image: {
     height: wp(5),
@@ -168,6 +166,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.blue,
     borderRadius: wp(100),
     right: wp(2.5),
+    alignSelf: 'center',
   },
   time: {
     position: 'absolute',

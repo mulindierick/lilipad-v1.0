@@ -6,7 +6,7 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import CustomImage from '../../components/common/CustomImage';
-import {images} from '../../utils/constants/theme';
+import {FONTS, images} from '../../utils/constants/theme';
 import CustomImagePickerModal from '../../components/common/CustomImagePickerModal';
 import {
   TextBig,
@@ -43,7 +43,7 @@ const ListHeaderItem = ({user, differentUserProfile}) => {
   const dispatch = useDispatch();
   const {updateProfilePhoto} = useUser();
   const updatePhoto = async () => {
-    const res = await updateProfilePhoto(localImageUriArray[0]?.image);
+    const res = await updateProfilePhoto(localImageUriArray[0]?.path);
     setLocalImageUriArray([]);
   };
 
@@ -69,16 +69,10 @@ const ListHeaderItem = ({user, differentUserProfile}) => {
           <TextBigger textStyle={{fontSize: wp(7)}}>
             {user?.firstName + ' ' + user?.lastName}
           </TextBigger>
-          <TextBig
-            textStyle={[styles.classInformation, {marginTop: hp(1.3)}]}
-            color={'rgba(21, 19, 19, 0.69)'}>
+          <TextBig textStyle={[styles.classInformation, {marginTop: hp(1.3)}]}>
             {user?.classYear}
           </TextBig>
-          <TextBig
-            textStyle={styles.classInformation}
-            color={'rgba(21, 19, 19, 0.69)'}>
-            {user?.major}
-          </TextBig>
+          <TextBig textStyle={styles.classInformation}>{user?.major}</TextBig>
         </View>
         <TextNormal textStyle={styles.postsTitle}>
           {user?.firstName + `'s` + ' Posts'}
@@ -96,12 +90,8 @@ const ListHeaderItem = ({user, differentUserProfile}) => {
           }}
           containerStyle={styles.innerImageContainer}
           resizeMode="cover"
+          onPressImage={() => setImageModal(true)}
         />
-        <TouchableOpacity
-          style={styles.iconContainer}
-          onPress={() => setImageModal(true)}>
-          <ProfileCamera />
-        </TouchableOpacity>
       </View>
       <CustomImagePickerModal
         showModal={imageModal}
@@ -114,16 +104,10 @@ const ListHeaderItem = ({user, differentUserProfile}) => {
         <TextBigger textStyle={{fontSize: wp(7)}}>
           {user?.firstName + ' ' + user?.lastName}
         </TextBigger>
-        <TextBig
-          textStyle={[styles.classInformation, {marginTop: hp(1.3)}]}
-          color={'rgba(21, 19, 19, 0.69)'}>
+        <TextBig textStyle={[styles.classInformation, {marginTop: hp(1.3)}]}>
           {user?.classYear}
         </TextBig>
-        <TextBig
-          textStyle={styles.classInformation}
-          color={'rgba(21, 19, 19, 0.69)'}>
-          {user?.major}
-        </TextBig>
+        <TextBig textStyle={styles.classInformation}>{user?.major}</TextBig>
       </View>
       <TextNormal textStyle={styles.postsTitle}>My Posts</TextNormal>
     </View>
@@ -135,9 +119,9 @@ export default ListHeaderItem;
 const styles = StyleSheet.create({
   imageContainer: {
     marginTop: hp(2),
-    height: hp(20),
+    height: hp(22),
     aspectRatio: 1,
-    borderRadius: hp(20),
+    borderRadius: hp(100),
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#000000',
@@ -165,15 +149,17 @@ const styles = StyleSheet.create({
   innerImageContainer: {
     height: hp(13),
     aspectRatio: 1,
-    borderRadius: hp(10),
+    borderRadius: hp(100),
   },
   userDetail: {
     alignItems: 'center',
     marginTop: hp(2),
   },
   classInformation: {
-    fontSize: wp(4.5),
+    fontSize: wp(4.8),
     fontWeight: '500',
+    fontFamily: FONTS.MediumItalic,
+    color: 'rgba(108,108,108, 0.63)',
   },
   postsTitle: {
     fontSize: wp(4.5),
