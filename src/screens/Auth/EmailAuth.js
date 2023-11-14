@@ -36,14 +36,23 @@ const EmailAuth = () => {
   } = useForm();
 
   const regexSetup = async () => {
-    const res = await getCollegeDomains();
-    console.log({res});
-    setCollegeName(res);
-    const domainPattern = res
-      .map(domain => domain.domain.replace(/\./g, '\\.'))
-      .join('|');
-    const regex = new RegExp(`^[^\\d]+(${domainPattern})$`);
-    setRegex(regex);
+    try {
+      const domains = await getCollegeDomains();
+      console.log({domains});
+      setCollegeName(domains);
+      // Escape dots in domain names and join them with |
+      const domainPattern = domains
+        .map(domain => domain.domain.replace(/\./g, '\\.'))
+        .join('|');
+
+      // Construct the regular expression
+      const regex = new RegExp(`^[^\\d]+(?:\\d+)?(?:${domainPattern})$`);
+
+      // Set the regular expression state or use it as needed
+      setRegex(regex);
+    } catch (error) {
+      console.error('Error fetching college domains:', error);
+    }
   };
 
   // Effect to set keyboard visibility
