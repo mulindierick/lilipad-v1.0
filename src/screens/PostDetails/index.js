@@ -158,7 +158,6 @@ const PostDetails = ({route}) => {
   const OnSendComment = async () => {
     try {
       if (text === '') return;
-      Keyboard.dismiss();
       const comment = text;
       setText('');
       setCommentLoader(true);

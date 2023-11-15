@@ -72,7 +72,7 @@ const Search = () => {
         </TouchableOpacity>
         <View style={styles.searchContainer}>
           <CustomTextInput
-            placeholder="Search"
+            placeholder="search"
             onChange={txt => setSearchText(txt)}
             containerStyle={styles.customTextInput}
             placeholderTextColor="#B0B0B0"

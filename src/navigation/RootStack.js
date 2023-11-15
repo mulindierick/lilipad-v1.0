@@ -48,25 +48,31 @@ const RootStack = () => {
             .then(userDetailData => {
               const userData = userDetailData?.data();
               console.log({userData});
-              dispatch(
-                setUser({
-                  email: userData?.email,
-                  photo: userData?.photo,
-                  firstName: userData?.firstName,
-                  lastName: userData?.lastName,
-                  isVerified: userData?.isVerified,
-                  firebaseUserId: userData?.firebaseUserId,
-                  major: userData?.major,
-                  spaces: userData?.spaces,
-                  classYear: userData?.classYear,
-                  PushNotificationToken: userData?.fcmToken,
-                  college: userData?.college,
-                  spaceId: userData?.spacesId,
-                  collegeName: userData?.collegeName,
-                  notificationStatus: userData?.notificationStatus,
-                }),
-              );
-              setIslogin(true);
+              if (!userData?.email) {
+                auth().signOut();
+                dispatch(setUser({}));
+                setIslogin(false);
+              } else {
+                dispatch(
+                  setUser({
+                    email: userData?.email,
+                    photo: userData?.photo,
+                    firstName: userData?.firstName,
+                    lastName: userData?.lastName,
+                    isVerified: userData?.isVerified,
+                    firebaseUserId: userData?.firebaseUserId,
+                    major: userData?.major,
+                    spaces: userData?.spaces,
+                    classYear: userData?.classYear,
+                    PushNotificationToken: userData?.fcmToken,
+                    college: userData?.college,
+                    spaceId: userData?.spacesId,
+                    collegeName: userData?.collegeName,
+                    notificationStatus: userData?.notificationStatus,
+                  }),
+                );
+                setIslogin(true);
+              }
             });
         } else {
           setIslogin(false);
