@@ -218,7 +218,11 @@ const PostDetails = ({route}) => {
   useEffect(() => {
     if (isKeyboardVisible) {
       setTimeout(() => {
-        flatListRef.current.scrollToEnd({animated: true});
+        try {
+          flatListRef.current.scrollToEnd({animated: true});
+        } catch (err) {
+          console.log({err});
+        }
       }, 100);
     }
   }, [isKeyboardVisible]);

@@ -820,6 +820,9 @@ const usePost = () => {
           )
           .doc(user?.firebaseUserId)
           .delete();
+
+        console.log({user});
+
         sendNotificationAndRecordActivityForCommentLike({
           postId: data?.postId,
           spaceId: data?.spaceId,

@@ -1,5 +1,5 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import CustomImage from '../../components/common/CustomImage';
 import {TextNormal} from '../../components/common/CustomText';
 import {
@@ -12,9 +12,15 @@ import {useNavigation} from '@react-navigation/native';
 
 const ActivityItem = ({item}) => {
   const navigation = useNavigation();
+  const [height, setHeight] = useState(0);
+
   return (
     <TouchableOpacity
-      style={styles.container}
+      onLayout={event => {
+        var {x, y, width, height} = event.nativeEvent.layout;
+        setHeight(height);
+      }}
+      style={[styles.container, height > 80 && {alignItems: 'flex-start'}]}
       onPress={() =>
         navigation.navigate('PostDetails', {
           postId: item?.postId,
@@ -133,7 +139,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    alignItems: 'flex-start',
+    alignItems: 'center',
     flexDirection: 'row',
     backgroundColor: 'white',
     paddingHorizontal: wp(3),
