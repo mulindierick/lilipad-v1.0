@@ -12,6 +12,7 @@ import Profile from '../screens/Profile';
 import {COLORS, images} from '../utils/constants/theme';
 import CustomImage from '../components/common/CustomImage';
 import DeviceInfo from 'react-native-device-info';
+import ExploreSpaces from '../screens/ExploreSpaces';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -23,6 +24,13 @@ const TABS = [
     imageFocused: images.communitySelected,
     image: images.communityUnselected,
     component: Community,
+  },
+  {
+    id: 3,
+    name: 'ExploreSpaces',
+    image: images.profileUnselected,
+    imageFocused: images.profileSelected,
+    component: ExploreSpaces,
   },
   {
     id: 2,
@@ -57,8 +65,8 @@ const BottomTabNavigator = () => {
               right: 0,
               height: hp(13),
               backgroundColor: COLORS.white,
-              borderTopRightRadius: hp(10),
-              borderTopLeftRadius: hp(10),
+              borderTopRightRadius: wp(7),
+              borderTopLeftRadius: wp(7),
               borderWidth: 0.6,
               borderBottomWidth: 0,
               borderColor: '#DADADA',

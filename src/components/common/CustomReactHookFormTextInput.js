@@ -19,6 +19,7 @@ const CustomRHFTextInput = ({
   spellCheck = false,
   autoCorrect = false,
   textInputStyle,
+  forMultiLineContainerStyle,
 }) => {
   return (
     <Controller
@@ -46,6 +47,7 @@ const CustomRHFTextInput = ({
           spellCheck={spellCheck}
           autoCorrect={autoCorrect}
           textInputStyle={textInputStyle}
+          forMultiLineContainerStyle={forMultiLineContainerStyle}
         />
       )}
     />

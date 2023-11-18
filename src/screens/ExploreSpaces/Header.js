@@ -9,22 +9,28 @@ import CustomImage from '../../components/common/CustomImage';
 import {TextBigger} from '../../components/common/CustomText';
 import {images} from '../../utils/constants/theme';
 import {TouchableOpacity} from 'react-native';
-import {BackButton} from '../../components/common/CustomSvgItems';
+import {
+  BackButton,
+  ExploreMainSvg,
+  ExplorePlusButton,
+} from '../../components/common/CustomSvgItems';
 
 const Header = () => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.goBack()} activeOpacity={1}>
-        <BackButton />
-      </TouchableOpacity>
-      <TextBigger textStyle={styles.text}>Explore Spaces</TextBigger>
-      <CustomImage
-        source={images.exploreSpaceIcon}
-        height={hp(5.5)}
-        width={wp(8)}
-        onPressImage={() => console.log('HELLO')}
-      />
+      <TextBigger textStyle={styles.text}>Explore</TextBigger>
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={() => navigation.navigate('CreateSpace')}>
+          <ExplorePlusButton />
+        </TouchableOpacity>
+
+        <TouchableOpacity activeOpacity={1}>
+          <ExploreMainSvg />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -39,6 +45,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp(4),
   },
   text: {
-    fontSize: wp(7),
+    fontSize: wp(9),
+    fontWeight: 'bold',
   },
 });

@@ -35,6 +35,7 @@ const CustomTextInput = ({
   ref = null,
   keyboardType = 'default',
   defaultValue = '',
+  forMultiLineContainerStyle,
 }) => {
   const [visible, setVisible] = useState(secureTextEntry ? true : false);
 
@@ -42,12 +43,15 @@ const CustomTextInput = ({
     <>
       <View style={[styles.container, containerStyle, shadow && styles.shadow]}>
         <View
-          style={{
-            flexDirection: 'row',
-            flex: 1,
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}>
+          style={[
+            {
+              flexDirection: 'row',
+              flex: 1,
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            },
+            forMultiLineContainerStyle,
+          ]}>
           {withIcon ? (
             <CustomIcon
               type={iconType}

@@ -131,11 +131,40 @@ const SpacesRelatedActivity = () => {
     }
   };
 
+  const addRequestToCreateSpace = async data => {
+    try {
+      let firebaseId = firestore()
+        .collection(`Collges/${user?.college}/spaceRequests`)
+        .doc();
+      let res = await firestore()
+        .collection('Colleges')
+        .doc(user?.college)
+        .collection('spaces')
+        .doc(firebaseId?.id)
+        .set({
+          ...data,
+          createdAt: firestore.FieldValue.serverTimestamp(),
+          userCreatedSpaceId: user?.firebaseUserId,
+          isActive: 'pending',
+          category: 'userCreated',
+          members: [user?.firebaseUserId],
+          spaceId: firebaseId?.id,
+          admins: [user?.firebaseUserId],
+          isPrivate: false,
+          collegeId: user?.college,
+          joinRequests: [],
+        });
+    } catch (err) {
+      console.log({err});
+    }
+  };
+
   return {
     removeSpace,
     updateLastSpaceVisitTime,
     fetchMembers,
     handleEachSpaceNotifcationStatus,
+    addRequestToCreateSpace,
   };
 };
 

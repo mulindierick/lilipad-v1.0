@@ -107,6 +107,8 @@ const UseFirebaseAuth = () => {
               .doc(uid.id)
               .set({
                 spaceName: item,
+                description: 'Auto Generated Space',
+                userCreatedSpaceId: null,
                 members: [user?.firebaseUserId],
                 isActive: 'active',
                 admins: [],

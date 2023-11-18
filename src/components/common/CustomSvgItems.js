@@ -668,4 +668,45 @@ export const CloseAddPostModalSvg = () => {
   );
 };
 
+export const ExplorePlusButton = () => {
+  return (
+    <View style={{width: wp(9), height: wp(9), marginRight: wp(8)}}>
+      <Svg
+        width="100%"
+        height="100%"
+        viewBox="0 0 35 35"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg">
+        <Path
+          d="M17.5 3V32M3 17.5H32"
+          stroke="#42ACF9"
+          strokeWidth="4.469"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </Svg>
+    </View>
+  );
+};
+
+export const ExploreMainSvg = () => {
+  return (
+    <View style={{width: wp(9), height: wp(9)}}>
+      <Svg
+        width="100%"
+        height="100%"
+        viewBox="0 0 30 30"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg">
+        <Path
+          fillRule="evenodd"
+          clipRule="evenodd"
+          d="M3.80985 0H8.87985C10.9948 0 12.6898 1.725 12.6898 3.8415V8.955C12.6898 11.085 10.9948 12.795 8.87985 12.795H3.80985C1.70985 12.795 -0.000152588 11.085 -0.000152588 8.955V3.8415C-0.000152588 1.725 1.70985 0 3.80985 0ZM3.80985 17.2045H8.87985C10.9948 17.2045 12.6898 18.916 12.6898 21.046V26.1595C12.6898 28.2745 10.9948 29.9995 8.87985 29.9995H3.80985C1.70985 29.9995 -0.000152588 28.2745 -0.000152588 26.1595V21.046C-0.000152588 18.916 1.70985 17.2045 3.80985 17.2045ZM26.19 0H21.12C19.005 0 17.31 1.725 17.31 3.8415V8.955C17.31 11.085 19.005 12.795 21.12 12.795H26.19C28.29 12.795 30 11.085 30 8.955V3.8415C30 1.725 28.29 0 26.19 0ZM21.12 17.2045H26.19C28.29 17.2045 30 18.916 30 21.046V26.1595C30 28.2745 28.29 29.9995 26.19 29.9995H21.12C19.005 29.9995 17.31 28.2745 17.31 26.1595V21.046C17.31 18.916 19.005 17.2045 21.12 17.2045Z"
+          fill="#42ACF9"
+        />
+      </Svg>
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({});

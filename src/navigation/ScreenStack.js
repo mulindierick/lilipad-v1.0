@@ -8,6 +8,7 @@ import Setting from '../screens/Settings';
 import DifferentUserProfile from '../screens/Profile/DifferentUserProfile';
 import Activity from '../screens/Activity';
 import ViewMembers from '../screens/ViewMembers';
+import CreateSpace from '../screens/CreateSpaces';
 
 const Stack = createNativeStackNavigator();
 
@@ -15,7 +16,6 @@ const ScreenStack = () => {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="BottomTabNavigator" component={BottomTabNavigator} />
-      <Stack.Screen name="ExploreSpaces" component={ExploreSpaces} />
       <Stack.Screen name="PostDetails" component={PostDetails} />
       <Stack.Screen name="Search" component={Search} />
       <Stack.Screen name="Settings" component={Setting} />
@@ -25,6 +25,7 @@ const ScreenStack = () => {
       />
       <Stack.Screen name="Activity" component={Activity} />
       <Stack.Screen name="ViewMembers" component={ViewMembers} />
+      <Stack.Screen name="CreateSpace" component={CreateSpace} />
     </Stack.Navigator>
   );
 };
