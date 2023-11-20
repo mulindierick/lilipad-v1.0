@@ -33,6 +33,7 @@ const usePost = () => {
             `Colleges/${user?.college}/spaces/${spacesKeys[space]}/posts`,
           )
           .orderBy('createdAt', 'desc')
+          .limit(10)
           .get()
           .then(data => {
             res(data);
@@ -63,8 +64,24 @@ const usePost = () => {
       }),
     );
 
+    let lastFetchedPostOfEachSpace = [];
+
     const data = await Promise.allSettled(promiseToGetPostOfAllSpaces).then(
       async data => {
+        // for last fetched post of each space
+        data.forEach(item => {
+          if (item.status === 'fulfilled' && item.value.docs.length > 0) {
+            lastFetchedPostOfEachSpace = [
+              ...lastFetchedPostOfEachSpace,
+              item.value.docs[item.value.docs.length - 1],
+            ];
+          } else {
+            lastFetchedPostOfEachSpace = [...lastFetchedPostOfEachSpace, null];
+          }
+        });
+
+        //Modifiying the Posts Data
+
         return await Promise.all(
           data.map(async item => {
             if (item.status === 'fulfilled') {
@@ -95,6 +112,7 @@ const usePost = () => {
         );
       },
     );
+    console.log({lastFetchedPostOfEachSpace});
 
     let SpaceDataObject = {};
     let newPostsCountData = {};
@@ -102,6 +120,7 @@ const usePost = () => {
       SpaceDataObject[space] = {
         data: data[index],
         filter: 'Recent',
+        lastVisible: lastFetchedPostOfEachSpace[index],
       };
       newPostsCountData[space] = newPostsCount[index];
     });
@@ -152,6 +171,7 @@ const usePost = () => {
           `Colleges/${user?.college}/spaces/${user?.spaceId[spaceName]}/posts`,
         )
         .orderBy('createdAt', 'desc')
+        .limit(10)
         .get();
     } else if (filter == 'Popular') {
       spaceData = await firestore()
@@ -159,6 +179,7 @@ const usePost = () => {
           `Colleges/${user?.college}/spaces/${user?.spaceId[spaceName]}/posts`,
         )
         .orderBy('likesCount', 'desc')
+        .limit(10)
         .get();
     } else if (filter == 'My Posts') {
       spaceData = await firestore()
@@ -166,6 +187,8 @@ const usePost = () => {
           `Colleges/${user?.college}/spaces/${user?.spaceId[spaceName]}/posts`,
         )
         .where('createdBy', '==', user?.firebaseUserId)
+        .orderBy('createdAt', 'desc')
+        .limit(10)
         .get();
     }
     await firestore()
@@ -202,7 +225,7 @@ const usePost = () => {
         };
       }),
     );
-    return post;
+    return {data: post, lastVisible: spaceData.docs[spaceData.docs.length - 1]};
   };
 
   const sharePost = async (spaceName, object, spaceId) => {
@@ -888,6 +911,94 @@ const usePost = () => {
     }
   };
 
+  const fetchMorePostsOfSpecificSpace = async (
+    spaceId,
+    lastVisible,
+    filter,
+  ) => {
+    try {
+      let posts = null;
+      console.log({filter, spaceId, lastVisible});
+
+      if (filter == 'Recent') {
+        if (!lastVisible) {
+          posts = await firestore()
+            .collection(`Colleges/${user?.college}/spaces/${spaceId}/posts`)
+            .orderBy('createdAt', 'desc')
+            .limit(10)
+            .get();
+        } else {
+          posts = await firestore()
+            .collection(`Colleges/${user?.college}/spaces/${spaceId}/posts`)
+            .orderBy('createdAt', 'desc')
+            .startAfter(lastVisible)
+            .limit(10)
+            .get();
+        }
+      } else if (filter == 'Popular') {
+        if (!lastVisible) {
+          posts = await firestore()
+            .collection(`Colleges/${user?.college}/spaces/${spaceId}/posts`)
+            .orderBy('likesCount', 'desc')
+            .limit(10)
+            .get();
+        } else {
+          posts = await firestore()
+            .collection(`Colleges/${user?.college}/spaces/${spaceId}/posts`)
+            .orderBy('likesCount', 'desc')
+            .startAfter(lastVisible)
+            .limit(10)
+            .get();
+        }
+      } else if (filter == 'My Posts') {
+        if (!lastVisible) {
+          posts = await firestore()
+            .collection(`Colleges/${user?.college}/spaces/${spaceId}/posts`)
+            .where('createdBy', '==', user?.firebaseUserId)
+            .orderBy('createdAt', 'desc')
+            .limit(10)
+            .get();
+        } else {
+          posts = await firestore()
+            .collection(`Colleges/${user?.college}/spaces/${spaceId}/posts`)
+            .where('createdBy', '==', user?.firebaseUserId)
+            .orderBy('createdAt', 'desc')
+            .startAfter(lastVisible)
+            .limit(10)
+            .get();
+        }
+      }
+
+      const post = await Promise.all(
+        posts.docs.map(async item => {
+          let userLiked = false;
+          if (item.data().likesCount > 0) {
+            const likes = await firestore()
+              .collection(
+                `Colleges/${user?.college}/spaces/${
+                  item.data().spaceId
+                }/posts/${item.data().postId}/likes`,
+              )
+              .doc(user?.firebaseUserId)
+              .get();
+            if (likes?._data?.userId === user?.firebaseUserId) {
+              userLiked = true;
+            }
+          }
+          return {
+            ...item.data(),
+            user: await item.data().createdByReference.get(),
+            userLiked: userLiked,
+          };
+        }),
+      );
+      console.log({data: post, lastVisible: posts.docs[posts.docs.length - 1]});
+      return {data: post, lastVisible: posts.docs[posts.docs.length - 1]};
+    } catch (err) {
+      console.log({err});
+    }
+  };
+
   return {
     fetchPostsOfAllSpaces,
     sharePost,
@@ -905,6 +1016,7 @@ const usePost = () => {
     deleteUserPost,
     fetchAllStudents,
     commentLikes,
+    fetchMorePostsOfSpecificSpace,
   };
 };
 

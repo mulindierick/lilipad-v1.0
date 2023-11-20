@@ -15,6 +15,12 @@ import {set} from 'react-hook-form';
 import {debounce} from 'lodash';
 import {BackButton} from '../../components/common/CustomSvgItems';
 import {useNavigation} from '@react-navigation/native';
+import {Animated} from 'react-native';
+
+const headerHeight = hp(20);
+let scrollValue = 0;
+let headerVisible = true;
+let focused = false;
 
 const Search = () => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -54,16 +60,30 @@ const Search = () => {
     [activeIndex],
   );
 
+  // For Animation
+  const [upperBorderFlag, setUpperBorderFlag] = useState(false);
+  const [y, setY] = useState(0);
+
   return (
     <CustomWrapper containerStyle={{paddingHorizontal: 0}}>
       <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingLeft: wp(6),
-          paddingRight: wp(2),
-          marginTop: hp(1.5),
-        }}>
+        style={[
+          {
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingLeft: wp(6),
+            paddingRight: wp(2),
+            paddingBottom: hp(1.5),
+            marginTop: hp(2),
+            zIndex: 1000,
+            position: 'relative',
+            backgroundColor: COLORS.backgroundColor,
+          },
+          upperBorderFlag && {
+            borderBottomWidth: 0.4,
+            borderBottomColor: '#DADADA',
+          },
+        ]}>
         <TouchableOpacity
           style={{}}
           activeOpacity={1}
@@ -84,9 +104,11 @@ const Search = () => {
         tabs={['Student', 'Spaces']}
         activeIndex={activeIndex}
         setActiveIndex={setActiveIndex}
-        pagerRef={pagerRef}>
-        <Students searchText={searchStudent} />
-        <Spaces searchText={searchSpace} />
+        pagerRef={pagerRef}
+        y={y}
+        setUpperBorderFlag={setUpperBorderFlag}>
+        <Students searchText={searchStudent} setY={setY} />
+        <Spaces searchText={searchSpace} setY={setY} />
       </CustomTabBar>
     </CustomWrapper>
   );

@@ -24,6 +24,7 @@ const CustomDropDownPopupMenu = ({
   possibleHeight = hp(10),
   setSelectedFilter,
   setFocus,
+  setNoMoreFetchingPosts,
 }) => {
   const [animation] = useState(new Animated.Value(focus ? 1 : 0)); // Initialize to 1 if focused, 0 if not
   const containerRef = useRef(null);
@@ -35,7 +36,7 @@ const CustomDropDownPopupMenu = ({
   const animateDropDown = toValue => {
     Animated.timing(animation, {
       toValue,
-      duration: 300, // Adjust the duration as needed
+      duration: 200, // Adjust the duration as needed
       easing: Easing.inOut(Easing.ease),
       useNativeDriver: false,
     }).start();
@@ -48,6 +49,17 @@ const CustomDropDownPopupMenu = ({
 
   return (
     <>
+      {focus && (
+        <TouchableWithoutFeedback onPress={() => setFocus(false)}>
+          <View
+            style={{
+              position: 'absolute',
+              height: hp(100),
+              width: wp(100),
+              zIndex: 99999999999,
+            }}></View>
+        </TouchableWithoutFeedback>
+      )}
       <Animated.View ref={containerRef} style={[styles.container, {height}]}>
         <FlatList
           data={['Recent', 'Popular', 'My Posts']}
@@ -68,6 +80,7 @@ const CustomDropDownPopupMenu = ({
               ]}
               onPress={() => {
                 setSelectedFilter(item);
+                setNoMoreFetchingPosts(false);
                 setFocus(false);
               }}>
               {item}

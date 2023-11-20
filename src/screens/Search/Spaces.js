@@ -18,7 +18,7 @@ import {
 import usePost from '../../utils/hooks/usePost';
 import SpacesItem from '../../components/common/SpacesItem';
 
-const Spaces = ({searchText}) => {
+const Spaces = ({searchText, setY}) => {
   const {user} = useUser();
   const {joinSpaces} = UseFirebaseAuth();
   const {fetchAllSpaces} = usePost();
@@ -88,10 +88,15 @@ const Spaces = ({searchText}) => {
     }
   }, [searchText]);
 
+  const onScroll = e => {
+    setY(e.nativeEvent.contentOffset.y);
+  };
+
   return (
     <>
       <FlatList
         data={filterData}
+        onScroll={onScroll}
         renderItem={({item, index}) => (
           <SpacesItem item={item} AddSpaces={AddSpaces} key={index} />
         )}
@@ -113,6 +118,7 @@ const Spaces = ({searchText}) => {
             )}
           </View>
         )}
+        style={{paddingTop: hp(5)}}
         ListFooterComponent={() => <View style={{paddingBottom: hp(15)}} />}
         onRefresh={() => fetchSpacesAgain()}
         refreshing={refreshing}

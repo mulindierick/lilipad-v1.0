@@ -9,11 +9,11 @@ import {
 } from 'react-native-responsive-screen';
 import useUser from '../../utils/hooks/useUser';
 
-const SpacesItem = ({item, AddSpaces}) => {
+const SpacesItem = ({item, AddSpaces, index}) => {
   const {user} = useUser();
 
   return (
-    <View style={styles.spaceContainer}>
+    <View style={[styles.spaceContainer, index == 0 && {borderTopWidth: 0}]}>
       <View>
         <TextBig numberOfLines={1} textStyle={styles.spaceContainerHeader}>
           {item?._data?.spaceName}
@@ -41,7 +41,6 @@ export default SpacesItem;
 
 const styles = StyleSheet.create({
   spaceContainer: {
-    borderRadius: 10,
     paddingLeft: wp(6),
     paddingRight: wp(9),
     paddingVertical: hp(1.2),
@@ -49,16 +48,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderWidth: 0.15,
+    borderTopWidth: 0.17,
     borderColor: '#CCCCCC',
-    shadowColor: '#000000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 1,
-    elevation: 12,
   },
   spaceContainerHeader: {
     width: wp(70),

@@ -28,6 +28,7 @@ import CommunityHeader from './CommunityHeader';
 import PostItem from './PostItem';
 import SpacesContainer from './SpacesContainer';
 import WelcomeNoteModal from './WelcomeNoteModal';
+import {filter} from 'lodash';
 
 const headerHeight = hp(20);
 let scrollValue = 0;
@@ -41,6 +42,7 @@ const Community = () => {
     fetchPostsOfAllSpaces,
     fetchPostsOfSpecificSpace,
     fetchFilteredPostsOfSpecificSpace,
+    fetchMorePostsOfSpecificSpace,
   } = usePost();
   const {PostFlatListRef} = useContext(MyContext);
 
@@ -48,12 +50,12 @@ const Community = () => {
 
   // useReducer
   const [loading, setLoading] = useState(true);
+  const [bottomLoading, setBottomLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [upperBorderFlag, setUpperBorderFlag] = useState(false);
   const [selectedSpaces, setSlectedSpaces] = useState(user?.spaces[0]);
-  const [selectedFilter, setSelectedFilter] = useState('Recent');
   const [addPostModal, setAddPostModal] = useState(false);
-  const [dropDown, setDropDown] = useState(false);
+  const [noMoreFetchingPosts, setNoMoreFetchingPosts] = useState(false);
   const [newPostCount, setNewPostCount] = useState(() => {
     let obj = {};
     user?.spaces.forEach(space => {
@@ -107,18 +109,19 @@ const Community = () => {
         user?.spaceId,
       );
       //There was some issue due to which the i had to empty the data before populating it again
+      // setSelectedSpaceData({
+      //   ...selectedSpaceData,
+      //   [selectedSpaces]: {
+      //     data: [],
+      //     filter: filter,
+      //   },
+      // });
       setSelectedSpaceData({
         ...selectedSpaceData,
         [selectedSpaces]: {
-          data: [],
+          data: data.data,
           filter: filter,
-        },
-      });
-      setSelectedSpaceData({
-        ...selectedSpaceData,
-        [selectedSpaces]: {
-          data: data,
-          filter: filter,
+          lastVisible: data.lastVisible,
         },
       });
     } catch (e) {
@@ -129,23 +132,34 @@ const Community = () => {
 
   const AfterAddingNewPost = async filter => {
     try {
+      setSelectedSpaceData({
+        ...selectedSpaceData,
+        [selectedSpaces]: {
+          data: selectedSpaceData[selectedSpaces].data,
+          filter: filter,
+          lastVisible: selectedSpaceData[selectedSpaces]?.lastVisible || null,
+        },
+      });
+
       const data = await fetchFilteredPostsOfSpecificSpace(
         selectedSpaces,
         filter,
       );
       //There was some issue due to which the i had to empty the data before populating it again
+      // setSelectedSpaceData({
+      //   ...selectedSpaceData,
+      //   [selectedSpaces]: {
+      //     data: [],
+      //     filter: filter,
+      //     lastVisible: data.lastVisible,
+      //   },
+      // });
       setSelectedSpaceData({
         ...selectedSpaceData,
         [selectedSpaces]: {
-          data: [],
+          data: data.data,
           filter: filter,
-        },
-      });
-      setSelectedSpaceData({
-        ...selectedSpaceData,
-        [selectedSpaces]: {
-          data: data,
-          filter: filter,
+          lastVisible: data.lastVisible,
         },
       });
     } catch (e) {
@@ -155,6 +169,35 @@ const Community = () => {
 
   const handleSelectingSpaces = async spaceName => {
     setSlectedSpaces(spaceName);
+  };
+
+  const fetchMorePosts = async () => {
+    if (noMoreFetchingPosts) return;
+    setBottomLoading(true);
+    try {
+      const data = await fetchMorePostsOfSpecificSpace(
+        user?.spaceId[selectedSpaces],
+        //lastVisible
+        selectedSpaceData[selectedSpaces]?.lastVisible || null,
+        selectedSpaceData[selectedSpaces]?.filter || 'Recent',
+      );
+      if (data.data.length === 0) {
+        setNoMoreFetchingPosts(true);
+        setBottomLoading(false);
+        return;
+      }
+      setSelectedSpaceData({
+        ...selectedSpaceData,
+        [selectedSpaces]: {
+          data: [...selectedSpaceData[selectedSpaces].data, ...data.data],
+          filter: selectedSpaceData[selectedSpaces].filter,
+          lastVisible: data.lastVisible,
+        },
+      });
+    } catch (e) {
+      console.log({e});
+    }
+    setBottomLoading(false);
   };
 
   //For when the app is opened from background
@@ -247,9 +290,22 @@ const Community = () => {
       offset: 0,
     });
     setRefreshing(true);
-    await AfterAddingNewPost(selectedSpaceData[selectedSpaces].filter);
+    await AfterAddingNewPost('Recent');
     setRefreshing(false);
   };
+
+  //For Playing Video
+  const [visibleIndex, setVisibleIndex] = useState(-1);
+
+  // Viewability configuration
+  const viewabilityConfig = useRef({
+    itemVisiblePercentThreshold: 50, // Adjust this threshold as needed
+  }).current;
+
+  // Callback when items become viewable or unviewable
+  const onViewableItemsChanged = useRef(({viewableItems}) => {
+    setVisibleIndex(viewableItems[0].index);
+  }).current;
 
   return (
     <CustomWrapper
@@ -274,6 +330,8 @@ const Community = () => {
             newPostCount={newPostCount}
             setNewPostCount={setNewPostCount}
             upperBorderFlag={upperBorderFlag}
+            triggerToSort={loading}
+            setNoMoreFetchingPosts={setNoMoreFetchingPosts}
             selectedFilter={
               selectedSpaceData[selectedSpaces]?.filter || 'Recent'
             }
@@ -284,8 +342,29 @@ const Community = () => {
       <FlatList
         ref={PostFlatListRef}
         persistentScrollbar={true}
+        initialNumToRender={10}
+        onViewableItemsChanged={onViewableItemsChanged}
+        viewabilityConfig={viewabilityConfig}
         keyExtractor={(item, index) => index.toString()}
+        disableVirtualization={true}
         data={selectedSpaceData[selectedSpaces]?.data || []}
+        onEndReached={() => fetchMorePosts()}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={() => {
+          return (
+            <View style={{paddingBottom: hp(35)}}>
+              {bottomLoading &&
+              selectedSpaceData[selectedSpaces]?.data?.length > 0 ? (
+                <ActivityIndicator
+                  style={{paddingTop: hp(2)}}
+                  size="large"
+                  color={'grey'}
+                  // color={COLORS.grey}
+                />
+              ) : null}
+            </View>
+          );
+        }}
         onScroll={onScroll}
         refreshControl={
           <RefreshControl
@@ -307,12 +386,11 @@ const Community = () => {
               key={item?.postId}
               index={index}
               afterEditingPost={fetchThePostAgainAfterTheOwnerHasPosted}
+              activeIndex={visibleIndex}
+              setVisibleIndex={setVisibleIndex}
             />
           );
         }}
-        ListFooterComponent={() => (
-          <View style={{paddingBottom: hp(30)}}></View>
-        )}
         showsVerticalScrollIndicator={false}
         // make this JSX componenet
         ListEmptyComponent={() => (

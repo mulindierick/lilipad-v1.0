@@ -11,6 +11,7 @@ import {COLORS, FONTS, images} from '../../utils/constants/theme';
 import StudentsItem from './StudentsItem';
 import useUser from '../../utils/hooks/useUser';
 import usePost from '../../utils/hooks/usePost';
+import {set} from 'lodash';
 
 // const ALGOLIA_APP_ID = 'VGYLBZ9NVP';
 // const ALGOLIA_API_KEY = '557b30279ba11eb89ecb208ab50ed432';
@@ -19,7 +20,7 @@ import usePost from '../../utils/hooks/usePost';
 // const searchClient = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_API_KEY);
 // const searchIndex = searchClient.initIndex(ALGOLIA_INDEX_NAME);
 
-const Students = ({searchText}) => {
+const Students = ({searchText, setY}) => {
   const {user} = useUser();
   const [results, setResults] = useState([]);
   const [pureData, setPureData] = useState([]);
@@ -83,11 +84,16 @@ const Students = ({searchText}) => {
     handleSearch();
   }, []);
 
+  const onScroll = e => {
+    setY(e.nativeEvent.contentOffset.y);
+  };
+
   return (
     <>
       <FlatList
         data={filterData}
         refreshing={isLoading}
+        onScroll={onScroll}
         renderItem={({item}) => {
           return item?._data?.fullName ? (
             <StudentsItem item={item?._data} key={item._data?.firebaseUserId} />
@@ -109,6 +115,7 @@ const Students = ({searchText}) => {
             ) : null}
           </View>
         )}
+        style={{paddingTop: hp(5)}}
         ListFooterComponent={() => <View style={{paddingBottom: hp(15)}} />}
       />
     </>

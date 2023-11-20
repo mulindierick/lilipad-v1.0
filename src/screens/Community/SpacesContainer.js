@@ -4,9 +4,10 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
+  Animated,
 } from 'react-native';
+
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -17,6 +18,7 @@ import {TextNormal, TextSmall} from '../../components/common/CustomText';
 import {COLORS} from '../../utils/constants/theme';
 import SpacesRelatedActivity from '../../utils/hooks/SpacesRelatedActivity';
 import useUser from '../../utils/hooks/useUser';
+
 const SpacesContainer = ({
   data = [],
   selected,
@@ -27,21 +29,40 @@ const SpacesContainer = ({
   selectedFilter,
   setSelectedFilter,
   wholeScreenNotAccessibile = false,
+  triggerToSort = false,
+  setNoMoreFetchingPosts,
 }) => {
   const navigation = useNavigation();
   const {user} = useUser();
   const {updateLastSpaceVisitTime} = SpacesRelatedActivity();
   const [dropDown, setDropDown] = useState(false);
+  const [sortedData, setSortedData] = useState([]);
+  const [scrollX] = useState(new Animated.Value(0));
+
+  useEffect(() => {
+    // Sort the data based on newPostCount from highest to lowest
+    const sortedKeys = Object.keys(newPostCount).sort(
+      (a, b) => newPostCount[b] - newPostCount[a],
+    );
+    const remainingSorted = sortedKeys.filter(
+      item => item != user?.collegeName,
+    );
+    setSortedData([user?.collegeName, ...remainingSorted]);
+  }, [triggerToSort]);
 
   useEffect(() => {}, [dropDown]);
 
   const handleSpacesClick = (item, index) => {
+    console.log({item});
     setSelected(item);
+    setNoMoreFetchingPosts(false);
     if (newPostCount[item] != 0) {
       updateLastSpaceVisitTime(item);
       setNewPostCount({...newPostCount, [item]: 0});
     }
   };
+
+  console.log({newPostCount});
 
   return (
     <>
@@ -73,49 +94,45 @@ const SpacesContainer = ({
           selectedFilter={selectedFilter}
           setSelectedFilter={setSelectedFilter}
           setFocus={setDropDown}
+          setNoMoreFetchingPosts={setNoMoreFetchingPosts}
         />
         <ScrollView
-          horizontal={true}
+          horizontal
           showsHorizontalScrollIndicator={false}
-          persistentScrollbar={true}
           contentContainerStyle={{
             flexGrow: 1,
-            // paddingHorizontal: wp(0.5),
             marginLeft: wp(5),
           }}>
-          {data.map((item, index) => {
-            return (
-              <TouchableOpacity
-                key={item}
-                activeOpacity={1}
-                onPress={() => handleSpacesClick(item)}
-                style={[
-                  selected == item ? styles.selected : styles.container,
-                  index == data.length - 1 ? {marginRight: wp(10)} : {},
+          {sortedData.map((item, index) => (
+            <TouchableOpacity
+              key={item}
+              activeOpacity={1}
+              onPress={() => handleSpacesClick(item)}
+              style={[
+                selected == item ? styles.selected : styles.container,
+                index === sortedData.length - 1 ? {marginRight: wp(10)} : {},
+              ]}
+              disabled={upperBorderFlag}>
+              <TextNormal
+                textStyle={[
+                  styles.textStyle,
+                  selected == item && {fontWeight: '600'},
                 ]}
-                disabled={upperBorderFlag}>
-                <TextNormal
-                  textStyle={[
-                    styles.textStyle,
-                    selected == item && {fontWeight: '600'},
-                  ]}
-                  numberOfLines={item.split(' ').length > 1 ? 2 : 1}
-                  color={selected == item ? COLORS.white : COLORS.black}>
-                  {item}
-                </TextNormal>
-                {newPostCount[item] != 0 && (
-                  <View style={styles.totalPostNumbers}>
-                    <TextSmall
-                      bold
-                      color={COLORS.white}
-                      textStyle={{fontSize: hp(1.4)}}>
-                      {newPostCount[item] > 99 ? '99+' : newPostCount[item]}
-                    </TextSmall>
-                  </View>
-                )}
-              </TouchableOpacity>
-            );
-          })}
+                color={selected == item ? COLORS.white : COLORS.black}>
+                {item}
+              </TextNormal>
+              {newPostCount[item] !== 0 && (
+                <View style={styles.totalPostNumbers}>
+                  <TextSmall
+                    bold
+                    color={COLORS.white}
+                    textStyle={{fontSize: hp(1.4)}}>
+                    {newPostCount[item] > 99 ? '!' : newPostCount[item]}
+                  </TextSmall>
+                </View>
+              )}
+            </TouchableOpacity>
+          ))}
         </ScrollView>
       </View>
     </>

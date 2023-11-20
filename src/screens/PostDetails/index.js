@@ -1,6 +1,6 @@
 import firestore from '@react-native-firebase/firestore';
 import {useNavigation} from '@react-navigation/native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {memo, useEffect, useMemo, useRef, useState} from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -53,6 +53,10 @@ const PostDetails = ({route}) => {
   const [likeCount, setLikeCount] = useState(0);
   const [commentCount, setCommentCount] = useState(0);
   const [text, setText] = useState('');
+
+  const memoizedPostData = useMemo(() => {
+    return postData;
+  }, [postData]);
 
   const {fetchPostById, handlePostLike, AddComment, fetchUpdatedComments} =
     usePost();
@@ -233,6 +237,20 @@ const PostDetails = ({route}) => {
 
   const {top} = useSafeAreaInsets();
 
+  //For Playing Video
+  const [visibleIndex, setVisibleIndex] = useState(-1);
+
+  // Viewability configuration
+  const viewabilityConfig = useRef({
+    itemVisiblePercentThreshold: 50, // Adjust this threshold as needed
+  }).current;
+
+  // Callback when items become viewable or unviewable
+  const onViewableItemsChanged = useRef(({viewableItems}) => {
+    console.log({index: viewableItems[0].index});
+    setVisibleIndex(viewableItems[0].index);
+  }).current;
+
   return loader ? (
     <CustomLoader />
   ) : (
@@ -250,6 +268,9 @@ const PostDetails = ({route}) => {
       <FlatList
         ref={flatListRef}
         data={[{commentId: 'borderLine'}, ...postComments]}
+        s
+        viewabilityConfig={viewabilityConfig}
+        onViewableItemsChanged={onViewableItemsChanged}
         showsVerticalScrollIndicator={false}
         renderItem={({item}) => (
           <View
@@ -295,7 +316,8 @@ const PostDetails = ({route}) => {
               alignItems: 'center',
               justifyContent: 'center',
               height: hp(10),
-            }}>
+            }}
+            key={'header'}>
             {loader ? (
               <ActivityIndicator color={COLORS.grey} size="large" />
             ) : (
@@ -305,17 +327,18 @@ const PostDetails = ({route}) => {
             )}
           </View>
         )}
-        ListHeaderComponent={() => (
+        ListHeaderComponent={
           <PostHeaderComponent
             key={postData?.data?.postId}
-            postData={postData}
+            postData={memoizedPostData}
             handleLike={handleLike}
             like={like}
             likeCount={likeCount}
             commentCount={commentCount}
             likeLoader={likeLoader}
+            activeIndex={visibleIndex}
           />
-        )}
+        }
         stickyHeaderIndices={[1]}
       />
       <KeyboardAvoidingView
@@ -346,7 +369,7 @@ const PostDetails = ({route}) => {
   );
 };
 
-export default PostDetails;
+export default memo(PostDetails);
 
 const styles = StyleSheet.create({
   borderLine: {

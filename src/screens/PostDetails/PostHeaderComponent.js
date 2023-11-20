@@ -18,6 +18,7 @@ const PostHeaderComponent = ({
   commentCount,
   likeLoader,
   like,
+  activeIndex,
 }) => {
   return (
     <>
@@ -39,6 +40,8 @@ const PostHeaderComponent = ({
           <TouchableOpacity activeOpacity={1}>
             <CustomVideo
               uri={postData?.data?.postVideo}
+              activeIndex={activeIndex}
+              index={0}
               containerStyle={{
                 height: hp(30),
                 width: '100%',
@@ -49,13 +52,19 @@ const PostHeaderComponent = ({
         )}
 
         {postData?.data?.postPhoto && (
-          <CustomImage
-            source={{uri: postData?.data?.postPhoto}}
-            height={hp(30)}
-            width={'100%'}
-            resizeMode="cover"
-            containerStyle={{marginTop: hp(1.5)}}
-          />
+          <View
+            style={{
+              width: wp(101),
+              backgroundColor: 'rgba(0, 0, 0, 1)',
+              marginTop: hp(1.5),
+            }}>
+            <CustomImage
+              source={{uri: postData?.data?.postPhoto}}
+              height={hp(35)}
+              width={wp(100)}
+              resizeMode="contain"
+            />
+          </View>
         )}
         <View style={{paddingHorizontal: wp(5)}}>
           <PostFooter

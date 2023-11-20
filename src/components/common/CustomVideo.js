@@ -1,22 +1,27 @@
 import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
-import React, {useState} from 'react';
+import React, {memo, useMemo, useState} from 'react';
 import Video from 'react-native-video';
 import {COLORS} from '../../utils/constants/theme';
 import {useFocusEffect} from '@react-navigation/native';
 
-const CustomVideo = ({uri, containerStyle, pause}) => {
+const CustomVideo = ({uri, containerStyle, index, activeIndex}) => {
   const [loading, setLoading] = useState(true);
+
+  const uriMemoized = useMemo(() => uri, [uri]);
+
   return (
     <>
       <Video
-        source={{uri: uri}}
+        source={{uri: uriMemoized}}
         style={containerStyle}
         resizeMode="cover"
         controls={true} // Store reference
         onBuffer={() => setLoading(false)}
         onLoadStart={() => setLoading(true)}
         onError={err => console.log(err)} // Callback when video cannot be loaded
-        paused={true}
+        playWhenInactive={false}
+        playInBackground={false}
+        paused={index == activeIndex ? false : true}
       />
       {loading && (
         <ActivityIndicator
@@ -29,6 +34,6 @@ const CustomVideo = ({uri, containerStyle, pause}) => {
   );
 };
 
-export default CustomVideo;
+export default memo(CustomVideo);
 
 const styles = StyleSheet.create({});

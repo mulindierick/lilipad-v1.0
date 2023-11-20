@@ -22,6 +22,8 @@ const PostItem = ({
   disabledProfileClick = false,
   index,
   afterEditingPost,
+  activeIndex,
+  setVisibleIndex,
 }) => {
   const {general} = useUser();
   const user = data?.user?._data;
@@ -84,19 +86,22 @@ const PostItem = ({
     }
   }, [general?.postId == data?.postId]);
 
+  const onPressPost = () => {
+    setVisibleIndex(-1);
+    navigation.navigate('PostDetails', {
+      postId: data?.postId,
+      spaceId: data?.spaceId,
+      spaceName: data?.spaceName,
+    });
+  };
+
   return (
     <TouchableOpacity
       style={[
         styles.postContainer,
         index != 0 && {borderTopWidth: 0.4, borderTopColor: '#CCCCCC'},
       ]}
-      onPress={() =>
-        navigation.navigate('PostDetails', {
-          postId: data?.postId,
-          spaceId: data?.spaceId,
-          spaceName: data?.spaceName,
-        })
-      }
+      onPress={() => onPressPost()}
       activeOpacity={1}>
       <PostHeader
         photo={user?.photo}
@@ -134,22 +139,28 @@ const PostItem = ({
         </View>
       ) : null}
       {data?.postPhoto && (
-        <CustomImage
-          source={{uri: data?.postPhoto}}
-          height={hp(35)}
-          width={wp(101)}
-          resizeMode="cover"
-          containerStyle={{
+        <View
+          style={{
+            width: wp(101),
             marginTop: hp(1.5),
             marginHorizontal: wp(-5),
-          }}
-          disabled
-        />
+            backgroundColor: 'rgba(0, 0, 0, 1)',
+          }}>
+          <CustomImage
+            source={{uri: data?.postPhoto}}
+            height={hp(35)}
+            width={wp(101)}
+            resizeMode="contain"
+            disabled
+          />
+        </View>
       )}
       {data?.postVideo && (
         <TouchableOpacity activeOpacity={1}>
           <CustomVideo
             uri={data?.postVideo}
+            index={index}
+            activeIndex={activeIndex}
             containerStyle={{
               height: hp(30),
               width: wp(101),

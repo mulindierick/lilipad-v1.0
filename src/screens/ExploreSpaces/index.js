@@ -83,25 +83,50 @@ const ExploreSpaces = () => {
     }
   }, [text]);
 
+  const [upperBorderFlag, setUpperBorderFlag] = useState(false);
+  const onScroll = e => {
+    const y = e.nativeEvent.contentOffset.y;
+    if (y <= 0) {
+      // At the top of the FlatList
+      setUpperBorderFlag(false);
+    } else {
+      setUpperBorderFlag(true);
+    }
+  };
+
   return (
     <CustomWrapper containerStyle={{paddingHorizontal: 0}}>
       <Header />
       <View style={styles.marginTop}>
         <CustomTextInput
-          placeholder="Search"
+          placeholder="search"
           onChange={txt => setText(txt)}
           containerStyle={styles.searchContainer}
-          placeholderTextColor="#575757"
         />
       </View>
-      <View style={styles.marginTop}>
-        <TextBig textStyle={styles.AllSpaces}>All Spaces</TextBig>
+      <View
+        style={[
+          styles.marginTop,
+          upperBorderFlag && {
+            borderBottomWidth: 0.4,
+            borderBottomColor: '#B0B0B0',
+          },
+        ]}>
+        <TextBig textStyle={[styles.AllSpaces, {marginHorizontal: wp(4)}]}>
+          All Spaces
+        </TextBig>
       </View>
       <FlatList
         data={filterData}
-        style={{paddingTop: hp(2)}}
-        renderItem={({item}) => (
-          <SpacesItem item={item} AddSpaces={AddSpaces} />
+        disableVirtualization={true}
+        onScroll={onScroll}
+        renderItem={({item, index}) => (
+          <SpacesItem
+            item={item}
+            AddSpaces={AddSpaces}
+            index={index}
+            key={item._data?.spaceId}
+          />
         )}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={() => (
@@ -119,7 +144,7 @@ const ExploreSpaces = () => {
             )}
           </View>
         )}
-        ListFooterComponent={() => <View style={{paddingBottom: hp(15)}} />}
+        ListFooterComponent={() => <View style={{paddingBottom: hp(20)}} />}
         refreshing={refreshing}
         onRefresh={() => fetchSpacesAgain()}
       />
@@ -133,12 +158,12 @@ const styles = StyleSheet.create({
   AllSpaces: {
     fontWeight: '700',
     fontSize: wp(5.5),
+    paddingBottom: hp(1),
   },
   searchContainer: {
     backgroundColor: '#E4E4E4',
   },
   marginTop: {
     marginTop: hp(2),
-    marginHorizontal: wp(4),
   },
 });
