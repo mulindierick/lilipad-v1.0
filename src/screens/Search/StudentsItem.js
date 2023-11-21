@@ -10,7 +10,7 @@ import {TextBig, TextNormal} from '../../components/common/CustomText';
 import useUser from '../../utils/hooks/useUser';
 import {useNavigation} from '@react-navigation/native';
 
-const StudentsItem = ({item}) => {
+const StudentsItem = ({item, index}) => {
   const {user} = useUser();
   const navigation = useNavigation();
 
@@ -25,7 +25,7 @@ const StudentsItem = ({item}) => {
 
   return (
     <TouchableOpacity
-      style={[styles.spaceContainer]}
+      style={[styles.spaceContainer, index == 0 && {borderTopWidth: 0}]}
       activeOpacity={1}
       key={item?.firebaseUserId}
       onPress={() => handleNavigation(item)}>
@@ -59,23 +59,14 @@ export default StudentsItem;
 
 const styles = StyleSheet.create({
   spaceContainer: {
-    borderRadius: 10,
     paddingLeft: wp(6),
     paddingRight: wp(9),
     paddingVertical: hp(0.99),
     backgroundColor: '#FFFFFF',
     flexDirection: 'row',
     alignItems: 'center',
-    borderWidth: 0.15,
+    borderTopWidth: 0.17,
     borderColor: '#CCCCCC',
-    shadowColor: '#000000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 1,
-    elevation: 12,
   },
   spaceContainerHeader: {
     width: wp(70),

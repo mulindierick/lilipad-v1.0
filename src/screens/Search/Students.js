@@ -94,9 +94,13 @@ const Students = ({searchText, setY}) => {
         data={filterData}
         refreshing={isLoading}
         onScroll={onScroll}
-        renderItem={({item}) => {
+        renderItem={({item, index}) => {
           return item?._data?.fullName ? (
-            <StudentsItem item={item?._data} key={item._data?.firebaseUserId} />
+            <StudentsItem
+              item={item?._data}
+              key={item._data?.firebaseUserId}
+              index={index}
+            />
           ) : null;
         }}
         showsVerticalScrollIndicator={false}

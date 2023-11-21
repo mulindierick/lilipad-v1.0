@@ -98,7 +98,12 @@ const Spaces = ({searchText, setY}) => {
         data={filterData}
         onScroll={onScroll}
         renderItem={({item, index}) => (
-          <SpacesItem item={item} AddSpaces={AddSpaces} key={index} />
+          <SpacesItem
+            item={item}
+            AddSpaces={AddSpaces}
+            key={index}
+            index={index}
+          />
         )}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={() => (
