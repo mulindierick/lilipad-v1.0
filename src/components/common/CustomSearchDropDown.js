@@ -51,7 +51,7 @@ const CustomSearchDropDown = ({data, setSelected, selected}) => {
         //because the data takes sometime to populate in filteredData
         onFocus={() => turnFocusOn()}
         onBlur={() => setFocus(false)}
-        placeholder="Search"
+        placeholder="search"
         autoCapitalize="sentences"
         autoCorrect={false}
         spellCheck={true}

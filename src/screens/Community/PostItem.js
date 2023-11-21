@@ -16,6 +16,7 @@ import {useDispatch} from 'react-redux';
 import {setPostDetails, setPostId} from '../../redux/reducers/generalSlice';
 import Video from 'react-native-video';
 import CustomVideo from '../../components/common/CustomVideo';
+import CustomPostImage from '../../components/common/CustomPostImage';
 
 const PostItem = ({
   data,
@@ -144,13 +145,11 @@ const PostItem = ({
             width: wp(101),
             marginTop: hp(1.5),
             marginHorizontal: wp(-5),
-            backgroundColor: 'rgba(0, 0, 0, 1)',
+            backgroundColor: COLORS.grey,
           }}>
-          <CustomImage
+          <CustomPostImage
             source={{uri: data?.postPhoto}}
-            height={hp(35)}
             width={wp(101)}
-            resizeMode="contain"
             disabled
           />
         </View>
@@ -225,5 +224,9 @@ const styles = StyleSheet.create({
   postTextStyle: {
     fontSize: wp(4.3),
     color: '#151313',
+  },
+  customImageContainer: {
+    flexShrink: 1,
+    aspectRatio: 1,
   },
 });

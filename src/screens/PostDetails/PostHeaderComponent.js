@@ -10,6 +10,7 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import {COLORS, FONTS} from '../../utils/constants/theme';
+import CustomPostImage from '../../components/common/CustomPostImage';
 
 const PostHeaderComponent = ({
   postData,
@@ -55,12 +56,11 @@ const PostHeaderComponent = ({
           <View
             style={{
               width: wp(101),
-              backgroundColor: 'rgba(0, 0, 0, 1)',
+              backgroundColor: COLORS.grey,
               marginTop: hp(1.5),
             }}>
-            <CustomImage
+            <CustomPostImage
               source={{uri: postData?.data?.postPhoto}}
-              height={hp(35)}
               width={wp(100)}
               resizeMode="contain"
             />

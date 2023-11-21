@@ -67,6 +67,18 @@ const Search = () => {
   return (
     <CustomWrapper containerStyle={{paddingHorizontal: 0}}>
       <View
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 100,
+          height: hp(10),
+          backgroundColor: COLORS.backgroundColor,
+        }}
+      />
+
+      <View
         style={[
           {
             flexDirection: 'row',
@@ -128,5 +140,9 @@ const styles = StyleSheet.create({
   marginTop: {
     marginTop: hp(2),
   },
-  customTextInput: {backgroundColor: 'transparent', flex: 0.9},
+  customTextInput: {
+    backgroundColor: 'transparent',
+    flex: 0.9,
+    borderRadius: 18,
+  },
 });

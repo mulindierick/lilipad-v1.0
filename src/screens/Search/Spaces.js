@@ -123,8 +123,8 @@ const Spaces = ({searchText, setY}) => {
             )}
           </View>
         )}
-        style={{paddingTop: hp(5)}}
-        ListFooterComponent={() => <View style={{paddingBottom: hp(15)}} />}
+        style={{paddingTop: hp(23.5)}}
+        ListFooterComponent={() => <View style={{paddingBottom: hp(50)}} />}
         onRefresh={() => fetchSpacesAgain()}
         refreshing={refreshing}
       />

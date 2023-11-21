@@ -32,7 +32,7 @@ const CustomHeader = ({
         style={[
           styles.ActivityContainer,
           upperBorderFlag
-            ? {borderBottomWidth: 1, borderBottomColor: '#DADADA'}
+            ? {borderBottomWidth: 0.4, borderBottomColor: '#DADADA'}
             : {},
         ]}>
         <View style={{flex: 1}}>

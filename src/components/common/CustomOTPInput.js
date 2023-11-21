@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     fontSize: wp(6),
     color: COLORS.lightgrey,
-    backgroundColor: '#F6F6F6',
+    backgroundColor: '#E4E4E4',
     fontWeight: '600',
   },
   containerStyle: {

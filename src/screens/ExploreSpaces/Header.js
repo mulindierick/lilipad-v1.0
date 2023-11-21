@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
-import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import React, {useContext, useState} from 'react';
+import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -14,12 +14,31 @@ import {
   ExploreMainSvg,
   ExplorePlusButton,
 } from '../../components/common/CustomSvgItems';
+import CustomExploreDropDownPopupMenu from '../../components/common/CustomExploreDropDownPopupMenu';
+import {MyContext} from '../../context/Context';
 
-const Header = () => {
+const Header = ({selectedFilter, setSelectedFilter}) => {
+  const [dropDown, setDropDown] = useState(false);
   const navigation = useNavigation();
+
+  const {ExploreSpacesFlatListRef} = useContext(MyContext);
+  const useScrollToTop = () => {
+    ExploreSpacesFlatListRef.current.scrollToOffset({
+      animated: true,
+      offset: 0,
+    });
+  };
+
   return (
     <View style={styles.container}>
-      <TextBigger textStyle={styles.text}>Explore</TextBigger>
+      {dropDown && (
+        <TouchableWithoutFeedback onPress={() => setDropDown(false)}>
+          <View style={styles.absoluteView}></View>
+        </TouchableWithoutFeedback>
+      )}
+      <TextBigger textStyle={styles.text} onPress={() => useScrollToTop()}>
+        Explore
+      </TextBigger>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <TouchableOpacity
           activeOpacity={1}
@@ -27,10 +46,18 @@ const Header = () => {
           <ExplorePlusButton />
         </TouchableOpacity>
 
-        <TouchableOpacity activeOpacity={1}>
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={() => setDropDown(!dropDown)}>
           <ExploreMainSvg />
         </TouchableOpacity>
       </View>
+      <CustomExploreDropDownPopupMenu
+        focus={dropDown}
+        setFocus={setDropDown}
+        selectedFilter={selectedFilter}
+        setSelectedFilter={setSelectedFilter}
+      />
     </View>
   );
 };
@@ -47,5 +74,15 @@ const styles = StyleSheet.create({
   text: {
     fontSize: wp(9),
     fontWeight: 'bold',
+  },
+  absoluteView: {
+    position: 'absolute',
+    backgroundColor: 'transparent',
+    height: hp(100),
+    width: wp(100),
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
 });

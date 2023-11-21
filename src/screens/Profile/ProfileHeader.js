@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React from 'react';
+import React, {useContext} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {
   Menu,
@@ -24,6 +24,7 @@ import {useDispatch} from 'react-redux';
 import auth from '@react-native-firebase/auth';
 import {setUser} from '../../redux/reducers/userSlice';
 import useUser from '../../utils/hooks/useUser';
+import {MyContext} from '../../context/Context';
 
 const ProfileHeader = ({differentUserProfile, upperBorderFlag}) => {
   const {general} = useUser();
@@ -58,13 +59,14 @@ const ProfileHeader = ({differentUserProfile, upperBorderFlag}) => {
             activeOpacity={1}
             onPress={() => navigation.goBack()}
             style={{
-              paddingVertical: wp(2),
-              borderWidth: 1,
-              borderColor: '#C9C9C9',
-              paddingHorizontal: wp(2),
               alignItems: 'center',
+              borderColor: '#C9C9C9',
+              borderWidth: 1,
+              height: wp(14),
+              aspectRatio: 1,
+              borderRadius: hp(10),
               justifyContent: 'center',
-              borderRadius: wp(100),
+              backgroundColor: COLORS.backgroundColor,
             }}>
             <BackButton containerStyle={{marginLeft: wp(-0.5)}} />
           </TouchableOpacity>
@@ -73,10 +75,18 @@ const ProfileHeader = ({differentUserProfile, upperBorderFlag}) => {
     );
   }
 
+  const {ProfileFlatListRef} = useContext(MyContext);
+  const useScrollToTop = () => {
+    ProfileFlatListRef.current.scrollToOffset({animated: true, offset: 0});
+  };
+
   return (
     <>
       <View style={[styles.container, upperBorderFlag && styles.borderColors]}>
-        <TextBig textStyle={styles.textStyle} bold>
+        <TextBig
+          textStyle={styles.textStyle}
+          bold
+          onPress={() => useScrollToTop()}>
           Profile
         </TextBig>
         <View style={styles.innerContainer}>

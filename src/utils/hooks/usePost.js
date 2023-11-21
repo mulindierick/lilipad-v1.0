@@ -278,8 +278,12 @@ const usePost = () => {
       const data = await firestore()
         .collection(`Colleges/${user?.college}/spaces`)
         .where('isActive', '==', 'active')
+        .where('category', '!=', 'classYear')
         .get();
-      return data.docs;
+      const filteredData = data.docs.filter(
+        item => item.data().category != 'college',
+      );
+      return filteredData;
     } catch (err) {
       console.log({err});
     }
@@ -771,11 +775,22 @@ const usePost = () => {
           )
           .get();
         comments.docs.forEach(async item => {
+          const commentId = item?.data()?.commentId;
+
+          const activitiesCommentLikes = await firestore()
+            .collectionGroup('activities')
+            .where('id', '==', `${commentId}_commentLike`)
+            .get();
+
+          activitiesCommentLikes.forEach(async item => {
+            await item.ref.delete();
+          });
+
           await firestore()
             .collection(
               `Colleges/${user?.college}/spaces/${spaceId}/posts/${postId}/comments`,
             )
-            .doc(item.id)
+            .doc(commentId)
             .delete();
         });
       }
@@ -999,6 +1014,54 @@ const usePost = () => {
     }
   };
 
+  const fetchFilteredSpaces = async filter => {
+    try {
+      if (filter == 'allSpaces') {
+        const data = await firestore()
+          .collection(`Colleges/${user?.college}/spaces`)
+          .where('isActive', '==', 'active')
+          .where('category', '!=', 'classYear')
+          .get();
+
+        const filteredData = data.docs.filter(
+          item => item.data().category != 'college',
+        );
+        return filteredData;
+      } else if (filter == 'mySpaces') {
+        const data = await firestore()
+          .collection(`Colleges/${user?.college}/spaces`)
+          .where('isActive', '==', 'active')
+          .where('members', 'array-contains', user?.firebaseUserId)
+          .get();
+        return data.docs;
+      } else if (filter == 'others') {
+        const data = await firestore()
+          .collection(`Colleges/${user?.college}/spaces`)
+          .where('isActive', '==', 'active')
+          .get();
+
+        const filteredData = data.docs.filter(
+          item =>
+            item.data().category != 'college' &&
+            item.data().category != 'classYear' &&
+            item.data().category != 'userCreated' &&
+            item.data().category != 'activities' &&
+            item.data().category != 'academic' &&
+            item.data().category != 'living',
+        );
+        return filteredData;
+      }
+      const data = await firestore()
+        .collection(`Colleges/${user?.college}/spaces`)
+        .where('isActive', '==', 'active')
+        .where('category', '==', filter)
+        .get();
+      return data.docs;
+    } catch (e) {
+      console.log({e});
+    }
+  };
+
   return {
     fetchPostsOfAllSpaces,
     sharePost,
@@ -1017,6 +1080,7 @@ const usePost = () => {
     fetchAllStudents,
     commentLikes,
     fetchMorePostsOfSpecificSpace,
+    fetchFilteredSpaces,
   };
 };
 

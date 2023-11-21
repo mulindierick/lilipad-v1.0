@@ -14,6 +14,9 @@ import CustomSettingsButton from './CustomSettingsButton';
 import UseFirebaseAuth from '../../utils/hooks/UseFirebaseAuth';
 import {TouchableOpacity} from 'react-native';
 import {BackButton} from '../../components/common/CustomSvgItems';
+import auth from '@react-native-firebase/auth';
+import {useDispatch} from 'react-redux';
+import {setUser} from '../../redux/reducers/userSlice';
 
 const Setting = () => {
   const {DeleteUserAccountAndRelatedActivities} = UseFirebaseAuth();
@@ -39,6 +42,25 @@ const Setting = () => {
       {cancelable: false},
     );
   };
+
+  const dispatch = useDispatch();
+
+  const signOut = () => {
+    dispatch(
+      setUser({
+        email: null,
+        photo: null,
+        firstName: null,
+        lastName: null,
+        isVerified: null,
+        firebaseUserId: null,
+        major: null,
+        spaces: null,
+      }),
+    );
+    auth().signOut();
+  };
+
   const navigation = useNavigation();
   return (
     <CustomWrapper containerStyle={{paddingHorizontal: 0}}>
@@ -67,6 +89,7 @@ const Setting = () => {
         containerStyle={{marginTop: hp(5)}}
         onPress={() => DeleteAccount()}
       />
+      <CustomSettingsButton text={'Logout'} onPress={() => signOut()} />
     </CustomWrapper>
   );
 };

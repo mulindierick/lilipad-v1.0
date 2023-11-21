@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   animatedFirstContainer: {
-    height: headerHeight / 2,
+    height: headerHeight / 60,
     marginTop: hp(-20),
     zIndex: 10000,
   },

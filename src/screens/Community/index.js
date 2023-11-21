@@ -47,7 +47,6 @@ const Community = () => {
   const {PostFlatListRef} = useContext(MyContext);
 
   const RBSheetRef = useRef();
-
   // useReducer
   const [loading, setLoading] = useState(true);
   const [bottomLoading, setBottomLoading] = useState(false);
@@ -299,12 +298,17 @@ const Community = () => {
 
   // Viewability configuration
   const viewabilityConfig = useRef({
-    itemVisiblePercentThreshold: 50, // Adjust this threshold as needed
+    itemVisiblePercentThreshold: 300, // Adjust this threshold as needed
   }).current;
 
   // Callback when items become viewable or unviewable
   const onViewableItemsChanged = useRef(({viewableItems}) => {
-    setVisibleIndex(viewableItems[0].index);
+    try {
+      if (viewableItems.length === 0) return;
+      setVisibleIndex(viewableItems[0]?.index || 0);
+    } catch (e) {
+      console.log({e});
+    }
   }).current;
 
   return (

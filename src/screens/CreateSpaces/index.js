@@ -1,5 +1,5 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import CustomWrapper from '../../components/wrapper/CustomWrapper';
 import {BackButton} from '../../components/common/CustomSvgItems';
 import {useNavigation} from '@react-navigation/native';
@@ -23,14 +23,17 @@ const CreateSpace = () => {
   } = useForm();
 
   const {addRequestToCreateSpace} = SpacesRelatedActivity();
+  const [loading, setLoading] = useState(false);
 
   const requestToCreateSpace = async data => {
+    setLoading(true);
     try {
       await addRequestToCreateSpace(data);
       navigation.goBack();
     } catch (err) {
       console.log({err});
     }
+    setLoading(true);
   };
 
   return (
@@ -118,6 +121,7 @@ const CreateSpace = () => {
           textStyle={styles.buttonText}
           boldTitle={true}
           disabled={!isValid}
+          loader={loading}
         />
       </View>
     </CustomWrapper>

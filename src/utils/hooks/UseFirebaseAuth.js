@@ -154,9 +154,9 @@ const UseFirebaseAuth = () => {
           fcmToken: fcmToken,
           lastActivitiesChecked: firestore.FieldValue.serverTimestamp(),
           notificationStatus: {
-            [collegeDataItems.collegeName]: false,
-            [classYear]: false,
-            [major]: false,
+            [collegeDataItems.collegeName]: true,
+            [classYear]: true,
+            [major]: true,
           },
         });
       dispatch(
@@ -197,7 +197,7 @@ const UseFirebaseAuth = () => {
           spaceId: {...user?.spaceId, [spaceName]: spaceId},
           notificationStatus: {
             ...user?.notificationStatus,
-            [spaceName]: false,
+            [spaceName]: true,
           },
         }),
       );
@@ -216,7 +216,7 @@ const UseFirebaseAuth = () => {
             },
             notificationStatus: {
               ...user?.notificationStatus,
-              [spaceName]: false,
+              [spaceName]: true,
             },
           },
           {merge: true},

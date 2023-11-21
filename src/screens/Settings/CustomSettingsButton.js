@@ -4,6 +4,7 @@ import {
   AboutLiliPad,
   BlueLiliPadIcon,
   DeleteAccount,
+  LeaveThisSpaceIcon,
   NotificationSvg,
   NotificationSvgForSettings,
   PrivacyAndSecurity,
@@ -45,6 +46,7 @@ const CustomSettingsButton = ({text, containerStyle, onPress}) => {
     'Delete Account': (
       <DeleteAccount containerStyle={{height: wp(6), width: wp(6)}} />
     ),
+    Logout: <LeaveThisSpaceIcon />,
   };
 
   if (text === 'Push Notifications') {
@@ -101,7 +103,6 @@ const styles = StyleSheet.create({
     marginTop: wp(2),
     paddingVertical: hp(2),
     paddingHorizontal: wp(4),
-    borderRadius: 14,
     borderWidth: 0.1,
     borderColor: '#CACACA',
     shadowColor: '#000000',

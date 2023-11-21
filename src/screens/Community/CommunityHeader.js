@@ -1,5 +1,5 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import React, {useContext} from 'react';
 import {TextBig, TextNormal} from '../../components/common/CustomText';
 import CustomImage from '../../components/common/CustomImage';
 import {COLORS, FONTS, svg} from '../../utils/constants/theme';
@@ -21,6 +21,7 @@ import {
   ThreeDotsVertical,
 } from '../../components/common/CustomSvgItems';
 import {useNavigation} from '@react-navigation/native';
+import {MyContext} from '../../context/Context';
 
 const CommunityHeader = ({
   selected,
@@ -29,10 +30,18 @@ const CommunityHeader = ({
   RBSheetRef,
 }) => {
   const navigation = useNavigation();
+  const {PostFlatListRef} = useContext(MyContext);
+  const useScrollToTop = () => {
+    PostFlatListRef.current.scrollToOffset({animated: true, offset: 0});
+  };
+
   return (
     <>
       <View style={styles.container}>
-        <TextBig textStyle={styles.textStyle} bold>
+        <TextBig
+          textStyle={styles.textStyle}
+          bold
+          onPress={() => useScrollToTop()}>
           Community
         </TextBig>
         <View style={styles.innerContainer}>

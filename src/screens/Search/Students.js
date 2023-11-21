@@ -119,8 +119,8 @@ const Students = ({searchText, setY}) => {
             ) : null}
           </View>
         )}
-        style={{paddingTop: hp(5)}}
-        ListFooterComponent={() => <View style={{paddingBottom: hp(15)}} />}
+        style={{paddingTop: hp(23.5)}}
+        ListFooterComponent={() => <View style={{paddingBottom: hp(50)}} />}
       />
     </>
   );

@@ -10,7 +10,7 @@ import {COLORS} from '../../utils/constants/theme';
 import {getAgoTimeFullString} from '../../utils/constants/helper';
 import {useNavigation} from '@react-navigation/native';
 
-const ActivityItem = ({item}) => {
+const ActivityItem = ({item, index}) => {
   const navigation = useNavigation();
   const [height, setHeight] = useState(0);
 

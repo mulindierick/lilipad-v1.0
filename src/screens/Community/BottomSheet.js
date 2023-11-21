@@ -175,7 +175,7 @@ const BottomSheet = ({
         ref={RBSheetRef}
         closeOnDragDown={true}
         dragFromTopOnly={true}
-        height={wp(45)}
+        height={wp(35)}
         customStyles={{
           draggableIcon: {
             width: wp(27),
@@ -207,14 +207,6 @@ const BottomSheet = ({
                 : 'Unmute Notifications'}
             </TextNormal>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.innerContainer}
-            onPress={() => BrowseAllSpaces()}>
-            <BrowseAllSpaceIcon />
-            <TextNormal textStyle={styles.text} color={COLORS.blue}>
-              Browse All Spaces
-            </TextNormal>
-          </TouchableOpacity>
         </View>
       </RBSheet>
     );
@@ -226,7 +218,7 @@ const BottomSheet = ({
         ref={RBSheetRef}
         closeOnDragDown={true}
         dragFromTopOnly={true}
-        height={wp(54)}
+        height={wp(44)}
         customStyles={{
           draggableIcon: {
             width: wp(27),
@@ -269,14 +261,6 @@ const BottomSheet = ({
                 : 'Unmute Notifications'}
             </TextNormal>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.innerContainer}
-            onPress={() => BrowseAllSpaces()}>
-            <BrowseAllSpaceIcon />
-            <TextNormal textStyle={styles.text} color={COLORS.blue}>
-              Browse All Spaces
-            </TextNormal>
-          </TouchableOpacity>
         </View>
       </RBSheet>
     );
@@ -287,7 +271,7 @@ const BottomSheet = ({
       ref={RBSheetRef}
       closeOnDragDown={true}
       dragFromTopOnly={true}
-      height={wp(68)}
+      height={wp(58)}
       customStyles={{
         draggableIcon: {
           width: wp(27),
@@ -341,14 +325,6 @@ const BottomSheet = ({
           <LeaveThisSpaceIcon />
           <TextNormal textStyle={styles.text} color={COLORS.red}>
             Leave this Space
-          </TextNormal>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.innerContainer}
-          onPress={() => BrowseAllSpaces()}>
-          <BrowseAllSpaceIcon />
-          <TextNormal textStyle={styles.text} color={COLORS.blue}>
-            Browse All Spaces
           </TextNormal>
         </TouchableOpacity>
       </View>

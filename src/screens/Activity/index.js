@@ -70,7 +70,9 @@ const Activity = () => {
         sections={data}
         keyExtractor={(item, index) => index.toString()}
         onScroll={onScroll}
-        renderItem={({item, index}) => <ActivityItem item={item} />}
+        renderItem={({item, index}) => (
+          <ActivityItem item={item} index={index} />
+        )}
         renderSectionHeader={({section: {title}}) => {
           return (
             <TextBig
@@ -126,11 +128,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     paddingHorizontal: wp(3),
     paddingVertical: hp(1.5),
-    borderRadius: 15,
     shadowColor: '#000000',
     shadowOffset: {width: 0, height: 1},
     shadowOpacity: 0.1,
-    shadowRadius: 1,
     backgroundColor: COLORS.white,
     borderWidth: 0,
     marginHorizontal: wp(0.5),

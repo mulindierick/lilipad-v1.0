@@ -5,9 +5,11 @@ export const MyContext = createContext();
 export const ContextProvider = ({children}) => {
   const PostFlatListRef = useRef();
   const ProfileFlatListRef = useRef();
+  const ExploreSpacesFlatListRef = useRef();
 
   return (
-    <MyContext.Provider value={{PostFlatListRef, ProfileFlatListRef}}>
+    <MyContext.Provider
+      value={{PostFlatListRef, ProfileFlatListRef, ExploreSpacesFlatListRef}}>
       {children}
     </MyContext.Provider>
   );

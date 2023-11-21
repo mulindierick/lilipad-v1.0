@@ -13,6 +13,14 @@ import {COLORS, images} from '../utils/constants/theme';
 import CustomImage from '../components/common/CustomImage';
 import DeviceInfo from 'react-native-device-info';
 import ExploreSpaces from '../screens/ExploreSpaces';
+import {
+  BottomCommunitySvg,
+  BottomExploreSvg,
+  BottomProfileSvg,
+  ExploreMainSvg,
+  ViewMemberSvg,
+} from '../components/common/CustomSvgItems';
+import {TextNormal} from '../components/common/CustomText';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -24,6 +32,9 @@ const TABS = [
     imageFocused: images.communitySelected,
     image: images.communityUnselected,
     component: Community,
+    focusedSvg: <BottomCommunitySvg color="black" />,
+    unFocusedSvg: <BottomCommunitySvg />,
+    text: 'Community',
   },
   {
     id: 3,
@@ -31,6 +42,9 @@ const TABS = [
     image: images.profileUnselected,
     imageFocused: images.profileSelected,
     component: ExploreSpaces,
+    focusedSvg: <BottomExploreSvg color="black" />,
+    unFocusedSvg: <BottomExploreSvg />,
+    text: 'Explore',
   },
   {
     id: 2,
@@ -38,13 +52,17 @@ const TABS = [
     image: images.profileUnselected,
     imageFocused: images.profileSelected,
     component: Profile,
+    focusedSvg: <BottomProfileSvg color="black" />,
+    unFocusedSvg: <BottomProfileSvg />,
+    text: 'Profile',
   },
 ];
 
 const BottomTabNavigator = () => {
   const tabsBar = TABS;
   const [selectedTab, setSelectedTab] = useState(tabsBar[0].name);
-  const {PostFlatListRef, ProfileFlatListRef} = useContext(MyContext);
+  const {PostFlatListRef, ProfileFlatListRef, ExploreSpacesFlatListRef} =
+    useContext(MyContext);
   return (
     <Tab.Navigator
       screenOptions={{
@@ -96,9 +114,16 @@ const BottomTabNavigator = () => {
                             offset: 0,
                           });
                         }
-                      } else {
+                      } else if (tab.name === 'Community') {
                         if (PostFlatListRef.current) {
                           PostFlatListRef.current.scrollToOffset({
+                            animated: true,
+                            offset: 0,
+                          });
+                        }
+                      } else {
+                        if (ExploreSpacesFlatListRef.current) {
+                          ExploreSpacesFlatListRef.current.scrollToOffset({
                             animated: true,
                             offset: 0,
                           });
@@ -116,13 +141,21 @@ const BottomTabNavigator = () => {
                         : {bottom: hp(3.5)},
                     ]}
                     key={tab.id}>
-                    <CustomImage
+                    {/* <CustomImage
                       source={focused ? tab.imageFocused : tab.image}
                       height={hp(6)}
                       width={wp(50)}
                       resizeMode="contain"
                       disabled
-                    />
+                    /> */}
+                    <View style={styles.container}>
+                      {focused ? tab.focusedSvg : tab.unFocusedSvg}
+                      <TextNormal
+                        textStyle={styles.text}
+                        color={focused ? 'black' : '#747474'}>
+                        {tab.text}
+                      </TextNormal>
+                    </View>
                   </View>
                 </TouchableWithoutFeedback>
               );
@@ -136,4 +169,13 @@ const BottomTabNavigator = () => {
 
 export default BottomTabNavigator;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  text: {
+    fontWeight: '600',
+  },
+});

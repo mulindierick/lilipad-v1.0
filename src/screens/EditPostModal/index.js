@@ -138,7 +138,11 @@ const EditPostModal = ({
               disabled={!isDataModified}
               title="Edit"
             />
-            <AddPostTextInput setText={setText} text={text} />
+            <AddPostTextInput
+              setText={setText}
+              text={text}
+              placeholderIncludes={spaceName}
+            />
 
             {/* Uploaded Post Content*/}
             {image ? (

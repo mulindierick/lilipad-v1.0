@@ -13,7 +13,7 @@ import {TextNormal} from '../../components/common/CustomText';
 import {COLORS} from '../../utils/constants/theme';
 import {
   heightPercentageToDP as hp,
-  widthPercentageToDP,
+  widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import {MyContext} from '../../context/Context';
 import CustomLoader from '../../components/common/CustomLoader';
@@ -26,6 +26,7 @@ const DifferentUserProfile = ({route}) => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [data, setData] = useState([]);
+  const [visibleIndex, setVisibleIndex] = useState(-1);
 
   const [userDetails, setUserDetails] = useState({});
   const {ProfileFlatListRef} = useContext(MyContext);
@@ -75,8 +76,7 @@ const DifferentUserProfile = ({route}) => {
   return loading ? (
     <CustomLoader />
   ) : (
-    <CustomWrapper
-      containerStyle={{paddingHorizontal: widthPercentageToDP(-4)}}>
+    <CustomWrapper containerStyle={{paddingHorizontal: wp(-4)}}>
       <ProfileHeader differentUserProfile upperBorderFlag={upperBorderFlag} />
       <FlatList
         data={data}
@@ -88,6 +88,7 @@ const DifferentUserProfile = ({route}) => {
             key={item?.postId}
             disabledProfileClick={true}
             index={index}
+            setVisibleIndex={setVisibleIndex}
           />
         )}
         ListHeaderComponent={() => (
@@ -121,4 +122,18 @@ const DifferentUserProfile = ({route}) => {
 
 export default DifferentUserProfile;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  backButton: {
+    alignItems: 'center',
+    borderColor: '#C9C9C9',
+    borderWidth: 1,
+    height: wp(14),
+    aspectRatio: 1,
+    borderRadius: hp(10),
+    justifyContent: 'center',
+    position: 'absolute',
+    left: wp(4),
+    backgroundColor: COLORS.white,
+    zIndex: 111111,
+  },
+});

@@ -242,13 +242,17 @@ const PostDetails = ({route}) => {
 
   // Viewability configuration
   const viewabilityConfig = useRef({
-    itemVisiblePercentThreshold: 50, // Adjust this threshold as needed
+    itemVisiblePercentThreshold: 300, // Adjust this threshold as needed
   }).current;
 
   // Callback when items become viewable or unviewable
   const onViewableItemsChanged = useRef(({viewableItems}) => {
-    console.log({index: viewableItems[0].index});
-    setVisibleIndex(viewableItems[0].index);
+    try {
+      if (viewableItems.length === 0) return;
+      setVisibleIndex(viewableItems[0]?.index || 0);
+    } catch (e) {
+      console.log({e});
+    }
   }).current;
 
   return loader ? (
@@ -268,7 +272,6 @@ const PostDetails = ({route}) => {
       <FlatList
         ref={flatListRef}
         data={[{commentId: 'borderLine'}, ...postComments]}
-        s
         viewabilityConfig={viewabilityConfig}
         onViewableItemsChanged={onViewableItemsChanged}
         showsVerticalScrollIndicator={false}

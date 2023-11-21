@@ -1,18 +1,19 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {TextBig} from '../../components/common/CustomText';
+import {TextBig, TextNormal} from '../../components/common/CustomText';
 import CustomTextInput from '../../components/common/CustomTextInput';
 import SpacesItem from '../../components/common/SpacesItem';
 import CustomWrapper from '../../components/wrapper/CustomWrapper';
-import {COLORS} from '../../utils/constants/theme';
+import {COLORS, FONTS} from '../../utils/constants/theme';
 import UseFirebaseAuth from '../../utils/hooks/UseFirebaseAuth';
 import usePost from '../../utils/hooks/usePost';
 import useUser from '../../utils/hooks/useUser';
 import Header from './Header';
+import {MyContext} from '../../context/Context';
 
 const ExploreSpaces = () => {
   const {user} = useUser();
@@ -23,7 +24,7 @@ const ExploreSpaces = () => {
   const [spaceData, setSpaceData] = useState([]);
   const [filterData, setFilterData] = useState([]);
 
-  const {fetchAllSpaces} = usePost();
+  const {fetchAllSpaces, fetchFilteredSpaces} = usePost();
 
   const fetchSpaces = async () => {
     setLoading(true);
@@ -38,9 +39,19 @@ const ExploreSpaces = () => {
   };
 
   const fetchSpacesAgain = async () => {
+    const Data = {
+      'All Spaces': 'allSpaces',
+      'My Spaces': 'mySpaces',
+      Living: 'living',
+      Other: 'others',
+      Activities: 'activities',
+      Academics: 'academic',
+      'User-Created': 'userCreated',
+    };
+
     setRefreshing(true);
     try {
-      const res = await fetchAllSpaces();
+      const res = await fetchFilteredSpaces(Data[selectedFilter]);
       setSpaceData(res);
       setFilterData(res);
     } catch (err) {
@@ -94,9 +105,23 @@ const ExploreSpaces = () => {
     }
   };
 
+  const {ExploreSpacesFlatListRef} = useContext(MyContext);
+  const [selectedFilter, setSelectedFilter] = useState('All Spaces');
+
+  useEffect(() => {
+    if (selectedFilter == 'All Spaces') {
+      fetchSpaces();
+    } else {
+      fetchSpacesAgain();
+    }
+  }, [selectedFilter]);
+
   return (
     <CustomWrapper containerStyle={{paddingHorizontal: 0}}>
-      <Header />
+      <Header
+        selectedFilter={selectedFilter}
+        setSelectedFilter={setSelectedFilter}
+      />
       <View style={styles.marginTop}>
         <CustomTextInput
           placeholder="search"
@@ -113,12 +138,14 @@ const ExploreSpaces = () => {
           },
         ]}>
         <TextBig textStyle={[styles.AllSpaces, {marginHorizontal: wp(4)}]}>
-          All Spaces
+          {selectedFilter}
         </TextBig>
       </View>
       <FlatList
         data={filterData}
+        ref={ExploreSpacesFlatListRef}
         disableVirtualization={true}
+        style={{position: 'relative', zIndex: -1}}
         onScroll={onScroll}
         renderItem={({item, index}) => (
           <SpacesItem
@@ -140,7 +167,9 @@ const ExploreSpaces = () => {
             {loading ? (
               <ActivityIndicator color={COLORS.blue} size="large" />
             ) : (
-              <TextBig color={COLORS.blue}>No Data Found</TextBig>
+              <TextNormal textStyle={styles.noDataFound}>
+                space not found.
+              </TextNormal>
             )}
           </View>
         )}
@@ -161,9 +190,19 @@ const styles = StyleSheet.create({
     paddingBottom: hp(1),
   },
   searchContainer: {
-    backgroundColor: '#E4E4E4',
+    width: wp(92),
+    alignSelf: 'center',
   },
   marginTop: {
+    position: 'relative',
+    zIndex: -1,
     marginTop: hp(2),
+    borderBottomWidth: 0.4,
+    borderBottomColor: 'transparent',
+  },
+  noDataFound: {
+    color: '#747474',
+    fontFamily: FONTS.LightItalic,
+    fontWeight: '400',
   },
 });

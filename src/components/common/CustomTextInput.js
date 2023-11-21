@@ -105,10 +105,11 @@ const styles = StyleSheet.create({
   container: {
     height: hp(6),
     width: '100%',
-    borderRadius: wp(2),
+    // borderRadius: wp(2),
+    borderRadius: 18,
     // marginVertical: hp(1),
     justifyContent: 'center',
-    backgroundColor: '#F6F6F6',
+    backgroundColor: '#E4E4E4',
   },
   textInput: {
     height: hp(7),

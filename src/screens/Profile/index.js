@@ -23,6 +23,7 @@ const Profile = () => {
   const [data, setData] = useState([]);
   const [upperBorderFlag, setUpperBorderFlag] = useState(false);
   const {ProfileFlatListRef} = useContext(MyContext);
+  const [visibleIndex, setVisibleIndex] = useState(-1);
 
   const {fetchMyPost} = usePost();
 
@@ -60,7 +61,12 @@ const Profile = () => {
         ref={ProfileFlatListRef}
         onScroll={onScroll}
         renderItem={({item, index}) => (
-          <PostItem data={item} key={item?.postId} index={index} />
+          <PostItem
+            data={item}
+            key={item?.postId}
+            index={index}
+            setVisibleIndex={setVisibleIndex}
+          />
         )}
         ListHeaderComponent={() => <ListHeaderItem user={user} />}
         showsVerticalScrollIndicator={false}

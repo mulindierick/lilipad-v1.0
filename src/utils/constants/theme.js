@@ -40,6 +40,8 @@ export const images = {
   plus: require('../../assets/plus.png'),
   send: require('../../assets/Send.png'),
   loaderImage: require('../../assets/splashScreenAsLoader.png'),
+  selectedExplore: require('../../assets/selectedExplore.png'),
+  unSelectedExplore: require('../../assets/unSelectedExplore.png'),
 };
 
 export const FONTS = {

@@ -103,6 +103,7 @@ const PostHeader = ({
           onBackDropPress={() => setEditPostModal(false)}
           onBackButtonPress={() => setEditPostModal(false)}
           afterEditingPost={afterEditingPost}
+          spaceName={data?.spaceName}
         />
       </TouchableOpacity>
     </View>
