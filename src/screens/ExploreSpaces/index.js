@@ -165,7 +165,7 @@ const ExploreSpaces = () => {
               height: hp(50),
             }}>
             {loading ? (
-              <ActivityIndicator color={COLORS.blue} size="large" />
+              <ActivityIndicator color={COLORS.grey} size="large" />
             ) : (
               <TextNormal textStyle={styles.noDataFound}>
                 space not found.
