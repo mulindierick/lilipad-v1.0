@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     height: hp(6),
     width: '100%',
     // borderRadius: wp(2),
-    borderRadius: 18,
+    borderRadius: 12,
     // marginVertical: hp(1),
     justifyContent: 'center',
     backgroundColor: '#E4E4E4',

@@ -5,8 +5,10 @@ import React, {useEffect, useState} from 'react';
 import SplashScreen from 'react-native-splash-screen';
 import {useDispatch} from 'react-redux';
 import CustomLoader from '../components/common/CustomLoader';
+import CustomNoInternetModal from '../components/common/CustomNoInternetModal';
 import {setUser} from '../redux/reducers/userSlice';
 import {useApp} from '../utils/hooks/useApp';
+import {useNetInfo} from '../utils/hooks/useNetInfo';
 import useUser from '../utils/hooks/useUser';
 import {
   GetFCMToken,
@@ -23,6 +25,7 @@ const RootStack = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   useApp(navigation, dispatch);
+  const {internetStatus} = useNetInfo();
 
   useEffect(() => {
     requestUserPermission();
@@ -87,6 +90,7 @@ const RootStack = () => {
 
   return (
     <>
+      <CustomNoInternetModal isVisible={!internetStatus} />
       {loading ? (
         <CustomLoader />
       ) : !isLogin ? (
