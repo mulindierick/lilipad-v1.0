@@ -20,12 +20,14 @@ import {COLORS, FONTS} from '../../utils/constants/theme';
 import {formatDate} from '../../utils/constants/helper';
 import ActivityItem from './ActivityItem';
 import CustomLoader from '../../components/common/CustomLoader';
+import {useRef} from 'react';
 
 const Activity = () => {
   const {fetchActivities} = usePost();
   const [data, setData] = useState([]);
   const [loader, setLoader] = useState(false);
   const [screenLoader, setScreenLoader] = useState(true);
+  const sectionListRef = useRef();
 
   const fetchAllActivities = async () => {
     setLoader(true);
@@ -63,11 +65,26 @@ const Activity = () => {
     }
   };
 
+  const sectionListScrollToTop = () => {
+    sectionListRef.current.scrollToLocation({
+      animated: true,
+      sectionIndex: 0,
+      itemIndex: 0,
+      viewOffset: 0,
+      viewPosition: 0,
+    });
+  };
+
   return (
     <CustomWrapper containerStyle={{paddingHorizontal: 0}}>
-      <CustomHeader Activty={true} upperBorderFlag={upperBorderFlag} />
+      <CustomHeader
+        Activty={true}
+        upperBorderFlag={upperBorderFlag}
+        sectionListScrollToTop={sectionListScrollToTop}
+      />
       <SectionList
         sections={data}
+        ref={sectionListRef}
         keyExtractor={(item, index) => index.toString()}
         onScroll={onScroll}
         renderItem={({item, index}) => (
@@ -99,11 +116,12 @@ const Activity = () => {
               <TextNormal textStyle={styles.noDataFound}>
                 Nothing, Yet.
               </TextNormal>
-            ) : (
+            ) : screenLoader ? (
               <ActivityIndicator color={COLORS.grey} size="large" />
-            )}
+            ) : null}
           </View>
         )}
+        ListFooterComponent={() => <View style={{paddingBottom: hp(10)}} />}
         showsVerticalScrollIndicator={false}
         refreshing={screenLoader ? false : loader}
         onRefresh={screenLoader ? false : () => fetchAllActivities()}

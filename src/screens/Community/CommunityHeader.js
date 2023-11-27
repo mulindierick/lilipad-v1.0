@@ -59,16 +59,14 @@ const CommunityHeader = ({
         style={
           upperBorderFlag
             ? {
-                borderWidth: 0.4,
+                borderBottomWidth: 0.8,
                 marginTop: hp(1.5),
-                borderColor: '#DADADA',
-                marginHorizontal: wp(-4),
+                borderBottomColor: '#DADADA',
               }
             : {
-                borderWidth: 0.4,
-                borderColor: 'transparent',
+                borderBottomWidth: 0.8,
+                borderBottomColor: 'transparent',
                 marginTop: hp(1.5),
-                marginHorizontal: wp(-4),
               }
         }
       />
@@ -100,30 +98,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: hp(2),
-  },
-  filterPopMenu: {
-    marginTop: hp(5),
-    width: wp(50),
-    borderRadius: 5,
-    backgroundColor: COLORS.white,
-    alignItems: 'flex-start',
-    paddingVertical: hp(1.5),
-    borderRadius: 12,
-    shadowColor: '#000000',
-    borderWidth: 0.1,
-    borderColor: '#CCCCCC',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.12,
-    shadowRadius: 3,
-  },
-  filterPopMenuText: {
-    fontSize: wp(4.3),
-    fontWeight: 'bold',
-    paddingHorizontal: wp(3),
-    marginVertical: hp(0.4),
-    width: wp(47),
   },
 });

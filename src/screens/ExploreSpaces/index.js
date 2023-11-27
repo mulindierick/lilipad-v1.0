@@ -133,8 +133,8 @@ const ExploreSpaces = () => {
         style={[
           styles.marginTop,
           upperBorderFlag && {
-            borderBottomWidth: 0.4,
-            borderBottomColor: '#B0B0B0',
+            borderBottomWidth: 0.8,
+            borderBottomColor: '#DADADA',
           },
         ]}>
         <TextBig textStyle={[styles.AllSpaces, {marginHorizontal: wp(4)}]}>

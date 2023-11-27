@@ -121,6 +121,7 @@ const Students = ({searchText, setY}) => {
         )}
         style={{paddingTop: hp(23.5)}}
         ListFooterComponent={() => <View style={{paddingBottom: hp(50)}} />}
+        onEndReachedThreshold={0.1}
       />
     </>
   );

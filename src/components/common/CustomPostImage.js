@@ -7,9 +7,13 @@ import {
   View,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {widthPercentageToDP} from 'react-native-responsive-screen';
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from 'react-native-responsive-screen';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {COLORS} from '../../utils/constants/theme';
+import LottieView from 'lottie-react-native';
 
 const CustomImage = props => {
   const {
@@ -27,7 +31,7 @@ const CustomImage = props => {
     imageProcessing = false,
     ...rest
   } = props;
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [calcImgHeight, setCalcImgHeight] = useState(0);
 
   const handleLoad = evt => {
@@ -42,6 +46,14 @@ const CustomImage = props => {
 
   return (
     <View>
+      {(isLoading || imageProcessing) && (
+        <LottieView
+          source={require('../../assets/ImageLoader.json')}
+          autoPlay
+          loop
+          style={{height: hp(20), width: wp(101)}}
+        />
+      )}
       <Pressable
         disabled={disabled}
         onPress={() =>
@@ -65,19 +77,6 @@ const CustomImage = props => {
           onLoadEnd={() => setIsLoading(false)}
           {...rest}
         />
-        {(isLoading || imageProcessing) && (
-          <ActivityIndicator
-            size="large"
-            color={COLORS.grey}
-            style={{
-              position: 'absolute',
-              top: 0,
-              bottom: 0,
-              left: 0,
-              right: 0,
-            }}
-          />
-        )}
       </Pressable>
       {editable && (
         <TouchableOpacity

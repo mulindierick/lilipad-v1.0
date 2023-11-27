@@ -133,7 +133,7 @@ const PostItem = ({
                 })
               }>
               <TextNormal textStyle={{color: COLORS.blue}}>
-                {showFullText ? 'See Less' : 'Read More'}
+                {showFullText ? 'See Less' : 'read more'}
               </TextNormal>
             </TouchableOpacity>
           )}

@@ -308,8 +308,8 @@ const PostDetails = ({route}) => {
           <View
             style={[
               isKeyboardVisible
-                ? {marginBottom: hp(47)}
-                : {marginBottom: hp(10)},
+                ? {marginBottom: hp(49)}
+                : {marginBottom: hp(12)},
             ]}></View>
         )}
         ListEmptyComponent={() => (

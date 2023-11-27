@@ -8,7 +8,7 @@ import {
 } from 'react-native-responsive-screen';
 import {useNavigation} from '@react-navigation/native';
 
-const ViewMembersHeader = () => {
+const ViewMembersHeader = ({scrollToTop}) => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
@@ -21,7 +21,9 @@ const ViewMembersHeader = () => {
         </TouchableOpacity>
       </View>
       <View style={{flex: 5, alignItems: 'center'}}>
-        <TextNormal textStyle={styles.textStyle}>View Members</TextNormal>
+        <TextNormal textStyle={styles.textStyle} onPress={() => scrollToTop()}>
+          View Members
+        </TextNormal>
       </View>
       <View style={{flex: 1}}></View>
     </View>

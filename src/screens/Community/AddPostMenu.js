@@ -16,6 +16,7 @@ import {
 } from 'react-native-responsive-screen';
 import {COLORS, images} from '../../utils/constants/theme';
 import DeviceInfo from 'react-native-device-info';
+import {AddPostCameraSvg} from '../../components/common/CustomSvgItems';
 
 const AddPostMenu = ({cameraPhotoHandler, cameraVideoHandler}) => {
   // to check whether the keyboard is visible or not
@@ -49,7 +50,8 @@ const AddPostMenu = ({cameraPhotoHandler, cameraVideoHandler}) => {
             underlayColor: 'rgba(0, 0, 0, 0)',
           },
         }}>
-        <CustomImage
+        <AddPostCameraSvg />
+        {/* <CustomImage
           source={images.camera}
           resizeMode="contain"
           height={hp(4.5)}
@@ -57,7 +59,8 @@ const AddPostMenu = ({cameraPhotoHandler, cameraVideoHandler}) => {
           containerStyle={{marginRight: wp(7)}}
           // onPressImage={() => cameraHandler()}
           disabled
-        />
+          tintColor={COLORS.blue}
+        /> */}
       </MenuTrigger>
       <MenuOptions
         optionsContainerStyle={[

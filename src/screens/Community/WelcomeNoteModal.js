@@ -24,8 +24,9 @@ const WelcomeNoteModal = ({
       onBackdropPress={onBackButtonPress}
       containerStyle={styles.containerStyle}
       backdropOpacity={0}
-      animationIn="zoomIn"
-      animationOut="zoomOut">
+      // animationIn="zoomIn"
+      // animationOut="zoomOut"
+    >
       <BlurView style={styles.parentView} blurType="light" blurAmount={2.5}>
         <View style={styles.container}>
           <TextNormal textStyle={styles.boldText}>

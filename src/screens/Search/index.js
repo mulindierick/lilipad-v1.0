@@ -1,26 +1,18 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {debounce} from 'lodash';
 import React, {useCallback, useRef, useState} from 'react';
-import CustomTabBar from '../../components/customTabBar';
-import CustomWrapper from '../../components/wrapper/CustomWrapper';
-import CustomTextInput from '../../components/common/CustomTextInput';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import CustomIcon from '../../components/common/CustomIcon';
-import {COLORS} from '../../utils/constants/theme';
-import Students from './Students';
-import Spaces from './Spaces';
-import {set} from 'react-hook-form';
-import {debounce} from 'lodash';
 import {BackButton} from '../../components/common/CustomSvgItems';
-import {useNavigation} from '@react-navigation/native';
-import {Animated} from 'react-native';
-
-const headerHeight = hp(20);
-let scrollValue = 0;
-let headerVisible = true;
-let focused = false;
+import CustomTextInput from '../../components/common/CustomTextInput';
+import CustomTabBar from '../../components/customTabBar';
+import CustomWrapper from '../../components/wrapper/CustomWrapper';
+import {COLORS} from '../../utils/constants/theme';
+import Spaces from './Spaces';
+import Students from './Students';
 
 const Search = () => {
   const [activeIndex, setActiveIndex] = useState(0);

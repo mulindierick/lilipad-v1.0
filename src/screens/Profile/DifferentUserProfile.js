@@ -10,7 +10,7 @@ import ListHeaderItem from './ListHeaderItem';
 import usePost from '../../utils/hooks/usePost';
 import PostItem from '../Community/PostItem';
 import {TextNormal} from '../../components/common/CustomText';
-import {COLORS} from '../../utils/constants/theme';
+import {COLORS, FONTS} from '../../utils/constants/theme';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -107,9 +107,7 @@ const DifferentUserProfile = ({route}) => {
             {loading ? (
               <ActivityIndicator color={COLORS.grey} size="large" />
             ) : (
-              <TextNormal textStyle={styles.noDataFound}>
-                Nothing, Yet.
-              </TextNormal>
+              <TextNormal textStyle={styles.noDataFound}>nothing.</TextNormal>
             )}
           </View>
         )}
@@ -135,5 +133,10 @@ const styles = StyleSheet.create({
     left: wp(4),
     backgroundColor: COLORS.white,
     zIndex: 111111,
+  },
+  noDataFound: {
+    color: '#747474',
+    fontFamily: FONTS.LightItalic,
+    fontWeight: '400',
   },
 });

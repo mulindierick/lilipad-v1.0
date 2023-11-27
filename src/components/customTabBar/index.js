@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import PagerView from 'react-native-pager-view';
 import {
@@ -10,9 +10,6 @@ import {TextNormal} from '../common/CustomText';
 import {Animated} from 'react-native';
 
 const headerHeight = hp(38.5);
-let scrollValue = 0;
-let headerVisible = true;
-let focused = false;
 
 const CustomTabBar = props => {
   const {
@@ -30,6 +27,10 @@ const CustomTabBar = props => {
     console.error('Make sure the children and tabs are of same length');
   }
 
+  const [scrollValue, setScrollValue] = useState(0);
+  const [headerVisible, setHeaderVisible] = useState(true);
+  const [focused, setFocused] = useState(false);
+
   const onPageScroll = event => {
     let position = event?.nativeEvent.position;
     setActiveIndex(position);
@@ -38,7 +39,7 @@ const CustomTabBar = props => {
       useNativeDriver: true,
       bounciness: 0,
     }).start();
-    headerVisible = true;
+    setHeaderVisible(true);
     setUpperBorderFlag(false);
   };
 
@@ -60,15 +61,13 @@ const CustomTabBar = props => {
   const opacity = animation;
 
   useEffect(() => {
-    if (focused) return;
-
-    if (y > scrollValue && headerVisible && y > headerHeight / 2) {
+    if (y > scrollValue && headerVisible && y > headerHeight / 60) {
       Animated.spring(animation, {
         toValue: 0,
         useNativeDriver: true,
         bounciness: 0,
       }).start();
-      headerVisible = false;
+      setHeaderVisible(false);
       setUpperBorderFlag(true);
     }
     if (y < scrollValue && !headerVisible) {
@@ -77,10 +76,10 @@ const CustomTabBar = props => {
         useNativeDriver: true,
         bounciness: 0,
       }).start();
-      headerVisible = true;
+      setHeaderVisible(true);
       setUpperBorderFlag(false);
     }
-    scrollValue = y;
+    setScrollValue(y);
   }, [y]);
 
   return (

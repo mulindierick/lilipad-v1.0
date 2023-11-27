@@ -33,6 +33,7 @@ import {TextNormal} from '../../components/common/CustomText';
 import {UseKeyboardVisible} from 'react-native-popup-menu/src/helpers';
 import AddPostMenu from './AddPostMenu';
 import DeviceInfo from 'react-native-device-info';
+import {AddPostGallerySvg} from '../../components/common/CustomSvgItems';
 
 const AddPostModal = ({
   isVisible,
@@ -219,14 +220,12 @@ const AddPostModal = ({
                 ios: () => hp(10),
                 android: () => 0,
               })()}>
-              <CustomImage
-                source={images.image}
-                resizeMode="contain"
-                height={hp(4.7)}
-                width={wp(10.5)}
-                containerStyle={{marginRight: wp(7)}}
-                onPressImage={() => galleryHandler()}
-              />
+              <TouchableOpacity
+                onPress={() => galleryHandler()}
+                activeOpacity={1}
+                style={{marginRight: wp(7)}}>
+                <AddPostGallerySvg />
+              </TouchableOpacity>
               <AddPostMenu
                 cameraPhotoHandler={cameraPhotoHandler}
                 cameraVideoHandler={cameraVideoHandler}
@@ -281,6 +280,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: hp(8),
     right: 0,
+    alignItems: 'center',
   },
   removeIconContainer: {
     position: 'absolute',

@@ -14,7 +14,7 @@ const CustomVideo = ({uri, containerStyle, index, activeIndex}) => {
       <Video
         source={{uri: uriMemoized}}
         style={containerStyle}
-        resizeMode="cover"
+        resizeMode="contain"
         controls={true} // Store reference
         onBuffer={() => setLoading(false)}
         onLoadStart={() => setLoading(true)}

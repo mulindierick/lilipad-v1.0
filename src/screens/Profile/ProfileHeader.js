@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     right: wp(2),
   },
   borderColors: {
+    borderBottomWidth: 0.8,
     borderBottomColor: '#DADADA',
-    borderBottomWidth: 0.4,
   },
 });

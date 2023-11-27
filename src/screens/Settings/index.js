@@ -1,4 +1,4 @@
-import {Alert, StyleSheet, Text, View} from 'react-native';
+import {Alert, Linking, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import CustomWrapper from '../../components/wrapper/CustomWrapper';
 import {
@@ -82,8 +82,20 @@ const Setting = () => {
           marginTop: hp(4),
         }}
       />
-      <CustomSettingsButton text={'Community Guidelines'} onPress={() => {}} />
-      <CustomSettingsButton text={'About LiliPad'} onPress={() => {}} />
+      <CustomSettingsButton
+        text={'Community Guidelines'}
+        onPress={() => {
+          Linking.openURL(
+            'https://lilipad-web.vercel.app/community-guidelines',
+          );
+        }}
+      />
+      <CustomSettingsButton
+        text={'About LiliPad'}
+        onPress={() => {
+          Linking.openURL('https://lilipad-web.vercel.app/about-us');
+        }}
+      />
       <CustomSettingsButton
         text={'Delete Account'}
         containerStyle={{marginTop: hp(5)}}

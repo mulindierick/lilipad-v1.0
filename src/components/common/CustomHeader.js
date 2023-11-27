@@ -14,6 +14,7 @@ const CustomHeader = ({
   forInfoFurtherScreen = false,
   Activty = false,
   upperBorderFlag,
+  sectionListScrollToTop,
 }) => {
   const navigation = useNavigation();
 
@@ -42,7 +43,11 @@ const CustomHeader = ({
             <BackButton />
           </TouchableOpacity>
         </View>
-        <TextNormal textStyle={styles.textStyle}>Activity</TextNormal>
+        <TextNormal
+          textStyle={styles.textStyle}
+          onPress={() => sectionListScrollToTop()}>
+          Activity
+        </TextNormal>
         <View style={{flex: 1}} />
       </View>
     );

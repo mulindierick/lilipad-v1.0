@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: wp(2),
-    paddingVertical: hp(2),
+    height: wp(14),
     paddingHorizontal: wp(4),
     borderWidth: 0.1,
     borderColor: '#CACACA',

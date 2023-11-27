@@ -20,7 +20,11 @@ const ActivityItem = ({item, index}) => {
         var {x, y, width, height} = event.nativeEvent.layout;
         setHeight(height);
       }}
-      style={[styles.container, height > 80 && {alignItems: 'flex-start'}]}
+      style={[
+        styles.container,
+        height > 80 && {alignItems: 'flex-start'},
+        index == 0 && {borderTopWidth: 0.2, borderTopColor: 'transparent'},
+      ]}
       onPress={() =>
         navigation.navigate('PostDetails', {
           postId: item?.postId,
@@ -144,14 +148,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     paddingHorizontal: wp(3),
     paddingVertical: hp(1.5),
-    borderRadius: 7,
     borderColor: '#CACACA',
-    shadowColor: '#000000',
-    shadowOffset: {width: 0, height: 0.5},
-    shadowOpacity: 0.05,
-    shadowRadius: 0.05,
     backgroundColor: COLORS.white,
-    borderWidth: 0.15,
+    borderTopWidth: 0.2,
+    borderTopColor: '#DADADA',
   },
   image: {
     height: wp(5),

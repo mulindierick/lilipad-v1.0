@@ -14,6 +14,7 @@ import {TextBig, TextNormal} from '../../components/common/CustomText';
 import useUser from '../../utils/hooks/useUser';
 import {useNavigation} from '@react-navigation/native';
 import CustomLoader from '../../components/common/CustomLoader';
+import {useRef} from 'react';
 
 const ViewMembers = ({route}) => {
   const key = route.params.id;
@@ -24,6 +25,7 @@ const ViewMembers = ({route}) => {
   const [loader, setLoader] = useState(true);
   const {fetchMembers} = SpacesRelatedActivity();
   const navigation = useNavigation();
+  const flatListRef = useRef();
 
   const handleNavigation = data => {
     if (data?.firebaseUserId == user?.firebaseUserId) {
@@ -65,9 +67,24 @@ const ViewMembers = ({route}) => {
     }
   }, [text]);
 
+  const [upperBorderFlag, setUpperBorderFlag] = useState(false);
+  const onScroll = e => {
+    const y = e.nativeEvent.contentOffset.y;
+    if (y <= 0) {
+      // At the top of the FlatList
+      setUpperBorderFlag(false);
+    } else {
+      setUpperBorderFlag(true);
+    }
+  };
+
+  const scrollTopTop = () => {
+    flatListRef.current.scrollToOffset({animated: true, offset: 0});
+  };
+
   return (
     <CustomWrapper containerStyle={{paddingHorizontal: 0}}>
-      <ViewMembersHeader />
+      <ViewMembersHeader scrollToTop={scrollTopTop} />
       <View style={styles.marginTop}>
         <CustomTextInput
           placeholder="search"
@@ -77,13 +94,23 @@ const ViewMembers = ({route}) => {
           textInputStyle={{fontWeight: '500', fontSize: wp(4)}}
         />
       </View>
+      <View
+        style={
+          upperBorderFlag
+            ? styles.borderStrokeVisible
+            : styles.borderStrokeNotVisible
+        }
+      />
       <FlatList
         data={filteredData}
+        ref={flatListRef}
         ListFooterComponent={() => <View style={{paddingBottom: hp(15)}} />}
+        onScroll={onScroll}
+        showsVerticalScrollIndicator={false}
         renderItem={({item, index}) => {
           return (
             <TouchableOpacity
-              style={[styles.spaceContainer]}
+              style={[styles.spaceContainer, index == 0 && {borderTopWidth: 0}]}
               activeOpacity={1}
               key={item?.firebaseUserId}
               onPress={() => handleNavigation(item)}>
@@ -131,29 +158,28 @@ const styles = StyleSheet.create({
   },
   marginTop: {
     marginVertical: hp(3),
-    marginHorizontal: wp(4),
+    paddingHorizontal: wp(4),
+  },
+  borderStrokeVisible: {
+    borderBottomWidth: 0.8,
+    borderBottomColor: '#CCCCCC',
+  },
+  borderStrokeNotVisible: {
+    borderBottomWidth: 0.8,
+    borderBottomColor: 'transparent',
   },
 
   //hERE
 
   spaceContainer: {
-    borderRadius: 10,
     paddingLeft: wp(6),
     paddingRight: wp(9),
     paddingVertical: hp(0.99),
     backgroundColor: '#FFFFFF',
     flexDirection: 'row',
     alignItems: 'center',
-    borderWidth: 0.15,
-    borderColor: '#CCCCCC',
-    shadowColor: '#000000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 1,
-    elevation: 12,
+    borderTopWidth: 0.2,
+    borderTopColor: '#CCCCCC',
   },
   spaceContainerHeader: {
     width: wp(70),
