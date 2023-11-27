@@ -713,7 +713,7 @@ export const BottomExploreSvg = ({containerStyle, color = '#747474'}) => {
   return (
     <View
       style={[
-        {width: wp(7), height: wp(7), marginBottom: wp(1)},
+        {width: wp(7), height: wp(7), marginBottom: wp(1.1)},
         containerStyle,
       ]}>
       <Svg
@@ -735,11 +735,7 @@ export const BottomExploreSvg = ({containerStyle, color = '#747474'}) => {
 
 export const BottomCommunitySvg = ({containerStyle, color = '#747474'}) => {
   return (
-    <View
-      style={[
-        {width: wp(8.5), height: wp(8.5), marginBottom: wp(0.1)},
-        containerStyle,
-      ]}>
+    <View style={[{width: wp(9), height: wp(9)}, containerStyle]}>
       <Svg
         width="100%"
         height="100%"
@@ -779,7 +775,7 @@ export const BottomProfileSvg = ({containerStyle, color = '#747474'}) => {
   return (
     <View
       style={[
-        {width: wp(8), height: wp(8), marginBottom: wp(0.5)},
+        {width: wp(8), height: wp(8), marginBottom: wp(0.6)},
         containerStyle,
       ]}>
       <Svg

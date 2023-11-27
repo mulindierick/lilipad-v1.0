@@ -169,6 +169,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: wp(7),
+    fontFamily: FONTS.Regular,
     fontWeight: '600',
     flex: 5,
     textAlign: 'center',
