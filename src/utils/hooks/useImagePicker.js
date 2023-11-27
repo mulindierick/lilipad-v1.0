@@ -28,7 +28,7 @@ const useImagePicker = () => {
     try {
       var maxFileSizeInBytes = 50 * 1048576; // 50MB in bytes
       let res = await ImagePicker.openPicker(config);
-      console.log({res});
+
       if (res.size > maxFileSizeInBytes) {
         Alert.alert(
           'File Size Exceeded',
@@ -42,7 +42,7 @@ const useImagePicker = () => {
         );
         return;
       }
-      console.log({res});
+
       res = [res];
       res = res.map(it => ({
         data: it.data,
@@ -157,7 +157,7 @@ const useImagePicker = () => {
   const compressImageSize = async (image, imageBuffer = false) => {
     try {
       const {path, uri, mime} = image;
-      console.log({image});
+
       let result = null;
       if (mime.includes('video')) {
         result = await Video.compress(path || uri, {

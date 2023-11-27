@@ -88,7 +88,6 @@ const SpacesRelatedActivity = () => {
 
       const membersData = await Promise.all(
         res?.data()?.members.map(async item => {
-          console.log({item});
           let res = await firestore().collection('accounts').doc(item).get();
           return res?.data();
         }),
@@ -101,8 +100,6 @@ const SpacesRelatedActivity = () => {
 
   const handleEachSpaceNotifcationStatus = async spaceName => {
     try {
-      console.log({spaceName});
-      console.log({user});
       const newData = {
         ...user?.notificationStatus,
         [spaceName]: !user?.notificationStatus[spaceName],

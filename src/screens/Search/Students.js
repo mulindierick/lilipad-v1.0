@@ -44,7 +44,7 @@ const Students = ({searchText, setY}) => {
 
       // Normal Search
       const students = await fetchAllStudents();
-      console.log({students});
+
       setPureData(students);
       if (searchText) {
         const filteredData = students.filter(item =>

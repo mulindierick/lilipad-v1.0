@@ -112,7 +112,6 @@ const usePost = () => {
         );
       },
     );
-    console.log({lastFetchedPostOfEachSpace});
 
     let SpaceDataObject = {};
     let newPostsCountData = {};
@@ -157,13 +156,11 @@ const usePost = () => {
         };
       }),
     );
-    console.log({post});
+
     return post;
   };
 
   const fetchFilteredPostsOfSpecificSpace = async (spaceName, filter) => {
-    console.log({spaceName}, {filter});
-
     let spaceData = null;
     if (filter == 'Recent') {
       spaceData = await firestore()
@@ -229,8 +226,6 @@ const usePost = () => {
   };
 
   const sharePost = async (spaceName, object, spaceId) => {
-    console.log({user});
-    console.log({spaceId});
     const {text, image, video} = object;
     try {
       const postId = firestore()
@@ -296,7 +291,6 @@ const usePost = () => {
     postCreatorId,
     spaceId,
   ) => {
-    console.log({spaceName});
     try {
       if (like) {
         const likeIdTask = await firestore()
@@ -359,7 +353,6 @@ const usePost = () => {
   };
 
   const fetchPostById = async (postId, spaceName, spaceId) => {
-    console.log({spaceId});
     try {
       const data = await firestore()
         .collection(`Colleges/${user?.college}/spaces/${spaceId}/posts`)
@@ -481,7 +474,6 @@ const usePost = () => {
 
   const fetchUpdatedComments = async (spaceId, postId, commentCount) => {
     try {
-      console.log({commentCount});
       const comments = await firestore()
         .collection(
           `Colleges/${user?.college}/spaces/${spaceId}/posts/${postId}/comments`,
@@ -621,8 +613,6 @@ const usePost = () => {
           }),
         );
 
-        console.log({eachDayData});
-
         const pureEachDayData = eachDayData.filter(item => item != 'noData');
 
         // const emptyValuesCheck = eachDayData.filter(item => item != 'noData');
@@ -737,8 +727,6 @@ const usePost = () => {
             {merge: true},
           );
       }
-
-      console.log('HELLOO SUCCESSFULLLL');
     } catch (err) {
       console.log({err});
     }
@@ -859,8 +847,6 @@ const usePost = () => {
           .doc(user?.firebaseUserId)
           .delete();
 
-        console.log({user});
-
         sendNotificationAndRecordActivityForCommentLike({
           postId: data?.postId,
           spaceId: data?.spaceId,
@@ -877,8 +863,6 @@ const usePost = () => {
           .doc(data?.commentId)
           .get();
         if (currentCommentData?.data()?.likesCount >= 0) {
-          console.log('YAHA Modify HAI');
-
           // increment the likesCount
           await firestore()
             .collection(
@@ -933,7 +917,6 @@ const usePost = () => {
   ) => {
     try {
       let posts = null;
-      console.log({filter, spaceId, lastVisible});
 
       if (filter == 'Recent') {
         if (!lastVisible) {
@@ -1007,7 +990,7 @@ const usePost = () => {
           };
         }),
       );
-      console.log({data: post, lastVisible: posts.docs[posts.docs.length - 1]});
+
       return {data: post, lastVisible: posts.docs[posts.docs.length - 1]};
     } catch (err) {
       console.log({err});

@@ -39,7 +39,7 @@ const ViewMembers = ({route}) => {
     setLoader(true);
     try {
       let res = await fetchMembers(key);
-      console.log('HEREE=>>', {res});
+
       setData(res);
       setFilteredData(res);
     } catch (err) {

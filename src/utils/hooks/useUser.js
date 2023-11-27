@@ -19,9 +19,6 @@ const useUser = () => {
   };
 
   const uploadImage = async (uri, postId = '') => {
-    console.log('uploadStarting', user?.firebaseUserId);
-    console.log({postId});
-
     const ext = uri.split('.').pop();
     let ref = null;
     if (postId) {

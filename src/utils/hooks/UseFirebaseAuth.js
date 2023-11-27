@@ -25,11 +25,10 @@ const UseFirebaseAuth = () => {
   const {user} = useSelector(state => ({user: state.userSlice}));
 
   const firebaseAuth = async (email, otp) => {
-    console.log(email, otp);
     try {
       let res = await verifyOTP({email: email, otp: otp});
       let fcmToken = await GetFCMToken();
-      console.log({res});
+
       if (res?.data?.message == 'Success') {
         let authStatus = firebase
           .auth()
@@ -83,7 +82,7 @@ const UseFirebaseAuth = () => {
             .collection(`Colleges/${user?.college}/spaces`)
             .where('spaceName', '==', item)
             .get();
-          console.log({res2});
+
           if (res2?.docs?.length > 0) {
             spacesId = {
               ...spacesId,
@@ -268,7 +267,6 @@ const UseFirebaseAuth = () => {
           spacesId: null,
         }),
       );
-      console.log('FINALLY COMPLETED');
     } catch (e) {
       console.log({e});
     }

@@ -15,7 +15,6 @@ const StudentsItem = ({item, index}) => {
   const navigation = useNavigation();
 
   const handleNavigation = () => {
-    console.log({user, item});
     if (user?.firebaseUserId == item?.firebaseUserId) {
       navigation.navigate('Profile');
     } else {
