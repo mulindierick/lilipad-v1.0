@@ -32,8 +32,6 @@ const FurtherInfo = () => {
 
   const {createAccount} = UseFirebaseAuth();
 
-  console.log('heree ', selectedMajor, ' ', selectedClassYear);
-
   const createAccountOfUser = async data => {
     setLoader(true);
     try {
@@ -43,7 +41,6 @@ const FurtherInfo = () => {
         classYear: selectedClassYear,
         image: localImageUriArray[0]?.image,
       });
-      console.log({res});
       // if (res == 'Success') {
       //   showToast('success', 'Account Created Successfully');
       // } else {
@@ -64,14 +61,12 @@ const FurtherInfo = () => {
 
   const getData = async () => {
     try {
-      console.log({user});
       let res = await firestore()
         .collection('Colleges')
         .doc(user?.college)
         .get();
       setMajorsData(res?.data()?.majorsOffered);
       setClassYearData(res?.data()?.classYear);
-      console.log({res});
     } catch (err) {
       console.log({err});
     }

@@ -44,7 +44,7 @@ const PostDetails = ({route}) => {
   const postId = route?.params?.postId;
   const spaceName = route?.params?.spaceName;
   const spaceId = route?.params?.spaceId;
-  console.log({postId, spaceName, spaceId});
+
   const [loader, setLoader] = useState(true);
   const [myOwnComment, setMyOwnComment] = useState(false);
   const [postData, setPostData] = useState({});
@@ -84,7 +84,6 @@ const PostDetails = ({route}) => {
           spaceName: spaceName,
         }),
       );
-      console.log({res});
     } catch (err) {
       console.log({err});
     }

@@ -43,10 +43,8 @@ const Search = () => {
       // Handle the input change here
       if (activeIndex == 0) {
         setSearchStudent(txt);
-        console.log('searchStudent');
       } else {
         setSearchSpace(txt);
-        console.log('searchSpace');
       }
     }, 0),
     [activeIndex],

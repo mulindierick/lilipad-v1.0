@@ -70,14 +70,12 @@ const Spaces = ({searchText, setY}) => {
         );
         setFilterData(changeData);
       }
-      console.log({res});
     } catch (err) {
       console.log({err});
     }
   };
 
   useEffect(() => {
-    console.log('===>', {searchText}, {loading});
     if (loading) {
       fetchSpaces();
     } else {

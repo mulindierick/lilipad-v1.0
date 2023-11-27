@@ -38,7 +38,6 @@ export const userSlice = createSlice({
       state.notificationStatus = payload?.notificationStatus || null;
     },
     setSpaces: (state, {payload}) => {
-      console.log('HELLOO ITS WORKING ===> ', payload?.spaces);
       state.spaces = payload?.spaces || null;
       state.spaceId = payload?.spaceId || null;
       state.notificationStatus = payload?.notificationStatus || null;

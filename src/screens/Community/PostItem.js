@@ -161,7 +161,7 @@ const PostItem = ({
             index={index}
             activeIndex={activeIndex}
             containerStyle={{
-              height: hp(30),
+              height: hp(35),
               width: wp(101),
               marginTop: hp(1.5),
               marginHorizontal: wp(-5),

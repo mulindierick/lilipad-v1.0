@@ -41,8 +41,6 @@ const RootStack = () => {
     setLoading(true);
     const subscriber = auth().onAuthStateChanged(async user => {
       try {
-        console.log('on Auth State Changed');
-        console.log({user});
         if (user) {
           let userDetail = await firestore()
             .collection('accounts')
@@ -50,7 +48,6 @@ const RootStack = () => {
             .get()
             .then(userDetailData => {
               const userData = userDetailData?.data();
-              console.log({userData});
               if (!userData?.email) {
                 auth().signOut();
                 dispatch(setUser({}));

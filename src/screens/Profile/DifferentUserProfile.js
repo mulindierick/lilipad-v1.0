@@ -20,7 +20,6 @@ import CustomLoader from '../../components/common/CustomLoader';
 import SplashScreen from 'react-native-splash-screen';
 
 const DifferentUserProfile = ({route}) => {
-  console.log({route});
   const {uid} = route?.params;
   const {user} = useUser();
   const [loading, setLoading] = useState(true);

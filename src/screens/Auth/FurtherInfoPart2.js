@@ -35,8 +35,6 @@ const FurtherInfoPart2 = ({route}) => {
 
   const {createAccount} = UseFirebaseAuth();
 
-  console.log('heree ', selectedMajor, ' ', selectedClassYear);
-
   const createAccountOfUser = async () => {
     setLoader(true);
     try {
@@ -45,7 +43,7 @@ const FurtherInfoPart2 = ({route}) => {
         major: selectedMajor,
         classYear: selectedClassYear,
       });
-      console.log({res});
+
       // if (res == 'Success') {
       //   showToast('success', 'Account Created Successfully');
       // } else {
@@ -57,18 +55,14 @@ const FurtherInfoPart2 = ({route}) => {
     setLoader(false);
   };
 
-  console.log({user});
-
   const getData = async () => {
     try {
-      console.log({user});
       let res = await firestore()
         .collection('Colleges')
         .doc(user?.college)
         .get();
       setMajorsData(res?.data()?.majorsOffered);
       setClassYearData(res?.data()?.classYear);
-      console.log({res});
     } catch (err) {
       console.log({err});
     }

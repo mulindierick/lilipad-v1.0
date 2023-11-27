@@ -67,7 +67,6 @@ const Community = () => {
   const [selectedSpaceData, setSelectedSpaceData] = useState(() => {
     let obj = {};
     user?.spaces.forEach(space => {
-      console.log({space});
       obj[space] = {
         data: [],
         filter: 'Recent',
@@ -204,7 +203,6 @@ const Community = () => {
 
   useEffect(() => {
     const handleAppStateChange = nextAppState => {
-      console.log({nextAppState});
       setAppState(nextAppState);
     };
 
@@ -231,7 +229,7 @@ const Community = () => {
       );
       if (findIndex >= 0) {
         let temp = [...selectedSpaceData[general?.spaceName].data];
-        console.log({temp});
+
         temp[findIndex].likesCount = general?.likeCount;
         temp[findIndex].commentsCount = general?.commentCount;
         temp[findIndex].userLiked = general?.userLiked;
@@ -244,7 +242,6 @@ const Community = () => {
         });
       }
     }
-    console.log({general});
   }, [general?.postId]);
 
   // For Animation

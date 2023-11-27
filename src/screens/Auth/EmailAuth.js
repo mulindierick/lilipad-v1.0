@@ -38,7 +38,6 @@ const EmailAuth = () => {
   const regexSetup = async () => {
     try {
       const domains = await getCollegeDomains();
-      console.log({domains});
       setCollegeName(domains);
       // Escape dots in domain names and join them with |
       const domainPattern = domains

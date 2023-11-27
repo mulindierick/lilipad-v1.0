@@ -48,14 +48,12 @@ const FurtherInfoPart1 = () => {
 
   const getData = async () => {
     try {
-      console.log({user});
       let res = await firestore()
         .collection('Colleges')
         .doc(user?.college)
         .get();
       setMajorsData(res?.data()?.majorsOffered);
       setClassYearData(res?.data()?.classYear);
-      console.log({res});
     } catch (err) {
       console.log({err});
     }

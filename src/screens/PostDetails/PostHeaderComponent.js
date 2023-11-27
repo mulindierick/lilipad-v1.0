@@ -44,7 +44,7 @@ const PostHeaderComponent = ({
               activeIndex={activeIndex}
               index={0}
               containerStyle={{
-                height: hp(30),
+                height: hp(35),
                 width: '100%',
                 marginTop: hp(1.5),
               }}

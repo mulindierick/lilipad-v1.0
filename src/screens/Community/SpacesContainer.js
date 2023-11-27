@@ -53,7 +53,6 @@ const SpacesContainer = ({
   useEffect(() => {}, [dropDown]);
 
   const handleSpacesClick = (item, index) => {
-    console.log({item});
     setSelected(item);
     setNoMoreFetchingPosts(false);
     if (newPostCount[item] != 0) {
@@ -61,8 +60,6 @@ const SpacesContainer = ({
       setNewPostCount({...newPostCount, [item]: 0});
     }
   };
-
-  console.log({newPostCount});
 
   return (
     <>

@@ -42,7 +42,6 @@ const PostHeader = ({
   };
 
   const handleNavigation = () => {
-    console.log({uid, userId: user?.firebaseUserId});
     if (uid == user?.firebaseUserId) {
       navigation.navigate('Profile');
     } else {

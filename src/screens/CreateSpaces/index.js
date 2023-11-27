@@ -1,4 +1,5 @@
 import {
+  Alert,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -27,6 +28,7 @@ const CreateSpace = () => {
     control,
     handleSubmit,
     formState: {isValid},
+    reset,
   } = useForm();
 
   const {addRequestToCreateSpace} = SpacesRelatedActivity();
@@ -36,11 +38,21 @@ const CreateSpace = () => {
     setLoading(true);
     try {
       await addRequestToCreateSpace(data);
-      navigation.goBack();
+      reset();
+      Alert.alert(
+        'Success',
+        'Your request to create a space has been submitted successfully.',
+        [
+          {
+            text: 'Ok',
+            onPress: () => navigation.goBack(),
+          },
+        ],
+      );
     } catch (err) {
       console.log({err});
     }
-    setLoading(true);
+    setLoading(false);
   };
 
   return (
@@ -135,7 +147,7 @@ const CreateSpace = () => {
               containerStyle={styles.button}
               textStyle={styles.buttonText}
               boldTitle={true}
-              disabled={!isValid}
+              disabled={!isValid || loading}
               loader={loading}
             />
           </View>

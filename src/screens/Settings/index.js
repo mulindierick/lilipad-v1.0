@@ -46,19 +46,37 @@ const Setting = () => {
   const dispatch = useDispatch();
 
   const signOut = () => {
-    dispatch(
-      setUser({
-        email: null,
-        photo: null,
-        firstName: null,
-        lastName: null,
-        isVerified: null,
-        firebaseUserId: null,
-        major: null,
-        spaces: null,
-      }),
+    Alert.alert(
+      'Logout',
+      'Are you sure you want to logout?',
+      [
+        {
+          text: 'No',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+
+        {
+          text: 'Yes',
+          onPress: async () => {
+            dispatch(
+              setUser({
+                email: null,
+                photo: null,
+                firstName: null,
+                lastName: null,
+                isVerified: null,
+                firebaseUserId: null,
+                major: null,
+                spaces: null,
+              }),
+            );
+            auth().signOut();
+          },
+        },
+      ],
+      {cancelable: false},
     );
-    auth().signOut();
   };
 
   const navigation = useNavigation();
