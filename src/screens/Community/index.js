@@ -222,11 +222,15 @@ const Community = () => {
 
   useEffect(() => {
     if (general?.postId) {
-      const findIndex = selectedSpaceData[selectedSpaces].data.findIndex(
-        item => {
-          return item?.postId === general?.postId;
-        },
-      );
+      let findIndex = -1;
+      console.log('CHECKKINFGGG', {general});
+      if (general?.spaceName) {
+        findIndex = selectedSpaceData[general?.spaceName].data.findIndex(
+          item => {
+            return item?.postId === general?.postId;
+          },
+        );
+      }
       if (findIndex >= 0) {
         let temp = [...selectedSpaceData[general?.spaceName].data];
 
@@ -235,7 +239,8 @@ const Community = () => {
         temp[findIndex].userLiked = general?.userLiked;
         setSelectedSpaceData({
           ...selectedSpaceData,
-          [selectedSpaces]: {
+          [general?.spaceName]: {
+            ...selectedSpaceData[general?.spaceName],
             data: temp,
             filter: selectedSpaceData[selectedSpaces].filter,
           },
@@ -346,9 +351,10 @@ const Community = () => {
         initialNumToRender={10}
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
-        keyExtractor={(item, index) => index.toString()}
+        // keyExtractor={(item, index) => index.toString()}
         disableVirtualization={true}
         data={selectedSpaceData[selectedSpaces]?.data || []}
+        extraData={selectedSpaceData[selectedSpaces]?.data || []}
         onEndReached={() => fetchMorePosts()}
         onEndReachedThreshold={0.5}
         ListFooterComponent={() => {

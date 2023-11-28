@@ -61,7 +61,7 @@ const CustomTabBar = props => {
   const opacity = animation;
 
   useEffect(() => {
-    if (y > scrollValue && headerVisible && y > headerHeight / 60) {
+    if (y > scrollValue + 50 && headerVisible && y > headerHeight / 2) {
       Animated.spring(animation, {
         toValue: 0,
         useNativeDriver: true,
@@ -69,8 +69,7 @@ const CustomTabBar = props => {
       }).start();
       setHeaderVisible(false);
       setUpperBorderFlag(true);
-    }
-    if (y < scrollValue && !headerVisible) {
+    } else if (y < scrollValue && !headerVisible) {
       Animated.spring(animation, {
         toValue: 1,
         useNativeDriver: true,

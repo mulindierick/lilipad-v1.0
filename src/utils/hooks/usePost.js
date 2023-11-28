@@ -11,6 +11,7 @@ import {
   useSendNewPostNotificationMutation,
   useSentNotificationMutation,
 } from '../../redux/apis';
+import {useNetInfo} from './useNetInfo';
 
 const usePost = () => {
   const {user} = useUser();
@@ -19,6 +20,8 @@ const usePost = () => {
   const [sendNewPostNotification] = useSendNewPostNotificationMutation();
   const [sendNotificationAndRecordActivityForCommentLike] =
     useCommentLikeActivityRecorderAndNotificationHandlerMutation();
+
+  const {internetStatus} = useNetInfo();
 
   const {uploadImage} = useUser();
   const dispatch = useDispatch();
@@ -228,6 +231,7 @@ const usePost = () => {
   const sharePost = async (spaceName, object, spaceId) => {
     const {text, image, video} = object;
     try {
+      if (!internetStatus) return alert('No Internet Connection');
       const postId = firestore()
         .collection(`Colleges/${user?.college}/spaces/${spaceId}/posts`)
         .doc();
@@ -345,6 +349,7 @@ const usePost = () => {
           userId: postCreatorId,
           userIdWhoPerforemedActivity: user?.firebaseUserId,
           spaceName: spaceName,
+          date: new Date().toLocaleString('en-GB').split(',')[0],
         });
       }
     } catch (err) {
@@ -466,6 +471,7 @@ const usePost = () => {
         userId: postCreatorId,
         userIdWhoPerforemedActivity: user?.firebaseUserId,
         spaceName: spaceName,
+        date: new Date().toLocaleString('en-GB').split(',')[0],
       });
     } catch (error) {
       console.log(error);
@@ -681,6 +687,7 @@ const usePost = () => {
 
   const EditPost = async (spaceId, data, postId, postPhoto, postVideo) => {
     try {
+      if (!internetStatus) return alert('No Internet Connection');
       const {text, image = null, video = null} = data;
       let mediaUrl = null;
       if (image) {
@@ -854,6 +861,7 @@ const usePost = () => {
           userWhoLikedComment: user,
           commentId: data?.commentId,
           spaceName: data?.spaceName,
+          date: new Date().toLocaleString('en-GB').split(',')[0],
         });
       } else {
         const currentCommentData = await firestore()
@@ -902,6 +910,7 @@ const usePost = () => {
           userWhoLikedComment: user,
           commentId: data?.commentId,
           spaceName: data?.spaceName,
+          date: new Date().toLocaleString('en-GB').split(',')[0],
         });
       }
       return null;
