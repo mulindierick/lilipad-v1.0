@@ -174,9 +174,9 @@ const UseFirebaseAuth = () => {
           spaceId: spacesId,
           collegeName: collegeDataItems.collegeName,
           notificationStatus: {
-            [collegeDataItems.collegeName]: false,
-            [classYear]: false,
-            [major]: false,
+            [collegeDataItems.collegeName]: true,
+            [classYear]: true,
+            [major]: true,
           },
         }),
       );
