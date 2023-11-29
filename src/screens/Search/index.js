@@ -80,9 +80,11 @@ const Search = () => {
             zIndex: 1000,
             position: 'relative',
             backgroundColor: COLORS.backgroundColor,
+            borderBottomWidth: 0.8,
+            borderBottomColor: 'transparent',
           },
           upperBorderFlag && {
-            borderBottomWidth: 0.4,
+            borderBottomWidth: 0.8,
             borderBottomColor: '#DADADA',
           },
         ]}>
