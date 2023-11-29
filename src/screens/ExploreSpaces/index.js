@@ -57,7 +57,9 @@ const ExploreSpaces = () => {
     } catch (err) {
       console.log({err});
     }
-    setRefreshing(false);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 100);
   };
 
   const AddSpaces = async (spaceName, spaceId) => {
@@ -147,6 +149,8 @@ const ExploreSpaces = () => {
         disableVirtualization={true}
         style={{position: 'relative', zIndex: -1}}
         onScroll={onScroll}
+        // extraData={false}
+        keyExtractor={item => console.log({item: item._data?.spaceId})}
         renderItem={({item, index}) => (
           <SpacesItem
             item={item}
@@ -197,7 +201,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     zIndex: -1,
     marginTop: hp(2),
-    borderBottomWidth: 0.4,
+    borderBottomWidth: 0.8,
     borderBottomColor: 'transparent',
   },
   noDataFound: {

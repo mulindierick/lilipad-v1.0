@@ -125,7 +125,9 @@ const Community = () => {
     } catch (e) {
       console.log({e});
     }
-    setRefreshing(false);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 200);
   };
 
   const AfterAddingNewPost = async filter => {

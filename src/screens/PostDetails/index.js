@@ -99,17 +99,21 @@ const PostDetails = ({route}) => {
       const res = await fetchUpdatedComments(spaceId, postId, commentCount);
       if (res.data.length > 0) {
         setCommentCount(res.data.length);
-        setPostComments(res.data);
         if (
           res.data[res.data.length - 1]?.user?._data?.firebaseUserId ===
             user?.firebaseUserId &&
           res.refreshValue
         ) {
-          flatListRef.current.scrollToIndex({
-            animated: true,
-            index: res.data.length - 1,
-          });
+          try {
+            flatListRef.current.scrollToIndex({
+              animated: true,
+              index: res.data.length - 1,
+            });
+          } catch (err) {
+            console.log({err});
+          }
         }
+        setPostComments(res.data);
       }
     } catch (err) {
       console.log({err});

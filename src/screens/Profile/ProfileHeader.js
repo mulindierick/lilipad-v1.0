@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     paddingHorizontal: wp(4),
     borderBottomColor: 'transparent',
-    borderBottomWidth: 0.4,
+    borderBottomWidth: 0.8,
   },
   innerContainer: {
     flexDirection: 'row',
