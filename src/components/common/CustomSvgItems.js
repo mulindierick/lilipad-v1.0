@@ -736,7 +736,7 @@ export const BottomExploreSvg = ({containerStyle, color = '#747474'}) => {
 export const BottomCommunitySvg = ({containerStyle, color = '#747474'}) => {
   return (
     <View
-      style={[{width: wp(9), height: wp(9), bottom: wp(-0.5)}, containerStyle]}>
+      style={[{width: wp(9), height: wp(9), bottom: wp(-0.3)}, containerStyle]}>
       <Svg
         width="100%"
         height="100%"
