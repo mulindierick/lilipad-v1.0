@@ -85,6 +85,21 @@ const RootStack = () => {
     return subscriber;
   }, []);
 
+  useEffect(() => {
+    //snapshot to check whether the account is deleted or not from admin panel
+    const snapshot = firestore()
+      .collection('accounts')
+      .doc(user?.firebaseUserId)
+      .onSnapshot(doc => {
+        if (!doc?.data()?.email) {
+          auth().signOut();
+          dispatch(setUser({}));
+          setIslogin(false);
+        }
+      });
+    return () => snapshot();
+  }, []);
+
   return (
     <>
       <CustomNoInternetModal isVisible={!internetStatus} />
