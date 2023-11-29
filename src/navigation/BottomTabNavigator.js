@@ -140,10 +140,10 @@ const BottomTabNavigator = () => {
                         ? {bottom: hp(0.5)}
                         : {bottom: hp(3.5)},
                       tab.name == 'Community'
-                        ? {left: wp(2.5)}
+                        ? {flex: 1}
                         : tab.name == 'Profile'
-                        ? {right: wp(2.5)}
-                        : {left: wp(1.3)},
+                        ? {flex: 1}
+                        : {flex: 0.5, left: wp(1.5)},
                     ]}
                     key={tab.id}>
                     {/* <CustomImage
