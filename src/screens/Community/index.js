@@ -225,8 +225,7 @@ const Community = () => {
   useEffect(() => {
     if (general?.postId) {
       let findIndex = -1;
-      console.log('CHECKKINFGGG', {general});
-      if (general?.spaceName) {
+      if (general?.spaceName && selectedSpaceData[general?.spaceName]?.data) {
         findIndex = selectedSpaceData[general?.spaceName].data.findIndex(
           item => {
             return item?.postId === general?.postId;
