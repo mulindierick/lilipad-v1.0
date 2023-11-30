@@ -47,6 +47,7 @@ const Community = () => {
   const {PostFlatListRef} = useContext(MyContext);
 
   const RBSheetRef = useRef();
+  const horizontalScrollRef = useRef();
   // useReducer
   const [loading, setLoading] = useState(true);
   const [bottomLoading, setBottomLoading] = useState(false);
@@ -338,6 +339,7 @@ const Community = () => {
             setNewPostCount={setNewPostCount}
             upperBorderFlag={upperBorderFlag}
             triggerToSort={loading}
+            scrollRef={horizontalScrollRef}
             setNoMoreFetchingPosts={setNoMoreFetchingPosts}
             selectedFilter={
               selectedSpaceData[selectedSpaces]?.filter || 'Recent'
@@ -433,6 +435,7 @@ const Community = () => {
         RBSheetRef={RBSheetRef}
         setSelected={handleSelectingSpaces}
         selected={selectedSpaces}
+        horizontalScrollRef={horizontalScrollRef}
       />
       <AddPostModal
         isVisible={addPostModal}

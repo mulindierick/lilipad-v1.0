@@ -34,6 +34,7 @@ const BottomSheet = ({
   spaceId,
   DeletePost,
   setEditPostModal,
+  horizontalScrollRef,
 }) => {
   const {user} = useUser();
   const {removeSpace, handleEachSpaceNotifcationStatus} =
@@ -46,6 +47,8 @@ const BottomSheet = ({
       setSelected(user?.collegeName);
       let res = await removeSpace(selected);
       RBSheetRef.current.close();
+      // scroll to zero index of scrollView
+      horizontalScrollRef.current.scrollTo({x: 0, y: 0, animated: true});
     } catch (err) {
       console.log({err});
     }

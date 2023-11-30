@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -31,6 +31,7 @@ const SpacesContainer = ({
   wholeScreenNotAccessibile = false,
   triggerToSort = false,
   setNoMoreFetchingPosts,
+  scrollRef,
 }) => {
   const navigation = useNavigation();
   const {user} = useUser();
@@ -95,6 +96,7 @@ const SpacesContainer = ({
         />
         <ScrollView
           horizontal
+          ref={scrollRef}
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{
             flexGrow: 1,
