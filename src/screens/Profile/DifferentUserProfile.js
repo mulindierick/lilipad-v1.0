@@ -18,6 +18,7 @@ import {
 import {MyContext} from '../../context/Context';
 import CustomLoader from '../../components/common/CustomLoader';
 import SplashScreen from 'react-native-splash-screen';
+import DifferentUserProfileItem from './DifferentUserProfileItem';
 
 const DifferentUserProfile = ({route}) => {
   const {uid} = route?.params;
@@ -41,7 +42,12 @@ const DifferentUserProfile = ({route}) => {
     } catch (e) {
       console.log({e});
     }
-    SplashScreen.hide();
+    try {
+      SplashScreen.hide();
+    } catch (e) {
+      console.log({e});
+    }
+
     setLoading(false);
   };
 
@@ -82,7 +88,7 @@ const DifferentUserProfile = ({route}) => {
         ref={ProfileFlatListRef}
         onScroll={onScroll}
         renderItem={({item, index}) => (
-          <PostItem
+          <DifferentUserProfileItem
             data={item}
             key={item?.postId}
             disabledProfileClick={true}

@@ -5,20 +5,18 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import CustomImage from '../../components/common/CustomImage';
+import {useDispatch} from 'react-redux';
+import CustomPostImage from '../../components/common/CustomPostImage';
 import {TextNormal} from '../../components/common/CustomText';
+import CustomVideo from '../../components/common/CustomVideo';
+import {setPostDetails} from '../../redux/reducers/generalSlice';
 import {COLORS} from '../../utils/constants/theme';
 import usePost from '../../utils/hooks/usePost';
-import PostFooter from './PostFooter';
-import PostHeader from './PostHeader';
 import useUser from '../../utils/hooks/useUser';
-import {useDispatch} from 'react-redux';
-import {setPostDetails, setPostId} from '../../redux/reducers/generalSlice';
-import Video from 'react-native-video';
-import CustomVideo from '../../components/common/CustomVideo';
-import CustomPostImage from '../../components/common/CustomPostImage';
+import PostHeader from '../Community/PostHeader';
+import PostFooter from '../Community/PostFooter';
 
-const PostItem = ({
+const DifferentUserProfileItem = ({
   data,
   disabledProfileClick = false,
   index,
@@ -75,6 +73,7 @@ const PostItem = ({
       setLike(general?.userLiked);
       setLikeCount(general?.likeCount);
       setCommentCount(general?.commentCount);
+      console.log('HEREEE', {general});
       dispatch(
         setPostDetails({
           postId: null,
@@ -184,7 +183,7 @@ const PostItem = ({
   );
 };
 
-export default PostItem;
+export default DifferentUserProfileItem;
 
 const styles = StyleSheet.create({
   postContainer: {
