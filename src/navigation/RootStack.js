@@ -91,13 +91,16 @@ const RootStack = () => {
       .collection('accounts')
       .doc(user?.firebaseUserId)
       .onSnapshot(doc => {
+        console.log({data: doc.data()});
         if (!doc?.data()?.email) {
-          auth().signOut();
-          dispatch(setUser({}));
-          setIslogin(false);
+          if (user?.isVerified) {
+            auth().signOut();
+            dispatch(setUser({}));
+            setIslogin(false);
+          }
         }
       });
-    return () => snapshot();
+    return () => (user?.email ? snapshot() : null);
   }, []);
 
   return (
