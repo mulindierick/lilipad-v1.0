@@ -24,6 +24,42 @@ const UseFirebaseAuth = () => {
   const dispatch = useDispatch();
   const {user} = useSelector(state => ({user: state.userSlice}));
 
+  const firebaseAuthForApple = async email => {
+    try {
+      let fcmToken = await GetFCMToken();
+
+      let data = await firestore()
+        .collection('accounts')
+        .where('email', '==', email)
+        .get();
+
+      console.log('RUNNING AND LOOKING GOOD');
+      if (data?.docs?.length > 0) {
+        await auth().signInWithEmailAndPassword(email, '123456789');
+        dispatch(setEmail({email: email}));
+        dispatch(setFCMToken({PushNotificationToken: fcmToken}));
+      } else {
+        const uid = firestore().collection('accounts').doc();
+        await firestore().collection('accounts').doc(uid.id).set({
+          email: email,
+          otp: null,
+          firebaseUserId: uid.id,
+          //seconds as OTP timestamp
+          OTPtimestamp: null,
+          isVerified: false,
+          college: '76qWv0AdnpedxDC0vgks',
+        });
+        await auth().createUserWithEmailAndPassword(email, '123456789');
+        dispatch(setEmail({email: email}));
+
+        // await auth().signInWithCustomToken(uid.id);
+      }
+    } catch (err) {
+      console.log({err});
+      return 'Error';
+    }
+  };
+
   const firebaseAuth = async (email, otp) => {
     try {
       let res = await verifyOTP({email: email, otp: otp});
@@ -311,6 +347,7 @@ const UseFirebaseAuth = () => {
     joinSpaces,
     DeleteUserAccountAndRelatedActivities,
     pushNotificationSwitch,
+    firebaseAuthForApple,
   };
 };
 

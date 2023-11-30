@@ -19,7 +19,8 @@ import {useDispatch} from 'react-redux';
 import {setUser} from '../../redux/reducers/userSlice';
 
 const Setting = () => {
-  const {DeleteUserAccountAndRelatedActivities} = UseFirebaseAuth();
+  const {DeleteUserAccountAndRelatedActivities, pushNotificationSwitch} =
+    UseFirebaseAuth();
   const DeleteAccount = async () => {
     //show the alert and ask for yes and no options and do certain operation on yes
     Alert.alert(
@@ -72,6 +73,7 @@ const Setting = () => {
               }),
             );
             auth().signOut();
+            pushNotificationSwitch(true);
           },
         },
       ],

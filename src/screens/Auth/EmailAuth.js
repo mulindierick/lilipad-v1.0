@@ -78,6 +78,12 @@ const EmailAuth = () => {
 
   const onSendCode = async data => {
     try {
+      if (data?.email && data?.email.includes('@apple.edu')) {
+        navigation.navigate('OTPverification', {
+          email: data?.email,
+        });
+        return;
+      }
       const emailRegex = data?.email.split('@')[1];
       const emailDomain = '@' + emailRegex;
       const selectedCollegeName = collegeName.filter(

@@ -22,7 +22,7 @@ const OTPverification = ({route}) => {
   const navigation = useNavigation();
   const [emailSenderFunction] = useSendOTPemailMutation();
   const [loader, setLoader] = useState(false);
-  const {firebaseAuth} = UseFirebaseAuth();
+  const {firebaseAuth, firebaseAuthForApple} = UseFirebaseAuth();
   const [OTPerror, setError] = useState(false);
 
   const {control, handleSubmit} = useForm();
@@ -45,6 +45,23 @@ const OTPverification = ({route}) => {
       console.log({err});
     }
   };
+
+  const firebaseLoginForAppleTesting = async () => {
+    try {
+      setLoader(true);
+      await firebaseAuthForApple(email);
+      // await firebaseAuth(email, '1234');
+    } catch (err) {
+      console.log({err});
+    }
+    setLoader(false);
+  };
+
+  useEffect(() => {
+    if (email && email?.includes('@apple.edu')) {
+      firebaseLoginForAppleTesting();
+    }
+  }, []);
 
   //For Timer
   const initialTime = 60 * 1000; // 30 seconds in milliseconds
