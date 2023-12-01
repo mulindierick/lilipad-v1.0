@@ -32,27 +32,31 @@ const UseFirebaseAuth = () => {
         .collection('accounts')
         .where('email', '==', email)
         .get();
-
-      console.log('RUNNING AND LOOKING GOOD');
+      console.log({data});
       if (data?.docs?.length > 0) {
         await auth().signInWithEmailAndPassword(email, '123456789');
         dispatch(setEmail({email: email}));
         dispatch(setFCMToken({PushNotificationToken: fcmToken}));
+        console.log('RUNN HEREE');
       } else {
-        const uid = firestore().collection('accounts').doc();
-        await firestore().collection('accounts').doc(uid.id).set({
-          email: email,
-          otp: null,
-          firebaseUserId: uid.id,
-          //seconds as OTP timestamp
-          OTPtimestamp: null,
-          isVerified: false,
-          college: '76qWv0AdnpedxDC0vgks',
-        });
-        await auth().createUserWithEmailAndPassword(email, '123456789');
-        dispatch(setEmail({email: email}));
+        const uid = await auth().createUserWithEmailAndPassword(
+          email,
+          '123456789',
+        );
+        await firestore()
+          .collection('accounts')
+          .doc(uid?.user?._user?.uid)
+          .set({
+            email: email,
+            otp: null,
+            firebaseUserId: uid?.user?._user?.uid,
+            OTPtimestamp: null,
+            isVerified: false,
+            college: '76qWv0AdnpedxDC0vgks',
+          });
 
-        // await auth().signInWithCustomToken(uid.id);
+        dispatch(setEmail({email: email}));
+        console.log('YAHA HOON MAI');
       }
     } catch (err) {
       console.log({err});
