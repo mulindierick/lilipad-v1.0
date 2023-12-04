@@ -38,11 +38,11 @@
 	<key>NSAppleMusicUsageDescription</key>
 	<string>This permission is not needed by the app, but it is required by an underlying API. If you see this dialog, contact us.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>To upload images</string>
+	<string>LiliPad would like to access camera to upload images or videos</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>To upload videos</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>To upload images</string>
+	<string>LiliPad would like to access gallery to upload images or videos</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
