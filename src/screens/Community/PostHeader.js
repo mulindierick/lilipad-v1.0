@@ -95,6 +95,7 @@ const PostHeader = ({
           userFirstName={userFirstName}
           setEditPostModal={setEditPostModal}
           DeletePost={() => deletePost()}
+          postId={data?.postId}
         />
         <EditPostModal
           data={data}

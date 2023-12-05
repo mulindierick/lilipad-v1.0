@@ -1,14 +1,13 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import ExploreSpaces from '../screens/ExploreSpaces';
-import PostDetails from '../screens/PostDetails';
-import Search from '../screens/Search';
-import BottomTabNavigator from './BottomTabNavigator';
-import Setting from '../screens/Settings';
-import DifferentUserProfile from '../screens/Profile/DifferentUserProfile';
 import Activity from '../screens/Activity';
-import ViewMembers from '../screens/ViewMembers';
 import CreateSpace from '../screens/CreateSpaces';
+import PostDetails from '../screens/PostDetails';
+import DifferentUserProfile from '../screens/Profile/DifferentUserProfile';
+import Search from '../screens/Search';
+import Setting from '../screens/Settings';
+import ViewMembers from '../screens/ViewMembers';
+import BottomTabNavigator from './BottomTabNavigator';
 
 const Stack = createNativeStackNavigator();
 

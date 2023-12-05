@@ -60,13 +60,25 @@ const useImagePicker = () => {
     } catch (err) {
       console.log(err.message);
       if (err?.message?.includes('permission')) {
-        Toast.show({
-          type: 'error',
-          text1: 'Gallery Permision Not Given',
-        });
-        setTimeout(() => {
-          Linking.openSettings();
-        }, 2000);
+        Alert.alert(
+          'Permission',
+          `Gallery permission not granted.`,
+          [
+            {
+              text: 'Ok',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel',
+            },
+
+            {
+              text: 'Setting',
+              onPress: async () => {
+                Linking.openSettings();
+              },
+            },
+          ],
+          {cancelable: false},
+        );
       } else if (err.message === 'User cancelled image selection') {
         // Handle the case where the user cancels image selection
         // setLoading(false)
@@ -127,13 +139,25 @@ const useImagePicker = () => {
     } catch (error) {
       console.log(error.message);
       if (error?.message?.includes('permission')) {
-        Toast.show({
-          type: 'error',
-          text1: 'Camera Permision Not Given',
-        });
-        setTimeout(() => {
-          Linking.openSettings();
-        }, 1500);
+        Alert.alert(
+          'Permission',
+          `Camera permission not granted.`,
+          [
+            {
+              text: 'Ok',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel',
+            },
+
+            {
+              text: 'Setting',
+              onPress: async () => {
+                Linking.openSettings();
+              },
+            },
+          ],
+          {cancelable: false},
+        );
       } else if (error.message == 'User cancelled image selection') {
         // Handle the case where the user cancels image selection
         // setLoading(false)

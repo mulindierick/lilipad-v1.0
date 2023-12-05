@@ -95,7 +95,8 @@ const DifferentUserProfileItem = ({
     });
   };
 
-  return (
+  return general?.reportPost &&
+    general?.reportPost.includes(data?.postId) ? null : (
     <TouchableOpacity
       style={[
         styles.postContainer,

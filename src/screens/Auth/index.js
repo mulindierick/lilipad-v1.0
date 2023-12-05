@@ -1,5 +1,5 @@
-import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import React, {useState} from 'react';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -9,8 +9,10 @@ import CustomImage from '../../components/common/CustomImage';
 import {TextNormal} from '../../components/common/CustomText';
 import CustomWrapper from '../../components/wrapper/CustomWrapper';
 import {COLORS, FONTS, images} from '../../utils/constants/theme';
+import CustomIcon from '../../components/common/CustomIcon';
 
 const Auth = ({navigation}) => {
+  const [checkBox, setCheckBox] = useState(false);
   return (
     <CustomWrapper>
       <View style={styles.container}>
@@ -19,13 +21,40 @@ const Auth = ({navigation}) => {
           height={hp(40)}
           width={wp(100)}
         />
-        <CustomButton
-          title="Join"
-          bigText
-          onPress={() => navigation.navigate('EmailAuth')}
-          textStyle={styles.buttonText}
-          containerStyle={{height: hp(7), backgroundColor: COLORS.grey}}
-        />
+        <View>
+          <CustomButton
+            title="Join"
+            bigText
+            onPress={() => navigation.navigate('EmailAuth')}
+            textStyle={styles.buttonText}
+            containerStyle={{height: hp(7), backgroundColor: COLORS.grey}}
+            disabled={!checkBox}
+          />
+          <TouchableOpacity
+            onPress={() => setCheckBox(!checkBox)}
+            activeOpacity={1}
+            style={styles.termsAndConditionsContainer}>
+            <CustomIcon
+              type="materialCommunityIcons"
+              icon={checkBox ? 'checkbox-outline' : 'checkbox-blank-outline'}
+              color={COLORS.textColorGrey}
+              disabled
+              size={wp(6)}
+            />
+            <TextNormal
+              textStyle={{width: wp(72)}}
+              color={COLORS.textColorGrey}>
+              Yes I understand and agree to the{' '}
+              <TextNormal
+                textStyle={{fontWeight: '500', textDecorationLine: 'underline'}}
+                color={COLORS.blue}
+                onPress={() => navigation.navigate('TermsAndConditions')}>
+                LiliPad Terms of Service
+              </TextNormal>
+              , including the User Agreement and Privacy Policy.
+            </TextNormal>
+          </TouchableOpacity>
+        </View>
         <TextNormal color={COLORS.grey} textStyle={styles.text1}>
           A Project By
           <TextNormal color={COLORS.grey} textStyle={styles.text2}>
@@ -59,5 +88,11 @@ const styles = StyleSheet.create({
   text2: {
     fontFamily: FONTS.MediumItalic,
     fontWeight: '400',
+  },
+  termsAndConditionsContainer: {
+    flexDirection: 'row',
+    width: wp(80),
+    justifyContent: 'space-between',
+    marginTop: hp(1),
   },
 });

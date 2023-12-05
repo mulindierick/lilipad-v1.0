@@ -96,7 +96,9 @@ const PostItem = ({
     });
   };
 
-  return (
+  return general?.reportPost &&
+    general?.reportPost.includes(data?.postId) ? null : general?.blockedUsers &&
+    general?.blockedUsers.includes(user?.firebaseUserId) ? null : (
     <TouchableOpacity
       style={[
         styles.postContainer,

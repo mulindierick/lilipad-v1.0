@@ -21,6 +21,8 @@ import {TextNormal} from '../../components/common/CustomText';
 import {COLORS} from '../../utils/constants/theme';
 import SpacesRelatedActivity from '../../utils/hooks/SpacesRelatedActivity';
 import useUser from '../../utils/hooks/useUser';
+import {useDispatch} from 'react-redux';
+import {setReportPost} from '../../redux/reducers/generalSlice';
 
 const BottomSheet = ({
   RBSheetRef,
@@ -36,7 +38,7 @@ const BottomSheet = ({
   setEditPostModal,
   horizontalScrollRef,
 }) => {
-  const {user} = useUser();
+  const {user, general} = useUser();
   const {removeSpace, handleEachSpaceNotifcationStatus} =
     SpacesRelatedActivity();
 
@@ -70,7 +72,14 @@ const BottomSheet = ({
     }, 250);
   };
 
+  const dispatch = useDispatch();
   const ReportPost = () => {
+    console.log({postId});
+    dispatch(
+      setReportPost(
+        general?.reportPost ? [...general?.reportPost, postId] : [postId],
+      ),
+    );
     RBSheetRef.current.close();
   };
 

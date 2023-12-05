@@ -8,6 +8,8 @@ const initialState = {
   userLiked: null,
   spaceName: null,
   newNotification: false,
+  reportPost: [],
+  blockedUsers: [],
 };
 
 export const generalSlice = createSlice({
@@ -37,6 +39,12 @@ export const generalSlice = createSlice({
     setNewNotification: (state, {payload}) => {
       state.newNotification = payload.newNotification;
     },
+    setBlockedUsers: (state, {payload}) => {
+      state.blockedUsers = payload;
+    },
+    setReportPost: (state, {payload}) => {
+      state.reportPost = payload;
+    },
   },
 });
 
@@ -47,6 +55,8 @@ export const {
   setLikeCountAnduserLiked,
   setPostId,
   setNewNotification,
+  setBlockedUsers,
+  setReportPost,
 } = generalSlice.actions;
 
 export default generalSlice.reducer;

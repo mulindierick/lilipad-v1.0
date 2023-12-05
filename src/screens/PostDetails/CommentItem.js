@@ -24,7 +24,7 @@ const CommentItem = ({
   userLiked,
 }) => {
   const navigation = useNavigation();
-  const {user} = useUser();
+  const {user, general} = useUser();
   const {commentLikes} = usePost();
   const [like, setLike] = useState(userLiked);
   const [commentLikesCount, setCommentLikesCount] = useState(
@@ -77,7 +77,7 @@ const CommentItem = ({
     }
   };
 
-  return (
+  return general?.blockedUsers && general?.blockedUsers.includes(uid) ? null : (
     <View
       style={[
         styles.specificCommentContainer,

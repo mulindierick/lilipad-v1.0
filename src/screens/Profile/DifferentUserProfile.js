@@ -82,7 +82,11 @@ const DifferentUserProfile = ({route}) => {
     <CustomLoader />
   ) : (
     <CustomWrapper containerStyle={{paddingHorizontal: wp(-4)}}>
-      <ProfileHeader differentUserProfile upperBorderFlag={upperBorderFlag} />
+      <ProfileHeader
+        differentUserProfile
+        upperBorderFlag={upperBorderFlag}
+        uid={uid}
+      />
       <FlatList
         data={data}
         ref={ProfileFlatListRef}

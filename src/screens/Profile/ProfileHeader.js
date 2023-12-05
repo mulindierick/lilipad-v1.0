@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useContext} from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {
   Menu,
   MenuOption,
@@ -25,26 +25,40 @@ import auth from '@react-native-firebase/auth';
 import {setUser} from '../../redux/reducers/userSlice';
 import useUser from '../../utils/hooks/useUser';
 import {MyContext} from '../../context/Context';
+import {setBlockedUsers} from '../../redux/reducers/generalSlice';
 
-const ProfileHeader = ({differentUserProfile, upperBorderFlag}) => {
+const ProfileHeader = ({differentUserProfile, upperBorderFlag, uid}) => {
   const {general} = useUser();
-  const dispatch = useDispatch();
-  const signOut = () => {
-    dispatch(
-      setUser({
-        email: null,
-        photo: null,
-        firstName: null,
-        lastName: null,
-        isVerified: null,
-        firebaseUserId: null,
-        major: null,
-        spaces: null,
-      }),
-    );
-    auth().signOut();
-  };
   const navigation = useNavigation();
+
+  const dispatch = useDispatch();
+
+  const OnBlockUser = () => {
+    Alert.alert(
+      'Block Account',
+      `\nYou won't be able to see this profile, any posts related to this profile, or comments from this account\n\nAre you sure you want to block this account?`,
+      [
+        {
+          text: 'No',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+
+        {
+          text: 'Yes',
+          onPress: async () => {
+            dispatch(
+              setBlockedUsers(
+                general?.blockedUsers ? [...general?.blockedUsers, uid] : [uid],
+              ),
+            );
+            navigation.goBack();
+          },
+        },
+      ],
+      {cancelable: false},
+    );
+  };
 
   if (differentUserProfile) {
     return (
@@ -52,7 +66,7 @@ const ProfileHeader = ({differentUserProfile, upperBorderFlag}) => {
         <View
           style={[
             styles.container,
-            {paddingVertical: hp(1)},
+            {paddingVertical: hp(1), alignItems: 'center'},
             upperBorderFlag && styles.borderColors,
           ]}>
           <TouchableOpacity
@@ -70,6 +84,12 @@ const ProfileHeader = ({differentUserProfile, upperBorderFlag}) => {
             }}>
             <BackButton containerStyle={{marginLeft: wp(-0.5)}} />
           </TouchableOpacity>
+          <TextNormal
+            color={COLORS.red}
+            textStyle={{fontSize: wp(5), fontWeight: '500'}}
+            onPress={() => OnBlockUser()}>
+            Block
+          </TextNormal>
         </View>
       </>
     );
