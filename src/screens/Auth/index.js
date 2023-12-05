@@ -39,10 +39,10 @@ const Auth = ({navigation}) => {
               icon={checkBox ? 'checkbox-outline' : 'checkbox-blank-outline'}
               color={COLORS.textColorGrey}
               disabled
-              size={wp(6)}
+              size={wp(5)}
             />
             <TextNormal
-              textStyle={{width: wp(72)}}
+              textStyle={{width: wp(74), marginLeft: wp(1)}}
               color={COLORS.textColorGrey}>
               Yes I understand and agree to the{' '}
               <TextNormal
@@ -93,6 +93,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: wp(80),
     justifyContent: 'space-between',
-    marginTop: hp(1),
   },
 });
