@@ -1,5 +1,11 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native';
+import React, {useContext, useEffect, useMemo, useState} from 'react';
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {useDispatch} from 'react-redux';
 import CustomWrapper from '../../components/wrapper/CustomWrapper';
 import {setUser} from '../../redux/reducers/userSlice';
@@ -19,10 +25,12 @@ import {MyContext} from '../../context/Context';
 import CustomLoader from '../../components/common/CustomLoader';
 import SplashScreen from 'react-native-splash-screen';
 import DifferentUserProfileItem from './DifferentUserProfileItem';
+import {UnBlockedUserIcon} from '../../components/common/CustomSvgItems';
+import {setBlockedUsers} from '../../redux/reducers/generalSlice';
 
 const DifferentUserProfile = ({route}) => {
   const {uid} = route?.params;
-  const {user} = useUser();
+  const {user, general} = useUser();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [data, setData] = useState([]);
@@ -30,6 +38,9 @@ const DifferentUserProfile = ({route}) => {
 
   const [userDetails, setUserDetails] = useState({});
   const {ProfileFlatListRef} = useContext(MyContext);
+
+  const [showLoadingWhenUnblocked, setShowLoadingWhenUnblocked] =
+    useState(false);
 
   const {fetchMyPost} = usePost();
 
@@ -78,6 +89,29 @@ const DifferentUserProfile = ({route}) => {
     }
   };
 
+  const dispatch = useDispatch();
+
+  const UnBlockUser = () => {
+    setShowLoadingWhenUnblocked(true);
+    const temp = [...data];
+    setData([]);
+    try {
+      dispatch(
+        setBlockedUsers(
+          general?.blockedUsers?.filter(
+            item => item != userDetails?.firebaseUserId,
+          ),
+        ),
+      );
+      setTimeout(() => {
+        setData(temp);
+        setShowLoadingWhenUnblocked(false);
+      }, 500);
+    } catch (e) {
+      console.log({e});
+    }
+  };
+
   return loading ? (
     <CustomLoader />
   ) : (
@@ -87,42 +121,89 @@ const DifferentUserProfile = ({route}) => {
         upperBorderFlag={upperBorderFlag}
         uid={uid}
       />
-      <FlatList
-        data={data}
-        ref={ProfileFlatListRef}
-        onScroll={onScroll}
-        renderItem={({item, index}) => (
-          <DifferentUserProfileItem
-            data={item}
-            key={item?.postId}
-            disabledProfileClick={true}
-            index={index}
-            setVisibleIndex={setVisibleIndex}
-          />
-        )}
-        ListHeaderComponent={() => (
-          <ListHeaderItem user={userDetails} differentUserProfile />
-        )}
-        showsVerticalScrollIndicator={false}
-        ListFooterComponent={() => <View style={{marginBottom: hp(15)}} />}
-        ListEmptyComponent={() => (
-          <View
-            style={{
-              flex: 1,
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: hp(10),
-            }}>
-            {loading ? (
-              <ActivityIndicator color={COLORS.grey} size="large" />
-            ) : (
-              <TextNormal textStyle={styles.noDataFound}>nothing.</TextNormal>
-            )}
-          </View>
-        )}
-        refreshing={refreshing}
-        onRefresh={() => fetchPostAgain()}
-      />
+
+      {general?.blockedUsers &&
+      general?.blockedUsers.includes(userDetails?.firebaseUserId) ? (
+        <FlatList
+          key="Blocked"
+          data={[]}
+          ref={ProfileFlatListRef}
+          onScroll={onScroll}
+          renderItem={({item, index}) => (
+            <DifferentUserProfileItem
+              data={item}
+              key={item?.postId}
+              disabledProfileClick={true}
+              index={index}
+              setVisibleIndex={setVisibleIndex}
+            />
+          )}
+          ListHeaderComponent={
+            <ListHeaderItem user={userDetails} differentUserProfile />
+          }
+          showsVerticalScrollIndicator={false}
+          ListFooterComponent={() => <View style={{marginBottom: hp(15)}} />}
+          ListEmptyComponent={() => (
+            <View
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: hp(10),
+              }}>
+              {loading ? (
+                <ActivityIndicator color={COLORS.grey} size="large" />
+              ) : (
+                <TouchableOpacity
+                  onPress={() => UnBlockUser()}
+                  activeOpacity={1}>
+                  <UnBlockedUserIcon />
+                </TouchableOpacity>
+              )}
+            </View>
+          )}
+          refreshing={refreshing}
+          onRefresh={() => fetchPostAgain()}
+        />
+      ) : (
+        <FlatList
+          key="NotBlocked"
+          data={data}
+          ref={ProfileFlatListRef}
+          onScroll={onScroll}
+          renderItem={({item, index}) => (
+            <DifferentUserProfileItem
+              data={item}
+              key={item?.postId}
+              disabledProfileClick={true}
+              index={index}
+              setVisibleIndex={setVisibleIndex}
+            />
+          )}
+          ListHeaderComponent={
+            <ListHeaderItem user={userDetails} differentUserProfile />
+          }
+          showsVerticalScrollIndicator={false}
+          ListFooterComponent={() => <View style={{marginBottom: hp(15)}} />}
+          ListEmptyComponent={() => (
+            <View
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: hp(10),
+              }}>
+              {showLoadingWhenUnblocked ? (
+                <ActivityIndicator color={COLORS.grey} size="large" />
+              ) : (
+                <TextNormal textStyle={styles.noDataFound}>nothing.</TextNormal>
+              )}
+            </View>
+          )}
+          refreshing={refreshing}
+          onRefresh={() => fetchPostAgain()}
+        />
+      )}
     </CustomWrapper>
   );
 };

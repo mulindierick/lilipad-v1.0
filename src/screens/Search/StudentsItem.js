@@ -11,7 +11,7 @@ import useUser from '../../utils/hooks/useUser';
 import {useNavigation} from '@react-navigation/native';
 
 const StudentsItem = ({item, index}) => {
-  const {user, general} = useUser();
+  const {user} = useUser();
   const navigation = useNavigation();
 
   const handleNavigation = () => {
@@ -22,8 +22,7 @@ const StudentsItem = ({item, index}) => {
     }
   };
 
-  return general?.blockedUsers &&
-    general?.blockedUsers.includes(item?.firebaseUserId) ? null : (
+  return (
     <TouchableOpacity
       style={[styles.spaceContainer, index == 0 && {borderTopWidth: 0}]}
       activeOpacity={1}

@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import React from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import {
   heightPercentageToDP as hp,
@@ -22,8 +22,12 @@ import {COLORS} from '../../utils/constants/theme';
 import SpacesRelatedActivity from '../../utils/hooks/SpacesRelatedActivity';
 import useUser from '../../utils/hooks/useUser';
 import {useDispatch} from 'react-redux';
-import {setReportPost} from '../../redux/reducers/generalSlice';
+import {
+  setBlockedUsers,
+  setReportPost,
+} from '../../redux/reducers/generalSlice';
 import usePost from '../../utils/hooks/usePost';
+import CustomIcon from '../../components/common/CustomIcon';
 
 const BottomSheet = ({
   RBSheetRef,
@@ -88,6 +92,34 @@ const BottomSheet = ({
     RBSheetRef.current.close();
   };
 
+  const OnBlockUser = () => {
+    RBSheetRef.current.close();
+    Alert.alert(
+      'Block Account',
+      `\nYou won't be able to see any posts related to this profile, or comments from this account\n\nAre you sure you want to block this account?`,
+      [
+        {
+          text: 'No',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+
+        {
+          text: 'Yes',
+          onPress: async () => {
+            console.log({general});
+            dispatch(
+              setBlockedUsers(
+                general?.blockedUsers ? [...general?.blockedUsers, uid] : [uid],
+              ),
+            );
+          },
+        },
+      ],
+      {cancelable: false},
+    );
+  };
+
   const viewProfile = () => {
     RBSheetRef.current.close();
     navigation.navigate('DifferentUserProfile', {uid: uid});
@@ -104,7 +136,7 @@ const BottomSheet = ({
         ref={RBSheetRef}
         closeOnDragDown={true}
         dragFromTopOnly={true}
-        height={wp(45)}
+        height={wp(58)}
         customStyles={{
           draggableIcon: {
             width: wp(27),
@@ -136,6 +168,20 @@ const BottomSheet = ({
             <ReportPostSvg />
             <TextNormal textStyle={styles.text} color={COLORS.red}>
               Report Post
+            </TextNormal>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.innerContainer}
+            onPress={() => OnBlockUser()}>
+            <CustomIcon
+              type="font-awesome5"
+              name="eye"
+              size={wp(6.5)}
+              color={COLORS.red}
+              disabled={true}
+            />
+            <TextNormal textStyle={styles.text} color={COLORS.red}>
+              Block This User
             </TextNormal>
           </TouchableOpacity>
         </View>

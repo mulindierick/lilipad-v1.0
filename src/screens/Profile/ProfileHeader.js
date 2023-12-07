@@ -31,35 +31,6 @@ const ProfileHeader = ({differentUserProfile, upperBorderFlag, uid}) => {
   const {general} = useUser();
   const navigation = useNavigation();
 
-  const dispatch = useDispatch();
-
-  const OnBlockUser = () => {
-    Alert.alert(
-      'Block Account',
-      `\nYou won't be able to see this profile, any posts related to this profile, or comments from this account\n\nAre you sure you want to block this account?`,
-      [
-        {
-          text: 'No',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
-        },
-
-        {
-          text: 'Yes',
-          onPress: async () => {
-            dispatch(
-              setBlockedUsers(
-                general?.blockedUsers ? [...general?.blockedUsers, uid] : [uid],
-              ),
-            );
-            navigation.goBack();
-          },
-        },
-      ],
-      {cancelable: false},
-    );
-  };
-
   if (differentUserProfile) {
     return (
       <>
@@ -84,12 +55,6 @@ const ProfileHeader = ({differentUserProfile, upperBorderFlag, uid}) => {
             }}>
             <BackButton containerStyle={{marginLeft: wp(-0.5)}} />
           </TouchableOpacity>
-          <TextNormal
-            color={COLORS.red}
-            textStyle={{fontSize: wp(5), fontWeight: '500'}}
-            onPress={() => OnBlockUser()}>
-            Block
-          </TextNormal>
         </View>
       </>
     );
