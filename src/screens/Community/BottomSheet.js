@@ -23,6 +23,7 @@ import SpacesRelatedActivity from '../../utils/hooks/SpacesRelatedActivity';
 import useUser from '../../utils/hooks/useUser';
 import {useDispatch} from 'react-redux';
 import {setReportPost} from '../../redux/reducers/generalSlice';
+import usePost from '../../utils/hooks/usePost';
 
 const BottomSheet = ({
   RBSheetRef,
@@ -37,10 +38,13 @@ const BottomSheet = ({
   DeletePost,
   setEditPostModal,
   horizontalScrollRef,
+  postData,
 }) => {
   const {user, general} = useUser();
   const {removeSpace, handleEachSpaceNotifcationStatus} =
     SpacesRelatedActivity();
+
+  const {reportPost} = usePost();
 
   const navigation = useNavigation();
 
@@ -80,6 +84,7 @@ const BottomSheet = ({
         general?.reportPost ? [...general?.reportPost, postId] : [postId],
       ),
     );
+    reportPost(postData);
     RBSheetRef.current.close();
   };
 

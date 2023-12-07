@@ -6,6 +6,7 @@ import SplashScreen from 'react-native-splash-screen';
 import {useDispatch} from 'react-redux';
 import CustomLoader from '../components/common/CustomLoader';
 import CustomNoInternetModal from '../components/common/CustomNoInternetModal';
+import {setReportPost} from '../redux/reducers/generalSlice';
 import {setUser} from '../redux/reducers/userSlice';
 import {useApp} from '../utils/hooks/useApp';
 import {useNetInfo} from '../utils/hooks/useNetInfo';
@@ -71,6 +72,7 @@ const RootStack = () => {
                     notificationStatus: userData?.notificationStatus,
                   }),
                 );
+                dispatch(setReportPost(userData?.reportPost || []));
                 setIslogin(true);
               }
             });

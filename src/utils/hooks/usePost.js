@@ -14,7 +14,7 @@ import {
 import {useNetInfo} from './useNetInfo';
 
 const usePost = () => {
-  const {user} = useUser();
+  const {user, general} = useUser();
   const [sentNotification] = useSentNotificationMutation();
   const [activityRecorder] = useActivityRecorderMutation();
   const [sendNewPostNotification] = useSendNewPostNotificationMutation();
@@ -1054,6 +1054,74 @@ const usePost = () => {
     }
   };
 
+  const reportPost = async WholeDataOfReportedPost => {
+    try {
+      delete WholeDataOfReportedPost.user;
+      console.log({general});
+      const res = await firestore()
+        .collection(
+          `Colleges/${user?.college}/spaces/${WholeDataOfReportedPost?.spaceId}/reportPosts`,
+        )
+        .doc(WholeDataOfReportedPost?.postId)
+        .get();
+
+      if (!res?.exists) {
+        await firestore()
+          .collection(
+            `Colleges/${user?.college}/spaces/${WholeDataOfReportedPost?.spaceId}/reportPosts`,
+          )
+          .doc(WholeDataOfReportedPost?.postId)
+          .set({
+            reportedBy: [user?.firebaseUserId],
+            reportCount: 1,
+            ...WholeDataOfReportedPost,
+            postReference: firestore()
+              .collection(
+                `Colleges/${user?.college}/spaces/${WholeDataOfReportedPost?.spaceId}/posts`,
+              )
+              .doc(WholeDataOfReportedPost?.postId),
+
+            reportId: WholeDataOfReportedPost?.postId,
+          });
+      } else {
+        await firestore()
+          .collection(
+            `Colleges/${user?.college}/spaces/${WholeDataOfReportedPost?.spaceId}/reportPosts`,
+          )
+          .doc(WholeDataOfReportedPost?.postId)
+          .update({
+            reportedBy: firestore.FieldValue.arrayUnion(user?.firebaseUserId),
+            reportCount: firestore.FieldValue.increment(1),
+          });
+      }
+
+      if (general?.reportPost && general?.reportPost?.length > 0) {
+        await firestore()
+          .collection('accounts')
+          .doc(user?.firebaseUserId)
+          .update({
+            reportPost: firestore.FieldValue.arrayUnion(
+              WholeDataOfReportedPost?.postId,
+            ),
+          });
+      } else {
+        await firestore()
+          .collection('accounts')
+          .doc(user?.firebaseUserId)
+          .set(
+            {
+              reportPost: [WholeDataOfReportedPost?.postId],
+            },
+            {merge: true},
+          );
+      }
+
+      console.log({res});
+    } catch (e) {
+      console.log({e});
+    }
+  };
+
   return {
     fetchPostsOfAllSpaces,
     sharePost,
@@ -1073,6 +1141,7 @@ const usePost = () => {
     commentLikes,
     fetchMorePostsOfSpecificSpace,
     fetchFilteredSpaces,
+    reportPost,
   };
 };
 
