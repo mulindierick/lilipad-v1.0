@@ -21,13 +21,21 @@ const Auth = ({navigation}) => {
           height={hp(40)}
           width={wp(100)}
         />
-        <View>
+        <View
+          style={{
+            height: hp(28),
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
           <CustomButton
             title="Join"
             bigText
             onPress={() => navigation.navigate('EmailAuth')}
             textStyle={styles.buttonText}
-            containerStyle={{height: hp(7), backgroundColor: COLORS.grey}}
+            containerStyle={[
+              {height: hp(7), backgroundColor: COLORS.grey},
+              checkBox && {backgroundColor: COLORS.blue},
+            ]}
             disabled={!checkBox}
           />
           <TouchableOpacity
@@ -44,24 +52,38 @@ const Auth = ({navigation}) => {
             <TextNormal
               textStyle={{width: wp(74), marginLeft: wp(1)}}
               color={COLORS.textColorGrey}>
-              Yes I understand and agree to the{' '}
+              I understand and agree to LiliPad's{' '}
               <TextNormal
-                textStyle={{fontWeight: '500', textDecorationLine: 'underline'}}
+                textStyle={{fontWeight: '500'}}
                 color={COLORS.blue}
                 onPress={() => navigation.navigate('TermsAndConditions')}>
-                LiliPad Terms of Service
+                Terms of Service
               </TextNormal>
-              , including the User Agreement and Privacy Policy.
+              ,{' '}
+              <TextNormal
+                textStyle={{fontWeight: '500'}}
+                color={COLORS.blue}
+                onPress={() => navigation.navigate('TermsAndConditions')}>
+                User Agreement
+              </TextNormal>{' '}
+              and{' '}
+              <TextNormal
+                textStyle={{fontWeight: '500'}}
+                color={COLORS.blue}
+                onPress={() => navigation.navigate('TermsAndConditions')}>
+                Privacy Policy
+              </TextNormal>
             </TextNormal>
           </TouchableOpacity>
-        </View>
-        <TextNormal color={COLORS.grey} textStyle={styles.text1}>
-          A Project By
-          <TextNormal color={COLORS.grey} textStyle={styles.text2}>
-            {' '}
-            Lili
+
+          <TextNormal color={COLORS.grey} textStyle={styles.text1}>
+            A Project By
+            <TextNormal color={COLORS.grey} textStyle={styles.text2}>
+              {' '}
+              Lili
+            </TextNormal>
           </TextNormal>
-        </TextNormal>
+        </View>
       </View>
     </CustomWrapper>
   );
