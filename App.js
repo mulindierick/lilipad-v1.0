@@ -7,6 +7,7 @@ import {PersistGate} from 'redux-persist/integration/react';
 import {ContextProvider} from './src/context/Context';
 import RootStack from './src/navigation/RootStack';
 import {persistor, store} from './src/redux/store';
+import {StatusBar} from 'react-native';
 const App = () => {
   // useEffect(() => {
   //   AvoidSoftInput.setShouldMimicIOSBehavior(true);
@@ -19,6 +20,7 @@ const App = () => {
         <PersistGate persistor={persistor}>
           <MenuProvider>
             <NavigationContainer>
+              <StatusBar barStyle="dark-content" />
               <RootStack />
             </NavigationContainer>
           </MenuProvider>
