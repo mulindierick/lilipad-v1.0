@@ -27,10 +27,12 @@ import SplashScreen from 'react-native-splash-screen';
 import DifferentUserProfileItem from './DifferentUserProfileItem';
 import {UnBlockedUserIcon} from '../../components/common/CustomSvgItems';
 import {setBlockedUsers} from '../../redux/reducers/generalSlice';
+import UseFirebaseAuth from '../../utils/hooks/UseFirebaseAuth';
 
 const DifferentUserProfile = ({route}) => {
   const {uid} = route?.params;
   const {user, general} = useUser();
+  const {UnBlockedUserHandling} = UseFirebaseAuth();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [data, setData] = useState([]);
@@ -91,7 +93,7 @@ const DifferentUserProfile = ({route}) => {
 
   const dispatch = useDispatch();
 
-  const UnBlockUser = () => {
+  const UnBlockUser = async () => {
     setShowLoadingWhenUnblocked(true);
     const temp = [...data];
     setData([]);
@@ -103,10 +105,10 @@ const DifferentUserProfile = ({route}) => {
           ),
         ),
       );
-      setTimeout(() => {
-        setData(temp);
-        setShowLoadingWhenUnblocked(false);
-      }, 500);
+      UnBlockedUserHandling(uid);
+      let res = await fetchMyPost(uid);
+      setData(res?.post || []);
+      setShowLoadingWhenUnblocked(false);
     } catch (e) {
       console.log({e});
     }

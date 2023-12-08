@@ -345,6 +345,46 @@ const UseFirebaseAuth = () => {
     }
   };
 
+  const BlockUserHandling = async uid => {
+    try {
+      await firestore()
+        .collection('accounts')
+        .doc(user?.firebaseUserId)
+        .update({
+          blockedUsers: firestore.FieldValue.arrayUnion(uid),
+        });
+
+      await firestore()
+        .collection('accounts')
+        .doc(uid)
+        .update({
+          blockedBy: firestore.FieldValue.arrayUnion(user?.firebaseUserId),
+        });
+    } catch (e) {
+      console.log({e});
+    }
+  };
+
+  const UnBlockedUserHandling = async uid => {
+    try {
+      await firestore()
+        .collection('accounts')
+        .doc(user?.firebaseUserId)
+        .update({
+          blockedUsers: firestore.FieldValue.arrayRemove(uid),
+        });
+
+      await firestore()
+        .collection('accounts')
+        .doc(uid)
+        .update({
+          blockedBy: firestore.FieldValue.arrayRemove(user?.firebaseUserId),
+        });
+    } catch (e) {
+      console.log({e});
+    }
+  };
+
   return {
     firebaseAuth,
     createAccount,
@@ -352,6 +392,8 @@ const UseFirebaseAuth = () => {
     DeleteUserAccountAndRelatedActivities,
     pushNotificationSwitch,
     firebaseAuthForApple,
+    BlockUserHandling,
+    UnBlockedUserHandling,
   };
 };
 

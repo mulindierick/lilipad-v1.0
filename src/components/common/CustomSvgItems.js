@@ -842,7 +842,7 @@ export const AddPostGallerySvg = ({containerStyle}) => {
 
 export const UnBlockedUserIcon = ({containerStyle}) => {
   return (
-    <View style={[{width: wp(10), height: wp(10)}, containerStyle]}>
+    <View style={[{width: wp(7), height: wp(7)}, containerStyle]}>
       <Svg
         width="100%"
         height="100%"

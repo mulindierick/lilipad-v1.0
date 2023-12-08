@@ -14,6 +14,7 @@ import {
   MuteOffNotificationsIcon,
   MuteOnNotificationsIcon,
   ReportPostSvg,
+  UnBlockedUserIcon,
   ViewMemberSvg,
   ViewMembersIcon,
 } from '../../components/common/CustomSvgItems';
@@ -28,6 +29,7 @@ import {
 } from '../../redux/reducers/generalSlice';
 import usePost from '../../utils/hooks/usePost';
 import CustomIcon from '../../components/common/CustomIcon';
+import UseFirebaseAuth from '../../utils/hooks/UseFirebaseAuth';
 
 const BottomSheet = ({
   RBSheetRef,
@@ -45,6 +47,7 @@ const BottomSheet = ({
   postData,
 }) => {
   const {user, general} = useUser();
+  const {BlockUserHandling} = UseFirebaseAuth();
   const {removeSpace, handleEachSpaceNotifcationStatus} =
     SpacesRelatedActivity();
 
@@ -113,6 +116,7 @@ const BottomSheet = ({
                 general?.blockedUsers ? [...general?.blockedUsers, uid] : [uid],
               ),
             );
+            BlockUserHandling(uid);
           },
         },
       ],
@@ -173,13 +177,7 @@ const BottomSheet = ({
           <TouchableOpacity
             style={styles.innerContainer}
             onPress={() => OnBlockUser()}>
-            <CustomIcon
-              type="font-awesome5"
-              name="eye"
-              size={wp(6.5)}
-              color={COLORS.red}
-              disabled={true}
-            />
+            <UnBlockedUserIcon />
             <TextNormal textStyle={styles.text} color={COLORS.red}>
               Block This User
             </TextNormal>
