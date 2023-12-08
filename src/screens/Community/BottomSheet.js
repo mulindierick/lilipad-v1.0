@@ -84,15 +84,18 @@ const BottomSheet = ({
   };
 
   const dispatch = useDispatch();
-  const ReportPost = () => {
-    console.log({postId});
-    dispatch(
-      setReportPost(
-        general?.reportPost ? [...general?.reportPost, postId] : [postId],
-      ),
-    );
-    reportPost(postData);
-    RBSheetRef.current.close();
+  const ReportPost = async () => {
+    try {
+      dispatch(
+        setReportPost(
+          general?.reportPost ? [...general?.reportPost, postId] : [postId],
+        ),
+      );
+      RBSheetRef.current.close();
+      await reportPost(postData);
+    } catch (err) {
+      console.log({err});
+    }
   };
 
   const OnBlockUser = () => {

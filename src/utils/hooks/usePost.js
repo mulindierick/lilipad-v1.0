@@ -811,6 +811,28 @@ const usePost = () => {
         item.ref.delete();
       });
 
+      //Report Post if exists
+      const reportPost = await firestore()
+        .collection(
+          `Colleges/${user?.college}/spaces/${spaceId}/reportPosts/${postId}`,
+        )
+        .get();
+
+      if (reportPost?.exists) {
+        const reportedBy = reportPost?.data()?.reportedBy;
+
+        reportedBy.forEach(async item => {
+          await firestore()
+            .collection(`accounts`)
+            .doc(item)
+            .update({
+              reportPost: firestore.FieldValue.arrayRemove(postId),
+            });
+        });
+
+        reportPost.ref.delete();
+      }
+
       //Delete Post
       const res = await firestore()
         .collection(`Colleges/${user?.college}/spaces/${spaceId}/posts`)
