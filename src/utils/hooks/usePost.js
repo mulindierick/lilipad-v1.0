@@ -813,9 +813,8 @@ const usePost = () => {
 
       //Report Post if exists
       const reportPost = await firestore()
-        .collection(
-          `Colleges/${user?.college}/spaces/${spaceId}/reportPosts/${postId}`,
-        )
+        .collection(`Colleges/${user?.college}/spaces/${spaceId}/reportPosts`)
+        .doc(postId)
         .get();
 
       if (reportPost?.exists) {
@@ -1096,7 +1095,6 @@ const usePost = () => {
           .set({
             reportedBy: [user?.firebaseUserId],
             reportCount: 1,
-            ...WholeDataOfReportedPost,
             postReference: firestore()
               .collection(
                 `Colleges/${user?.college}/spaces/${WholeDataOfReportedPost?.spaceId}/posts`,
@@ -1104,6 +1102,7 @@ const usePost = () => {
               .doc(WholeDataOfReportedPost?.postId),
 
             reportId: WholeDataOfReportedPost?.postId,
+            collegeId: user?.college,
           });
       } else {
         await firestore()
