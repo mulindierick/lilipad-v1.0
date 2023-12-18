@@ -1,31 +1,19 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useContext} from 'react';
-import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {
-  Menu,
-  MenuOption,
-  MenuOptions,
-  MenuTrigger,
-} from 'react-native-popup-menu';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import {
   BackButton,
-  FilterSvg,
   NotificationSvg,
-  SearchSvg,
   SettingSvg,
 } from '../../components/common/CustomSvgItems';
-import {TextBig, TextNormal} from '../../components/common/CustomText';
-import {COLORS, FONTS} from '../../utils/constants/theme';
-import {useDispatch} from 'react-redux';
-import auth from '@react-native-firebase/auth';
-import {setUser} from '../../redux/reducers/userSlice';
-import useUser from '../../utils/hooks/useUser';
+import {TextBig} from '../../components/common/CustomText';
 import {MyContext} from '../../context/Context';
-import {setBlockedUsers} from '../../redux/reducers/generalSlice';
+import {COLORS, FONTS} from '../../utils/constants/theme';
+import useUser from '../../utils/hooks/useUser';
 
 const ProfileHeader = ({differentUserProfile, upperBorderFlag, uid}) => {
   const {general} = useUser();
@@ -102,7 +90,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     paddingHorizontal: wp(4),
     borderBottomColor: 'transparent',
-    borderBottomWidth: 0.8,
+    borderBottomWidth: 1,
   },
   innerContainer: {
     flexDirection: 'row',
@@ -152,7 +140,7 @@ const styles = StyleSheet.create({
     right: wp(2),
   },
   borderColors: {
-    borderBottomWidth: 0.8,
+    borderBottomWidth: 1,
     borderBottomColor: '#DADADA',
   },
 });

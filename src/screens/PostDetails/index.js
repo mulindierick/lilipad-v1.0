@@ -87,7 +87,9 @@ const PostDetails = ({route}) => {
     } catch (err) {
       console.log({err});
     }
-    setLoader(false);
+    setTimeout(() => {
+      setLoader(false);
+    }, 250);
   };
 
   useEffect(() => {
@@ -258,14 +260,13 @@ const PostDetails = ({route}) => {
     }
   }).current;
 
-  return loader ? (
-    <CustomLoader />
-  ) : (
+  return (
     <CustomWrapper
       containerStyle={{
         backgroundColor: COLORS.white,
         paddingHorizontal: wp(0),
       }}>
+      <CustomLoader isVisible={loader} PostDetail={true} />
       <TouchableOpacity
         style={[styles.backButton, {top: top}]}
         onPress={() => navigation.goBack()}

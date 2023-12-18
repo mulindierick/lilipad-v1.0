@@ -147,7 +147,7 @@ const CustomTabBar = props => {
         style={styles.pagerView}
         ref={pagerRef}
         onPageScroll={onPageScroll}
-        scrollEnabled={false}>
+        scrollEnabled={true}>
         {children}
       </PagerView>
     </View>

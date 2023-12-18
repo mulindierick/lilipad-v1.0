@@ -20,6 +20,7 @@ import {MyContext} from '../../context/Context';
 const Profile = () => {
   const {user} = useUser();
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [data, setData] = useState([]);
   const [upperBorderFlag, setUpperBorderFlag] = useState(false);
   const {ProfileFlatListRef} = useContext(MyContext);
@@ -36,6 +37,17 @@ const Profile = () => {
       console.log({e});
     }
     setLoading(false);
+  };
+
+  const fetchPostsAgain = async () => {
+    setRefreshing(true);
+    try {
+      let res = await fetchMyPost(user?.firebaseUserId);
+      setData(res);
+    } catch (e) {
+      console.log({e});
+    }
+    setRefreshing(false);
   };
 
   useEffect(() => {
@@ -57,6 +69,7 @@ const Profile = () => {
       containerStyle={{paddingHorizontal: widthPercentageToDP(-4)}}>
       <ProfileHeader upperBorderFlag={upperBorderFlag} />
       <FlatList
+        key={'#'}
         data={data}
         ref={ProfileFlatListRef}
         onScroll={onScroll}
@@ -86,8 +99,8 @@ const Profile = () => {
             )}
           </View>
         )}
-        refreshing={loading}
-        onRefresh={() => fetchPosts()}
+        refreshing={refreshing}
+        onRefresh={() => fetchPostsAgain()}
       />
     </CustomWrapper>
   );

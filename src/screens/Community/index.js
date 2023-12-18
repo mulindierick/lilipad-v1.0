@@ -265,6 +265,10 @@ const Community = () => {
   const onScroll = e => {
     if (focused) return;
     const y = e.nativeEvent.contentOffset.y;
+    if (bottomLoading) {
+      scrollValue = y;
+      return;
+    }
 
     if (y > scrollValue && headerVisible && y > headerHeight / 2) {
       Animated.spring(animation, {

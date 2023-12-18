@@ -8,7 +8,11 @@ import {
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
 
-const CustomLoader = ({splashScreen = false, isVisible}) => {
+const CustomLoader = ({
+  splashScreen = false,
+  isVisible,
+  PostDetail = false,
+}) => {
   if (splashScreen) {
     return (
       <ReactNativeModal
@@ -28,6 +32,20 @@ const CustomLoader = ({splashScreen = false, isVisible}) => {
             resizeMode="cover"
           />
         </View>
+      </ReactNativeModal>
+    );
+  }
+
+  if (PostDetail) {
+    return (
+      <ReactNativeModal
+        isVisible={isVisible}
+        style={styles.container}
+        animationIn={'fadeIn'}
+        animationOut={'fadeOut'}
+        backdropOpacity={1}
+        backdropColor="lightgrey">
+        <ActivityIndicator size={'large'} color={COLORS.grey} />
       </ReactNativeModal>
     );
   }

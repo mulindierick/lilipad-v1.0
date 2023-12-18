@@ -39,6 +39,7 @@ const StudentsItem = ({item, index}) => {
               : images.dummyProfilePic
           }
           containerStyle={styles.image}
+          disabled={true}
         />
       </View>
       <View style={{alignItems: 'flex-start', marginLeft: wp(4)}}>
