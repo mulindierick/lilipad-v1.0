@@ -16,12 +16,13 @@ const AddPostTextInput = ({text, setText, placeholderIncludes}) => {
         value={text}
         multiline={true}
         containerStyle={styles.container}
-        textInputStyle={[text ? styles.textInput : styles.placeholderStyle]}
+        // textInputStyle={[text ? styles.textInput : styles.placeholderStyle]}
+        textInputStyle={[styles.textInput]}
         placeholder={`Share With ${
           placeholderIncludes.length > 18
-            ? placeholderIncludes.slice(0, 18)
+            ? placeholderIncludes.slice(0, 18) + '...'
             : placeholderIncludes
-        }...`}
+        }`}
         autoCapitalize="sentences"
         autoCorrect={true}
         autoFocus={true}
