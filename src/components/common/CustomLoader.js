@@ -45,7 +45,7 @@ const CustomLoader = ({
         animationOut={'fadeOut'}
         backdropOpacity={1}
         backdropColor={COLORS.white}>
-        <ActivityIndicator size={'small'} color={COLORS.grey} />
+        <ActivityIndicator size={'large'} color={COLORS.grey} />
       </ReactNativeModal>
     );
   }
