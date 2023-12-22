@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   Focus: {
     borderWidth: 2,
     borderColor: COLORS.blue,
-    borderRadius: 10,
+    borderRadius: 12.5,
   },
   Error: {
     borderWidth: 2,

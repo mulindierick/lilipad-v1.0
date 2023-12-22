@@ -388,7 +388,7 @@ const BottomSheet = ({
           onPress={() => removeAndUpdateSpaces()}>
           <LeaveThisSpaceIcon />
           <TextNormal textStyle={styles.text} color={COLORS.red}>
-            Leave this Space
+            Leave This Space
           </TextNormal>
         </TouchableOpacity>
       </View>

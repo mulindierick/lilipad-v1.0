@@ -10,9 +10,11 @@ const CustomWrapper = ({
   requiresHeader = false,
   forInfoFurtherScreen = false,
   containerStyle,
+  bottom = false,
 }) => {
+  let edges = bottom ? ['top', 'bottom'] : ['top'];
   return (
-    <SafeAreaView style={[styles.container, containerStyle]} edges={['top']}>
+    <SafeAreaView style={[styles.container, containerStyle]} edges={edges}>
       {requiresHeader && (
         <CustomHeader forInfoFurtherScreen={forInfoFurtherScreen} />
       )}

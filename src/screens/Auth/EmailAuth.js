@@ -152,7 +152,7 @@ const EmailAuth = () => {
                       color={COLORS.textColorGrey}
                       textStyle={styles.normal}>
                       {' '}
-                      Fall 2023, LiliPad{' '}
+                      Spring 2024, LiliPad{' '}
                     </TextNormal>
                     is only active at{' '}
                     <TextNormal

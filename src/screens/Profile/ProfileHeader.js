@@ -14,36 +14,35 @@ import {TextBig} from '../../components/common/CustomText';
 import {MyContext} from '../../context/Context';
 import {COLORS, FONTS} from '../../utils/constants/theme';
 import useUser from '../../utils/hooks/useUser';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const ProfileHeader = ({differentUserProfile, upperBorderFlag, uid}) => {
   const {general} = useUser();
   const navigation = useNavigation();
+  const {top} = useSafeAreaInsets();
 
   if (differentUserProfile) {
     return (
       <>
-        <View
-          style={[
-            styles.container,
-            {paddingVertical: hp(1), alignItems: 'center'},
-            upperBorderFlag && styles.borderColors,
-          ]}>
-          <TouchableOpacity
-            activeOpacity={1}
-            onPress={() => navigation.goBack()}
-            style={{
-              alignItems: 'center',
-              borderColor: '#C9C9C9',
-              borderWidth: 1,
-              height: wp(14),
-              aspectRatio: 1,
-              borderRadius: hp(10),
-              justifyContent: 'center',
-              backgroundColor: COLORS.backgroundColor,
-            }}>
-            <BackButton containerStyle={{marginLeft: wp(-0.5)}} />
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={() => navigation.goBack()}
+          style={{
+            position: 'absolute',
+            top: top + 10,
+            alignItems: 'center',
+            borderColor: '#C9C9C9',
+            borderWidth: 1,
+            height: wp(15),
+            aspectRatio: 1,
+            borderRadius: hp(10),
+            justifyContent: 'center',
+            backgroundColor: COLORS.backgroundColor,
+            left: wp(4),
+            zIndex: 1,
+          }}>
+          <BackButton containerStyle={{marginLeft: wp(-0.5)}} />
+        </TouchableOpacity>
       </>
     );
   }
@@ -55,7 +54,7 @@ const ProfileHeader = ({differentUserProfile, upperBorderFlag, uid}) => {
 
   return (
     <>
-      <View style={[styles.container, upperBorderFlag && styles.borderColors]}>
+      <View style={[styles.container]}>
         <TextBig
           textStyle={styles.textStyle}
           bold
@@ -77,6 +76,21 @@ const ProfileHeader = ({differentUserProfile, upperBorderFlag, uid}) => {
           </TouchableOpacity>
         </View>
       </View>
+      <View
+        style={
+          upperBorderFlag
+            ? {
+                borderBottomWidth: 0.8,
+                paddingTop: hp(1.5),
+                borderBottomColor: '#DADADA',
+              }
+            : {
+                borderBottomWidth: 0.8,
+                borderBottomColor: 'transparent',
+                paddingTop: hp(1.5),
+              }
+        }
+      />
     </>
   );
 };
@@ -89,8 +103,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'flex-end',
     paddingHorizontal: wp(4),
-    borderBottomColor: 'transparent',
-    borderBottomWidth: 1,
   },
   innerContainer: {
     flexDirection: 'row',
@@ -140,7 +152,7 @@ const styles = StyleSheet.create({
     right: wp(2),
   },
   borderColors: {
-    borderBottomWidth: 1,
+    borderBottomWidth: 0.8,
     borderBottomColor: '#DADADA',
   },
 });

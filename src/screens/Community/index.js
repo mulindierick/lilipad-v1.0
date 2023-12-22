@@ -28,7 +28,7 @@ import CommunityHeader from './CommunityHeader';
 import PostItem from './PostItem';
 import SpacesContainer from './SpacesContainer';
 import WelcomeNoteModal from './WelcomeNoteModal';
-import {filter} from 'lodash';
+import {filter, set} from 'lodash';
 
 const headerHeight = hp(20);
 let scrollValue = 0;
@@ -56,6 +56,7 @@ const Community = () => {
   const [selectedSpaces, setSlectedSpaces] = useState(user?.spaces[0]);
   const [addPostModal, setAddPostModal] = useState(false);
   const [noMoreFetchingPosts, setNoMoreFetchingPosts] = useState(false);
+  const [firstTimeFetch, setFirstTimeFetch] = useState(true);
   const [newPostCount, setNewPostCount] = useState(() => {
     let obj = {};
     user?.spaces.forEach(space => {
@@ -76,12 +77,24 @@ const Community = () => {
     return obj;
   });
 
-  const fetchPosts = async () => {
+  const fetchPosts = async (doNotScrollToTop = false) => {
     setLoading(true);
+    setNoMoreFetchingPosts(false);
     try {
       const data = await fetchPostsOfAllSpaces(user?.spaces, user?.spaceId);
       setSelectedSpaceData(data.data);
       setNewPostCount(data.newPostsCount);
+      // scroll to top
+      if (!doNotScrollToTop) {
+        try {
+          PostFlatListRef?.current?.scrollToOffset({
+            animated: true,
+            offset: 0,
+          });
+        } catch (e) {
+          console.log({e});
+        }
+      }
     } catch (e) {
       console.log({e});
     }
@@ -93,6 +106,7 @@ const Community = () => {
       animated: true,
       offset: 0,
     });
+    setNoMoreFetchingPosts(false);
     setRefreshing(true);
     try {
       setSelectedSpaceData({
@@ -173,7 +187,8 @@ const Community = () => {
   };
 
   const fetchMorePosts = async () => {
-    if (noMoreFetchingPosts) return;
+    if (noMoreFetchingPosts || bottomLoading) return;
+    console.log('HERE WE GO AGAINNNNNN');
     setBottomLoading(true);
     try {
       const data = await fetchMorePostsOfSpecificSpace(
@@ -218,10 +233,15 @@ const Community = () => {
 
   // ENDS HERE
   useEffect(() => {
-    // if (appState === 'active') {
-    fetchPosts();
-    // }
-  }, [user?.spaces.length, appState]);
+    if (appState === 'background' || firstTimeFetch) {
+      fetchPosts();
+      setFirstTimeFetch(false);
+    }
+  }, [appState]);
+
+  useEffect(() => {
+    fetchPosts(true);
+  }, [user?.spaces.length]);
 
   useEffect(() => {
     if (general?.postId) {
@@ -265,10 +285,6 @@ const Community = () => {
   const onScroll = e => {
     if (focused) return;
     const y = e.nativeEvent.contentOffset.y;
-    if (bottomLoading) {
-      scrollValue = y;
-      return;
-    }
 
     if (y > scrollValue && headerVisible && y > headerHeight / 2) {
       Animated.spring(animation, {
@@ -298,7 +314,9 @@ const Community = () => {
     });
     setRefreshing(true);
     await AfterAddingNewPost('Recent');
-    setRefreshing(false);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 200);
   };
 
   //For Playing Video
@@ -363,7 +381,7 @@ const Community = () => {
         data={selectedSpaceData[selectedSpaces]?.data || []}
         extraData={selectedSpaceData[selectedSpaces]?.data || []}
         onEndReached={() => fetchMorePosts()}
-        onEndReachedThreshold={0.5}
+        onEndReachedThreshold={0}
         ListFooterComponent={() => {
           return (
             <View style={{paddingBottom: hp(35)}}>

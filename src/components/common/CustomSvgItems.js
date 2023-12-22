@@ -11,13 +11,18 @@ import CustomIcon from './CustomIcon';
 
 export const PlusSVG = () => {
   return (
-    <View style={{width: wp(25), height: wp(25)}}>
-      <Svg width="100%" height="100%" viewBox={`0 0 100 100`}>
-        <Circle cx="34.5" cy="34.5" r="34.5" fill={COLORS.blue} />
+    <View style={{width: wp(17), height: wp(17)}}>
+      <Svg
+        width="100%"
+        height="100%"
+        viewBox="0 0 69 69"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg">
+        <Circle cx="34.5" cy="34.5" r="34.5" fill="#42ACF9" />
         <Path
           d="M34.5 22V47M22 34.5H47"
           stroke="white"
-          strokeWidth="7.9"
+          strokeWidth="5.9"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
@@ -40,7 +45,7 @@ export const FilterSvg = () => {
 
 export const SearchSvg = () => {
   return (
-    <View style={{width: wp(10.5), height: wp(10.5), marginRight: wp(8)}}>
+    <View style={{width: wp(10), height: wp(10), marginRight: wp(8)}}>
       <Svg
         width="100%"
         height="100%"
@@ -60,7 +65,7 @@ export const SearchSvg = () => {
 
 export const ThreeDotsVertical = () => {
   return (
-    <View style={{width: wp(8), height: wp(8)}}>
+    <View style={{width: wp(7.5), height: wp(7.5)}}>
       <Svg
         width="100%"
         height="100%"
@@ -736,7 +741,10 @@ export const BottomExploreSvg = ({containerStyle, color = '#747474'}) => {
 export const BottomCommunitySvg = ({containerStyle, color = '#747474'}) => {
   return (
     <View
-      style={[{width: wp(9), height: wp(9), bottom: wp(-0.3)}, containerStyle]}>
+      style={[
+        {width: wp(9.3), height: wp(9.3), bottom: wp(-0.3)},
+        containerStyle,
+      ]}>
       <Svg
         width="100%"
         height="100%"
@@ -842,7 +850,11 @@ export const AddPostGallerySvg = ({containerStyle}) => {
 
 export const UnBlockedUserIcon = ({containerStyle}) => {
   return (
-    <View style={[{width: wp(7), height: wp(7)}, containerStyle]}>
+    <View
+      style={[
+        {width: wp(6), height: wp(6), marginLeft: wp(1)},
+        containerStyle,
+      ]}>
       <Svg
         width="100%"
         height="100%"

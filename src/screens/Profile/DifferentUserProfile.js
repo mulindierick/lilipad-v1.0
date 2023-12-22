@@ -60,8 +60,9 @@ const DifferentUserProfile = ({route}) => {
     } catch (e) {
       console.log({e});
     }
-
-    setLoading(false);
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
   };
 
   const fetchPostAgain = async () => {
@@ -114,10 +115,9 @@ const DifferentUserProfile = ({route}) => {
     }
   };
 
-  return loading ? (
-    <CustomLoader />
-  ) : (
+  return (
     <CustomWrapper containerStyle={{paddingHorizontal: wp(-4)}}>
+      {loading && <CustomLoader PostDetail={true} />}
       <ProfileHeader
         differentUserProfile
         upperBorderFlag={upperBorderFlag}

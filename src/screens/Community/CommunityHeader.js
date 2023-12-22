@@ -59,12 +59,12 @@ const CommunityHeader = ({
         style={
           upperBorderFlag
             ? {
-                borderBottomWidth: 1,
+                borderBottomWidth: 0.8,
                 paddingTop: hp(1.5),
                 borderBottomColor: '#DADADA',
               }
             : {
-                borderBottomWidth: 1,
+                borderBottomWidth: 0.8,
                 borderBottomColor: 'transparent',
                 paddingTop: hp(1.5),
               }

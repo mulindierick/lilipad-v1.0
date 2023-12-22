@@ -91,7 +91,7 @@ const ViewMembers = ({route}) => {
           onChange={txt => setText(txt)}
           containerStyle={styles.searchContainer}
           placeholderTextColor="#B0B0B0"
-          textInputStyle={{fontWeight: '400', fontSize: wp(4)}}
+          // textInputStyle={{fontWeight: '400', fontSize: wp(4)}}
         />
       </View>
       <View

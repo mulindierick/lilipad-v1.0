@@ -55,6 +55,7 @@ const CustomSearchDropDown = ({data, setSelected, selected}) => {
         autoCapitalize="sentences"
         autoCorrect={false}
         spellCheck={true}
+        placeholderTextColor="#B0B0B0"
       />
       {focus && (
         <View style={styles.listContainer}>

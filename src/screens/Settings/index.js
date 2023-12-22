@@ -117,11 +117,14 @@ const Setting = () => {
         }}
       />
       <CustomSettingsButton
-        text={'Delete Account'}
+        text={'Logout'}
+        onPress={() => signOut()}
         containerStyle={{marginTop: hp(5)}}
+      />
+      <CustomSettingsButton
+        text={'Delete Account'}
         onPress={() => DeleteAccount()}
       />
-      <CustomSettingsButton text={'Logout'} onPress={() => signOut()} />
     </CustomWrapper>
   );
 };

@@ -129,6 +129,7 @@ const ExploreSpaces = () => {
           placeholder="search"
           onChange={txt => setText(txt)}
           containerStyle={styles.searchContainer}
+          placeholderTextColor="#B0B0B0"
         />
       </View>
       <View

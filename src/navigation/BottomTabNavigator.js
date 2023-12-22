@@ -143,7 +143,7 @@ const BottomTabNavigator = () => {
                         ? {flex: 1, left: wp(4)}
                         : tab.name == 'Profile'
                         ? {flex: 1, right: wp(2.5)}
-                        : {flex: 1, left: wp(2.5)},
+                        : {flex: 1, left: wp(1.3)},
                     ]}
                     key={tab.id}>
                     {/* <CustomImage

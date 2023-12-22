@@ -89,7 +89,7 @@ const PostDetails = ({route}) => {
     }
     setTimeout(() => {
       setLoader(false);
-    }, 250);
+    }, 400);
   };
 
   useEffect(() => {
@@ -99,6 +99,7 @@ const PostDetails = ({route}) => {
   const onCommentDocumentUpdate = async commentCount => {
     try {
       const res = await fetchUpdatedComments(spaceId, postId, commentCount);
+      setPostComments(res.data);
       if (res.data.length > 0) {
         setCommentCount(res.data.length);
         if (
@@ -106,16 +107,18 @@ const PostDetails = ({route}) => {
             user?.firebaseUserId &&
           res.refreshValue
         ) {
-          try {
-            flatListRef.current.scrollToIndex({
-              animated: true,
-              index: res.data.length - 1,
-            });
-          } catch (err) {
-            console.log({err});
-          }
+          setTimeout(() => {
+            if (!flatListRef?.current) return;
+            try {
+              flatListRef.current.scrollToIndex({
+                animated: true,
+                index: res.data.length - 1,
+              });
+            } catch (err) {
+              console.log({err});
+            }
+          }, 50);
         }
-        setPostComments(res.data);
       }
     } catch (err) {
       console.log({err});
@@ -166,7 +169,7 @@ const PostDetails = ({route}) => {
 
   const OnSendComment = async () => {
     try {
-      if (text === '') return;
+      if (text.trim() === '') return;
       const comment = text;
       setText('');
       setCommentLoader(true);
@@ -240,7 +243,7 @@ const PostDetails = ({route}) => {
     navigation.goBack();
   };
 
-  const {top} = useSafeAreaInsets();
+  const {top, bottom} = useSafeAreaInsets();
 
   //For Playing Video
   const [visibleIndex, setVisibleIndex] = useState(-1);
@@ -265,110 +268,115 @@ const PostDetails = ({route}) => {
       containerStyle={{
         backgroundColor: COLORS.white,
         paddingHorizontal: wp(0),
-      }}>
-      <CustomLoader isVisible={loader} PostDetail={true} />
+      }}
+      bottom={true}>
+      {loader && <CustomLoader PostDetail={true} />}
       <TouchableOpacity
         style={[styles.backButton, {top: top}]}
         onPress={() => navigation.goBack()}
         activeOpacity={1}>
         <BackButton containerStyle={{marginLeft: wp(-0.8)}} />
       </TouchableOpacity>
-      <FlatList
-        ref={flatListRef}
-        data={[{commentId: 'borderLine'}, ...postComments]}
-        viewabilityConfig={viewabilityConfig}
-        onViewableItemsChanged={onViewableItemsChanged}
-        showsVerticalScrollIndicator={false}
-        renderItem={({item}) => (
-          <View
-            style={
-              item?.commentId === 'borderLine'
-                ? {
-                    backgroundColor: COLORS.white,
-                    marginBottom: hp(2),
-                  }
-                : {paddingHorizontal: wp(4)}
-            }
-            key={item?.commentId}>
-            {item?.commentId === 'borderLine' ? (
-              <View style={styles.borderLine} />
-            ) : (
-              <CommentItem
-                photo={item?.user?._data?.photo}
-                fullName={`${item?.user?._data?.firstName} ${item?.user?._data?.lastName}`}
-                timeInSeconds={item.createdAt?._seconds}
-                text={item?.text}
-                userOwnComment={
-                  item?.user?._data?.firebaseUserId === user?.firebaseUserId
-                }
-                uid={item?.user?._data?.firebaseUserId}
-                data={item}
-                userLiked={item?.userLiked}
-              />
-            )}
-          </View>
-        )}
-        ListFooterComponent={() => (
-          <View
-            style={[
-              isKeyboardVisible
-                ? {marginBottom: hp(49)}
-                : {marginBottom: hp(12)},
-            ]}></View>
-        )}
-        ListEmptyComponent={() => (
-          <View
-            style={{
-              flex: 1,
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: hp(10),
-            }}
-            key={'header'}>
-            {loader ? (
-              <ActivityIndicator color={COLORS.grey} size="large" />
-            ) : (
-              <TextNormal textStyle={styles.noDataFound}>
-                Nothing, Yet.
-              </TextNormal>
-            )}
-          </View>
-        )}
-        ListHeaderComponent={
-          <PostHeaderComponent
-            key={postData?.data?.postId}
-            postData={memoizedPostData}
-            handleLike={handleLike}
-            like={like}
-            likeCount={likeCount}
-            commentCount={commentCount}
-            likeLoader={likeLoader}
-            activeIndex={visibleIndex}
-          />
-        }
-        stickyHeaderIndices={[1]}
-      />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.select({
-          ios: () => hp(1.5),
-        })()}
-        style={styles.footer}>
-        <View style={styles.footerTextInputContainer}>
-          <CustomTextInput
-            containerStyle={styles.textInput}
-            textInputStyle={{paddingHorizontal: wp(2)}}
-            onChange={txt => setText(txt)}
-            value={text}
-            autoCapitalize="sentences"
-            autoCorrect={true}
-            spellCheck={true}
-          />
-          <TouchableOpacity
-            onPress={() => OnSendComment()}
-            disabled={commentLoader}>
-            <SendSvg />
-          </TouchableOpacity>
+        // keyboardVerticalOffset={Platform.select({
+        //   // ios: () => hp(1.5),
+        // })()}
+        style={{flex: 1}}>
+        <FlatList
+          ref={flatListRef}
+          data={[{commentId: 'borderLine'}, ...postComments]}
+          viewabilityConfig={viewabilityConfig}
+          onViewableItemsChanged={onViewableItemsChanged}
+          showsVerticalScrollIndicator={false}
+          renderItem={({item}) => (
+            <View
+              style={
+                item?.commentId === 'borderLine'
+                  ? {
+                      backgroundColor: COLORS.white,
+                      marginBottom: hp(2),
+                    }
+                  : {paddingHorizontal: wp(4)}
+              }
+              key={item?.commentId}>
+              {item?.commentId === 'borderLine' ? (
+                <View style={styles.borderLine} />
+              ) : (
+                <CommentItem
+                  photo={item?.user?._data?.photo}
+                  fullName={`${item?.user?._data?.firstName} ${item?.user?._data?.lastName}`}
+                  timeInSeconds={item.createdAt?._seconds}
+                  text={item?.text}
+                  userOwnComment={
+                    item?.user?._data?.firebaseUserId === user?.firebaseUserId
+                  }
+                  uid={item?.user?._data?.firebaseUserId}
+                  data={item}
+                  userLiked={item?.userLiked}
+                />
+              )}
+            </View>
+          )}
+          ListFooterComponent={() => (
+            <View
+              style={[
+                // isKeyboardVisible
+                //   ? {marginBottom: hp(49)}
+                //   : {marginBottom: hp(12)},
+                {marginBottom: wp(1)},
+              ]}></View>
+          )}
+          ListEmptyComponent={() => (
+            <View
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: hp(10),
+              }}
+              key={'header'}>
+              {loader ? (
+                <ActivityIndicator color={COLORS.grey} size="large" />
+              ) : (
+                <TextNormal textStyle={styles.noDataFound}>
+                  Nothing, Yet.
+                </TextNormal>
+              )}
+            </View>
+          )}
+          ListHeaderComponent={
+            <PostHeaderComponent
+              key={postData?.data?.postId}
+              postData={memoizedPostData}
+              handleLike={handleLike}
+              like={like}
+              likeCount={likeCount}
+              commentCount={commentCount}
+              likeLoader={likeLoader}
+              activeIndex={visibleIndex}
+            />
+          }
+          stickyHeaderIndices={[1]}
+        />
+        <View style={[styles.footer]}>
+          <View style={styles.footerTextInputContainer}>
+            <CustomTextInput
+              containerStyle={styles.textInput}
+              textInputStyle={{paddingHorizontal: wp(2)}}
+              onChange={txt => setText(txt)}
+              value={text}
+              autoCapitalize="sentences"
+              autoCorrect={true}
+              spellCheck={true}
+              placeholderTextColor="#B0B0B0"
+            />
+            <TouchableOpacity
+              onPress={() => OnSendComment()}
+              disabled={commentLoader}>
+              <SendSvg />
+            </TouchableOpacity>
+          </View>
         </View>
       </KeyboardAvoidingView>
       <View style={styles.footerBack}></View>
@@ -400,32 +408,20 @@ const styles = StyleSheet.create({
   },
   textInput: {width: wp(74), backgroundColor: 'transparent'},
   footer: {
-    borderTopWidth: 1,
-    borderColor: COLORS.grey,
     marginHorizontal: wp(-4),
     width: wp(100),
     alignItems: 'center',
     paddingHorizontal: wp(4),
     flexDirection: 'row',
     paddingTop: hp(1),
+    paddingBottom: hp(1),
     alignSelf: 'center',
-    position: 'absolute',
-    bottom: hp(4),
-    backgroundColor: COLORS.white,
     zIndex: 1,
   },
   noDataFound: {
     color: '#747474',
     fontFamily: FONTS.LightItalic,
     fontWeight: '400',
-  },
-  footerBack: {
-    alignSelf: 'center',
-    position: 'absolute',
-    bottom: hp(0),
-    backgroundColor: COLORS.white,
-    height: hp(5),
-    width: wp(100),
   },
   backButton: {
     alignItems: 'center',
