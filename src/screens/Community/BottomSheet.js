@@ -129,7 +129,9 @@ const BottomSheet = ({
 
   const viewProfile = () => {
     RBSheetRef.current.close();
-    navigation.navigate('DifferentUserProfile', {uid: uid});
+    setTimeout(() => {
+      navigation.navigate('DifferentUserProfile', {uid: uid});
+    }, 200);
   };
 
   const BrowseAllSpaces = () => {

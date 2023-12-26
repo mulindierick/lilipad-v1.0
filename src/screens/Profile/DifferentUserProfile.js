@@ -28,6 +28,7 @@ import DifferentUserProfileItem from './DifferentUserProfileItem';
 import {UnBlockedUserIcon} from '../../components/common/CustomSvgItems';
 import {setBlockedUsers} from '../../redux/reducers/generalSlice';
 import UseFirebaseAuth from '../../utils/hooks/UseFirebaseAuth';
+import {useLayoutEffect} from 'react';
 
 const DifferentUserProfile = ({route}) => {
   const {uid} = route?.params;
@@ -62,7 +63,7 @@ const DifferentUserProfile = ({route}) => {
     }
     setTimeout(() => {
       setLoading(false);
-    }, 500);
+    }, 450);
   };
 
   const fetchPostAgain = async () => {
@@ -77,7 +78,7 @@ const DifferentUserProfile = ({route}) => {
     setRefreshing(false);
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     fetchPosts();
   }, [uid]);
 

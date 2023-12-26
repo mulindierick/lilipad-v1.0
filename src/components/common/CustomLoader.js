@@ -38,15 +38,27 @@ const CustomLoader = ({
 
   if (PostDetail) {
     return (
-      <ReactNativeModal
-        isVisible={true}
-        style={styles.container}
-        animationIn={'fadeIn'}
-        animationOut={'fadeOut'}
-        backdropOpacity={1}
-        backdropColor={COLORS.white}>
-        <ActivityIndicator size={'large'} color={COLORS.grey} />
-      </ReactNativeModal>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: COLORS.white,
+          position: 'absolute',
+          zIndex: 1000,
+          right: 0,
+          left: 0,
+          top: 0,
+          bottom: 0,
+        }}>
+        <ReactNativeModal
+          isVisible={true}
+          style={styles.container}
+          animationIn={'fadeIn'}
+          animationOut={'fadeOut'}
+          backdropOpacity={1}
+          backdropColor={COLORS.white}>
+          <ActivityIndicator size={'large'} color={COLORS.grey} />
+        </ReactNativeModal>
+      </View>
     );
   }
 
