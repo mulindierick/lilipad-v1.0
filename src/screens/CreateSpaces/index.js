@@ -65,7 +65,7 @@ const CreateSpace = () => {
               style={{flex: 1}}>
               <BackButton />
             </TouchableOpacity>
-            <Text style={styles.text}>Create a Space</Text>
+            <TextNormal textStyle={styles.text}>Create a Space</TextNormal>
             <View style={{flex: 1}} />
           </View>
 

@@ -77,6 +77,7 @@ const CustomTextInput = ({
             autoFocus={autoFocus}
             keyboardType={keyboardType}
             defaultValue={defaultValue}
+            allowFontScaling={false}
           />
 
           {secureTextEntry && (

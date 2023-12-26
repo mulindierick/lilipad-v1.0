@@ -8,11 +8,19 @@ import {ContextProvider} from './src/context/Context';
 import RootStack from './src/navigation/RootStack';
 import {persistor, store} from './src/redux/store';
 import {StatusBar} from 'react-native';
+import {
+  SafeAreaProvider,
+  initialWindowMetrics,
+} from 'react-native-safe-area-context';
+import {LogBox} from 'react-native';
+
 const App = () => {
   // useEffect(() => {
   //   AvoidSoftInput.setShouldMimicIOSBehavior(true);
   //   AvoidSoftInput.setEnabled(true);
   // }, []);
+
+  LogBox.ignoreAllLogs(true);
 
   return (
     <Provider store={store}>

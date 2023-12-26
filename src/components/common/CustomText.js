@@ -30,7 +30,8 @@ export const TextNormal = ({
         textStyle,
       ]}
       suppressHighlighting={true}
-      {...rest}>
+      {...rest}
+      allowFontScaling={false}>
       {children}
     </Text>
   );
@@ -58,6 +59,7 @@ export const TextSmall = ({
         textStyle,
       ]}
       suppressHighlighting={true}
+      allowFontScaling={false}
       {...rest}>
       {children}
     </Text>
@@ -83,6 +85,7 @@ export const TextSmaller = ({
         center && {textAlign: 'center'},
         textStyle,
       ]}
+      allowFontScaling={false}
       suppressHighlighting={true}
       {...rest}>
       {children}
@@ -112,6 +115,7 @@ export const TextBig = ({
         center && {textAlign: 'center'},
         textStyle,
       ]}
+      allowFontScaling={false}
       suppressHighlighting={true}
       {...rest}>
       {children}
@@ -139,6 +143,7 @@ export const TextBigger = ({
         center && {textAlign: 'center'},
         textStyle,
       ]}
+      allowFontScaling={false}
       suppressHighlighting={true}
       {...rest}>
       {children}
@@ -165,6 +170,7 @@ export const TextHuge = ({
         color && {color: color},
         center && {textAlign: 'center'},
       ]}
+      allowFontScaling={false}
       suppressHighlighting={true}
       {...rest}>
       {children}
