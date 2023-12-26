@@ -17,6 +17,7 @@ import {
 } from 'react-native-responsive-screen';
 import usePost from '../../utils/hooks/usePost';
 import SpacesItem from '../../components/common/SpacesItem';
+import {Alert} from 'react-native';
 
 const Spaces = ({searchText, setY}) => {
   const {user} = useUser();
@@ -55,21 +56,42 @@ const Spaces = ({searchText, setY}) => {
 
   const AddSpaces = async (spaceName, spaceId) => {
     try {
-      const res = await joinSpaces(spaceName, spaceId);
-      if (res === 'Success') {
-        const changeData = filterData.map(item =>
-          item?._data?.spaceName === spaceName
-            ? {
-                ...item,
-                _data: {
-                  ...item._data,
-                  members: [...item._data.members, user?.firebaseUserId],
-                },
+      Alert.alert(
+        'Join Space',
+        'Are you sure you want to join this space?',
+        [
+          {
+            text: 'No',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+          },
+
+          {
+            text: 'Yes',
+            onPress: async () => {
+              const res = await joinSpaces(spaceName, spaceId);
+              if (res === 'Success') {
+                const changeData = filterData.map(item =>
+                  item?._data?.spaceName === spaceName
+                    ? {
+                        ...item,
+                        _data: {
+                          ...item._data,
+                          members: [
+                            ...item._data.members,
+                            user?.firebaseUserId,
+                          ],
+                        },
+                      }
+                    : item,
+                );
+                setFilterData(changeData);
               }
-            : item,
-        );
-        setFilterData(changeData);
-      }
+            },
+          },
+        ],
+        {cancelable: false},
+      );
     } catch (err) {
       console.log({err});
     }

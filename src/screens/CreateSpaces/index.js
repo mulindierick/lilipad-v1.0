@@ -125,20 +125,8 @@ const CreateSpace = () => {
                 italic
                 textStyle={styles.italic}
                 color={COLORS.textColorGrey}>
-                It may take up to a
-                <TextNormal
-                  color={COLORS.textColorGrey}
-                  textStyle={styles.normal}>
-                  {' '}
-                  few hours{' '}
-                </TextNormal>
-                for this space to be{' '}
-                <TextNormal
-                  color={COLORS.textColorGrey}
-                  textStyle={styles.normal}>
-                  reviewed.
-                </TextNormal>{' '}
-                We will communicate the pending status of this space over email.
+                It may take up to a few hours for this space to be reviewed. We
+                will communicate the pending status of this space over email.
               </TextNormal>
             </View>
             <CustomButton
