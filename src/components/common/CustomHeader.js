@@ -78,6 +78,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: wp(5),
     paddingVertical: hp(1),
+    borderBottomWidth: 0.4,
+    borderBottomColor: 'transparent',
   },
   forInfoFurtherScreen: {
     alignItems: 'center',

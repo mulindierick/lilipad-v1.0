@@ -22,6 +22,7 @@ import useUser from '../../utils/hooks/useUser';
 import Header from './Header';
 import {MyContext} from '../../context/Context';
 import {Alert} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const ExploreSpaces = () => {
   const {user} = useUser();
@@ -145,8 +146,22 @@ const ExploreSpaces = () => {
     }
   }, [selectedFilter]);
 
+  const {top} = useSafeAreaInsets();
+
   return (
     <CustomWrapper containerStyle={{paddingHorizontal: 0}}>
+      <View
+        style={{
+          backgroundColor: COLORS.backgroundColor,
+          height: top,
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          alignSelf: 'center',
+          zIndex: 10,
+        }}
+      />
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View>
           <Header

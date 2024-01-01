@@ -16,6 +16,7 @@ import {
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
 import {MyContext} from '../../context/Context';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const Profile = () => {
   const {user} = useUser();
@@ -64,9 +65,23 @@ const Profile = () => {
     }
   };
 
+  const {top} = useSafeAreaInsets();
+
   return (
     <CustomWrapper
       containerStyle={{paddingHorizontal: widthPercentageToDP(-4)}}>
+      <View
+        style={{
+          backgroundColor: COLORS.backgroundColor,
+          height: top,
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          alignSelf: 'center',
+          zIndex: 10,
+        }}
+      />
       <ProfileHeader upperBorderFlag={upperBorderFlag} />
       <FlatList
         key={'#'}

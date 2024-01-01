@@ -21,7 +21,6 @@ const App = () => {
   // }, []);
 
   LogBox.ignoreAllLogs(true);
-
   return (
     <Provider store={store}>
       <ContextProvider>
