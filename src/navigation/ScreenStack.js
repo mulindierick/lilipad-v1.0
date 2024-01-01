@@ -13,7 +13,9 @@ const Stack = createNativeStackNavigator();
 
 const ScreenStack = () => {
   return (
-    <Stack.Navigator screenOptions={{headerShown: false}}>
+    <Stack.Navigator
+      screenOptions={{headerShown: false}}
+      initialRouteName="BottomTabNavigator">
       <Stack.Screen name="BottomTabNavigator" component={BottomTabNavigator} />
       <Stack.Screen name="PostDetails" component={PostDetails} />
       <Stack.Screen name="Search" component={Search} />

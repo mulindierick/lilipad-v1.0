@@ -117,6 +117,7 @@ const ViewMembers = ({route}) => {
               <View style={[styles.imageContainer]}>
                 <CustomImage
                   resizeMode="cover"
+                  disabled={true}
                   source={
                     item?.photo
                       ? {

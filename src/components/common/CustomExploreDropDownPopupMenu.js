@@ -69,14 +69,14 @@ const CustomExploreDropDownPopupMenu = ({
             'My Spaces',
             'Other',
             'Activities',
-            'User-Created',
+            'User-Created Spaces',
             'Academics',
           ]}
           style={[style]}
           numColumns={2}
           columnWrapperStyle={{
             justifyContent: 'space-between',
-            paddingRight: wp(3),
+            paddingHorizontal: wp(3),
           }}
           contentContainerStyle={[
             contentContainerStyle,
@@ -138,9 +138,8 @@ const styles = StyleSheet.create({
   filterPopMenuText: {
     fontFamily: FONTS.Medium,
     fontSize: wp(4.3),
-    paddingHorizontal: wp(3),
     marginVertical: hp(1),
     fontWeight: '500',
-    width: wp(40),
+    width: wp(44),
   },
 });

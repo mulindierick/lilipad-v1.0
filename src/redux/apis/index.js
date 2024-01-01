@@ -68,6 +68,15 @@ export const lilipadCloudFunction = createApi({
         };
       },
     }),
+    DeleteUserPost: build.mutation({
+      query(body) {
+        return {
+          method: 'POST',
+          url: 'DeleteUserPost',
+          body,
+        };
+      },
+    }),
   }),
 });
 
@@ -79,4 +88,5 @@ export const {
   useActivityRecorderMutation,
   useSendNewPostNotificationMutation,
   useCommentLikeActivityRecorderAndNotificationHandlerMutation,
+  useDeleteUserPostMutation,
 } = lilipadCloudFunction;

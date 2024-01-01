@@ -1,5 +1,12 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  View,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -47,9 +54,8 @@ const ExploreSpaces = () => {
       Other: 'others',
       Activities: 'activities',
       Academics: 'academic',
-      'User-Created': 'userCreated',
+      'User-Created Spaces': 'userCreated',
     };
-
     setRefreshing(true);
     try {
       const res = await fetchFilteredSpaces(Data[selectedFilter]);
@@ -141,30 +147,34 @@ const ExploreSpaces = () => {
 
   return (
     <CustomWrapper containerStyle={{paddingHorizontal: 0}}>
-      <Header
-        selectedFilter={selectedFilter}
-        setSelectedFilter={setSelectedFilter}
-      />
-      <View style={styles.marginTop}>
-        <CustomTextInput
-          placeholder="search"
-          onChange={txt => setText(txt)}
-          containerStyle={styles.searchContainer}
-          placeholderTextColor="#B0B0B0"
-        />
-      </View>
-      <View
-        style={[
-          styles.marginTop,
-          upperBorderFlag && {
-            borderBottomWidth: 0.8,
-            borderBottomColor: '#DADADA',
-          },
-        ]}>
-        <TextBig textStyle={[styles.AllSpaces, {marginHorizontal: wp(4)}]}>
-          {selectedFilter}
-        </TextBig>
-      </View>
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <View>
+          <Header
+            selectedFilter={selectedFilter}
+            setSelectedFilter={setSelectedFilter}
+          />
+          <View style={styles.marginTop}>
+            <CustomTextInput
+              placeholder="search"
+              onChange={txt => setText(txt)}
+              containerStyle={styles.searchContainer}
+              placeholderTextColor="#B0B0B0"
+            />
+          </View>
+          <View
+            style={[
+              styles.marginTop,
+              upperBorderFlag && {
+                borderBottomWidth: 0.8,
+                borderBottomColor: '#DADADA',
+              },
+            ]}>
+            <TextBig textStyle={[styles.AllSpaces, {marginHorizontal: wp(4)}]}>
+              {selectedFilter}
+            </TextBig>
+          </View>
+        </View>
+      </TouchableWithoutFeedback>
       <FlatList
         data={filterData}
         ref={ExploreSpacesFlatListRef}
@@ -172,7 +182,6 @@ const ExploreSpaces = () => {
         style={{position: 'relative', zIndex: -1}}
         onScroll={onScroll}
         // extraData={false}
-        keyExtractor={item => console.log({item: item._data?.spaceId})}
         renderItem={({item, index}) => (
           <SpacesItem
             item={item}

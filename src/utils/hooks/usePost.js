@@ -8,8 +8,10 @@ import {
 import {
   useActivityRecorderMutation,
   useCommentLikeActivityRecorderAndNotificationHandlerMutation,
+  useDeleteUserPostMutation,
   useSendNewPostNotificationMutation,
   useSentNotificationMutation,
+  useUploadPostMutation,
 } from '../../redux/apis';
 import {useNetInfo} from './useNetInfo';
 
@@ -18,6 +20,7 @@ const usePost = () => {
   const [sentNotification] = useSentNotificationMutation();
   const [activityRecorder] = useActivityRecorderMutation();
   const [sendNewPostNotification] = useSendNewPostNotificationMutation();
+  const [DeleteUserPostCF] = useDeleteUserPostMutation();
   const [sendNotificationAndRecordActivityForCommentLike] =
     useCommentLikeActivityRecorderAndNotificationHandlerMutation();
 
@@ -741,102 +744,13 @@ const usePost = () => {
 
   const deleteUserPost = async (postId, spaceId) => {
     try {
-      const postData = await firestore()
-        .collection(`Colleges/${user?.college}/spaces/${spaceId}/posts`)
-        .doc(postId)
-        .get();
-
-      // also delete all the references of likes and comments if exists
-      if (postData.data().likesCount > 0) {
-        const likes = await firestore()
-          .collection(
-            `Colleges/${user?.college}/spaces/${spaceId}/posts/${postId}/likes`,
-          )
-          .get();
-        likes.docs.forEach(async item => {
-          await firestore()
-            .collection(
-              `Colleges/${user?.college}/spaces/${spaceId}/posts/${postId}/likes`,
-            )
-            .doc(item.id)
-            .delete();
-        });
-      }
-
-      if (postData.data().commentsCount > 0) {
-        const comments = await firestore()
-          .collection(
-            `Colleges/${user?.college}/spaces/${spaceId}/posts/${postId}/comments`,
-          )
-          .get();
-        comments.docs.forEach(async item => {
-          const commentId = item?.data()?.commentId;
-
-          const activitiesCommentLikes = await firestore()
-            .collectionGroup('activities')
-            .where('id', '==', `${commentId}_commentLike`)
-            .get();
-
-          activitiesCommentLikes.forEach(async item => {
-            await item.ref.delete();
-          });
-
-          await firestore()
-            .collection(
-              `Colleges/${user?.college}/spaces/${spaceId}/posts/${postId}/comments`,
-            )
-            .doc(commentId)
-            .delete();
-        });
-      }
-
-      // delete the activities from the user who created the post
-      //like Activities
-      const document = await firestore()
-        .collectionGroup('activities')
-        .where('id', '==', `${postData.data()?.postId}_like`)
-        .get();
-
-      document.forEach(async item => {
-        item.ref.delete();
+      // Call the Function To delete the post
+      const res = await DeleteUserPostCF({
+        postId: postId,
+        spaceId: spaceId,
+        collegeId: user?.college,
       });
-
-      //comment Activities
-      const document2 = await firestore()
-        .collectionGroup('activities')
-        .where('id', '==', `${postData.data()?.postId}_comment`)
-        .get();
-
-      document2.forEach(async item => {
-        item.ref.delete();
-      });
-
-      //Report Post if exists
-      const reportPost = await firestore()
-        .collection(`Colleges/${user?.college}/spaces/${spaceId}/reportPosts`)
-        .doc(postId)
-        .get();
-
-      if (reportPost?.exists) {
-        const reportedBy = reportPost?.data()?.reportedBy;
-
-        reportedBy.forEach(async item => {
-          await firestore()
-            .collection(`accounts`)
-            .doc(item)
-            .update({
-              reportPost: firestore.FieldValue.arrayRemove(postId),
-            });
-        });
-
-        reportPost.ref.delete();
-      }
-
-      //Delete Post
-      const res = await firestore()
-        .collection(`Colleges/${user?.college}/spaces/${spaceId}/posts`)
-        .doc(postId)
-        .delete();
+      console.log('After Deleteing', {res});
     } catch (err) {
       console.log({err});
     }

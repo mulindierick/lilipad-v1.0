@@ -188,6 +188,11 @@ const Community = () => {
 
   const fetchMorePosts = async () => {
     if (noMoreFetchingPosts || bottomLoading) return;
+    if (
+      selectedSpaceData[selectedSpaces]?.data &&
+      selectedSpaceData[selectedSpaces]?.data?.length < 9
+    )
+      return;
     console.log('HERE WE GO AGAINNNNNN');
     setBottomLoading(true);
     try {
